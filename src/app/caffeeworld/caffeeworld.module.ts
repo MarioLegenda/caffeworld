@@ -6,6 +6,8 @@ import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
 
 import { LandingComponent } from './landing/landing.component';
 import { CaffeeworldComponent } from './caffeeworld.component';
+import {CreateComponent} from './table/create/create.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
     imports: [
@@ -13,10 +15,12 @@ import { CaffeeworldComponent } from './caffeeworld.component';
         FormsModule,
         NgbModule,
         JwBootstrapSwitchNg2Module,
+        RouterModule,
     ],
     declarations: [
         CaffeeworldComponent,
         LandingComponent,
+        CreateComponent
     ]
 })
 export class CaffeeworldModule { }

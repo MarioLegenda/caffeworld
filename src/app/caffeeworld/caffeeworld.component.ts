@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-examples',
+  selector: 'app-caffeeworld-root',
   templateUrl: './caffeeworld.component.html',
   styleUrls: ['./caffeeworld.component.scss']
 })

@@ -4,9 +4,11 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LandingComponent } from './caffeeworld/landing/landing.component';
+import {CreateComponent} from './caffeeworld/table/create/create.component';
 
 const routes: Routes =[
     { path: '',     component: LandingComponent },
+    {path: 'table/create', component: CreateComponent },
 ];
 
 @NgModule({
