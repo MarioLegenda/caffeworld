@@ -32,11 +32,14 @@
 
                 <div class="col-lg-8 form-element">
                     <div class="form-group">
-                        <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 6 of your friends to the table:</label>
+                        <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
 
-                        <input *ngFor="let a of invitationsNum" class="col-lg-8 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
+                        <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
+                            <input class="col-lg-12 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
+                            <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
+                        </div>
 
-                        <ngb-alert *ngIf="invitationsNum.length >= 5" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
+                        <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
                             <div class="container">
                                 <i class="now-ui-icons travel_info"></i>
                                 <p>Sorry, but you can only add up to 5 friends</p>
@@ -44,7 +47,7 @@
                         </ngb-alert>
 
                         <div class="col-lg-12 invitation-button-wrapper">
-                            <button (click)="addInvitationField()"type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                            <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
                         </div>
                     </div>
                 </div>

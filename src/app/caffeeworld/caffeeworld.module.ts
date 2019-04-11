@@ -8,6 +8,7 @@ import { LandingComponent } from './landing/landing.component';
 import { CaffeeworldComponent } from './caffeeworld.component';
 import {CreateComponent} from './table/create/create.component';
 import {RouterModule} from '@angular/router';
+import InvitationService from './table/create/service/InvitationService';
 
 @NgModule({
     imports: [
@@ -21,6 +22,12 @@ import {RouterModule} from '@angular/router';
         CaffeeworldComponent,
         LandingComponent,
         CreateComponent
+    ],
+    providers: [
+        {
+            provide: InvitationService,
+            useFactory: () => new InvitationService(5),
+        }
     ]
 })
 export class CaffeeworldModule { }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import InvitationService from './service/InvitationService';
 
 @Component({
     selector: 'app-create-room',
@@ -6,12 +7,11 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent {
-    invitations = [];
-    invitationsNum = [0];
+    constructor(private invitationService: InvitationService) {
+        this.invitationService.init(1);
+    }
 
     addInvitationField() {
-        if (this.invitationsNum.length < 5) {
-            this.invitationsNum.push(0);
-        }
+        this.invitationService.update();
     }
 }

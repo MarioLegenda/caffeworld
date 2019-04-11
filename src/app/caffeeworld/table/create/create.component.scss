@@ -47,14 +47,13 @@
     }
 
     .invitation-button-wrapper {
-      float:
-              left;
+      float: left;
       .add-invitation-button {
         width: 200px;
         display: block;
         float: left;
 
-        margin-left: 38%;
+        margin-left: 35%;
 
         font-size: 1.05em;
 
@@ -79,6 +78,23 @@
     .invitation-error {
       margin-top: 40px;
       border-radius: 40px;
+    }
+
+    .multiple-input-wrapper {
+      position: relative;
+      float: left;
+
+      i {
+        font-size: 2em;
+        color: gray;
+        position: absolute;
+        top: 30px; right: 25px;
+
+        &:hover {
+          color: red;
+          cursor: pointer;
+        }
+      }
     }
   }
 }
