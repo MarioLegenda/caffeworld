@@ -1,6 +1,54 @@
 <div class="wrapper">
     <div>
-        <div class="container-fluid create-room">
+        <div class="container-fluid create-room col-xl-9">
+            <div class="row">
+                <div class="col-lg-8 form-element">
+                    <div class="form-group">
+                        <label class="col-lg-2 label" for="create-room-email">Email:</label>
+                        <input class="col-lg-8 input form-control" type="email" id="create-room-email" value="" placeholder="your email"/>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 form-element">
+                    <div class="form-group">
+                        <label class="col-lg-2 label" for="create-room-name">Nickname:</label>
+                        <input class="col-lg-8 input form-control" type="text" id="create-room-name" value="" placeholder="your nickname"/>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 form-element">
+                    <div class="form-group">
+                        <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
+                        <input class="col-lg-8 input form-control" type="text" id="create-room-subject" value="" placeholder="a news article, an event ..."/>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 form-element">
+                    <div class="form-group">
+                        <label class="col-lg-4 label" for="create-room-subject-description">Subject description:</label>
+                        <textarea class="col-lg-8 textarea form-control" rows="4" cols="80" id="create-room-subject-description" placeholder="describe your subject for others in the table"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 form-element">
+                    <div class="form-group">
+                        <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 6 of your friends to the table:</label>
+
+                        <input *ngFor="let a of invitationsNum" class="col-lg-8 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
+
+                        <ngb-alert *ngIf="invitationsNum.length >= 5" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
+                            <div class="container">
+                                <i class="now-ui-icons travel_info"></i>
+                                <p>Sorry, but you can only add up to 5 friends</p>
+                            </div>
+                        </ngb-alert>
+
+                        <div class="col-lg-12 invitation-button-wrapper">
+                            <button (click)="addInvitationField()"type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

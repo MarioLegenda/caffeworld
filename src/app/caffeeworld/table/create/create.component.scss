@@ -1,0 +1,84 @@
+.create-room {
+  margin-top: 200px;
+
+  .form-element {
+    margin: 0 auto;
+    margin-bottom: 40px;
+
+    padding: 15px;
+
+    border-bottom: 1px solid #d3d3d3;
+
+    .label {
+      float: left;
+      font-size: 1.2em;
+
+      margin-top: 11px;
+    }
+
+    .input {
+      float: right;
+
+      padding: 25px;
+      font-size: 1.2em;
+
+      border: 1px solid #d3d3d3;
+    }
+
+    .textarea {
+      border: 1px solid #d3d3d3;
+      border-radius: 20px;
+      font-size: 1.2em;
+
+      display: block;
+      float: left;
+
+      margin-top: 20px;
+    }
+
+    .invitation-label {
+      float: none;
+    }
+
+    .invitation-input {
+      float: left;
+
+      margin-top: 20px;
+    }
+
+    .invitation-button-wrapper {
+      float:
+              left;
+      .add-invitation-button {
+        width: 200px;
+        display: block;
+        float: left;
+
+        margin-left: 40%;
+
+        font-size: 1.05em;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .error {
+      float: left;
+      padding: 0;
+      padding-top: 13px;
+      position: relative;
+
+      i {
+        position: absolute;
+        top: 15px; right: 15px;
+      }
+    }
+
+    .invitation-error {
+      margin-top: 40px;
+      border-radius: 40px;
+    }
+  }
+}
