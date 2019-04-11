@@ -1,53 +1,75 @@
 <div class="wrapper">
     <div>
         <div class="container-fluid create-room col-xl-9">
+            <h4>Create a table</h4>
+
             <div class="row">
-                <div class="col-lg-8 form-element">
-                    <div class="form-group">
-                        <label class="col-lg-2 label" for="create-room-email">Email:</label>
-                        <input class="col-lg-8 input form-control" type="email" id="create-room-email" value="" placeholder="your email"/>
-                    </div>
-                </div>
+                <p class="col-lg-8 intro-text">
+                    Hello there. You are about to create a table to have some fun with your friends.
+                    But before you do, it is important for you to know how we handle your email (or better, not handle it at all!).
+                    We need your email only to send the url of the table to you and your friends. After we send those emails, they are
+                    not used anymore by the application and they are not in any way saved by the application.
+                </p>
 
-                <div class="col-lg-8 form-element">
-                    <div class="form-group">
-                        <label class="col-lg-2 label" for="create-room-name">Nickname:</label>
-                        <input class="col-lg-8 input form-control" type="text" id="create-room-name" value="" placeholder="your nickname"/>
-                    </div>
-                </div>
+                <p class="col-lg-8 intro-text">
+                    Actually, you don't have to give us your email. After you create the table, you can send the url of the table to your
+                    friends with some other medium, like facebook or gmail.
+                </p>
 
-                <div class="col-lg-8 form-element">
-                    <div class="form-group">
-                        <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
-                        <input class="col-lg-8 input form-control" type="text" id="create-room-subject" value="" placeholder="a news article, an event ..."/>
-                    </div>
-                </div>
+                <p class="col-lg-8 intro-text">
+                    Have fun!
+                </p>
+            </div>
 
-                <div class="col-lg-8 form-element">
-                    <div class="form-group">
-                        <label class="col-lg-4 label" for="create-room-subject-description">Subject description:</label>
-                        <textarea class="col-lg-8 textarea form-control" rows="4" cols="80" id="create-room-subject-description" placeholder="describe your subject for others in the table"></textarea>
-                    </div>
-                </div>
-
-                <div class="col-lg-8 form-element">
-                    <div class="form-group">
-                        <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
-
-                        <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
-                            <input class="col-lg-12 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
-                            <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
+            <div class="form">
+                <div class="row">
+                    <div class="col-lg-8 form-element">
+                        <div class="form-group">
+                            <label class="col-lg-2 label" for="create-room-email">Email:</label>
+                            <input class="col-lg-8 input form-control" type="email" id="create-room-email" value="" placeholder="your email but its optional"/>
                         </div>
+                    </div>
 
-                        <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
-                            <div class="container">
-                                <i class="now-ui-icons travel_info"></i>
-                                <p>Sorry, but you can only add up to 5 friends</p>
+                    <div class="col-lg-8 form-element">
+                        <div class="form-group">
+                            <label class="col-lg-2 label" for="create-room-name">Nickname:</label>
+                            <input class="col-lg-8 input form-control" type="text" id="create-room-name" value="" placeholder="your nickname"/>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 form-element">
+                        <div class="form-group">
+                            <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
+                            <input class="col-lg-8 input form-control" type="text" id="create-room-subject" value="" placeholder="a news article, an event ..."/>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 form-element">
+                        <div class="form-group">
+                            <label class="col-lg-4 label" for="create-room-subject-description">Subject description:</label>
+                            <textarea class="col-lg-8 textarea form-control" rows="4" cols="80" id="create-room-subject-description" placeholder="describe your subject for your friends"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 form-element">
+                        <div class="form-group">
+                            <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
+
+                            <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
+                                <input class="col-lg-12 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
+                                <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
                             </div>
-                        </ngb-alert>
 
-                        <div class="col-lg-12 invitation-button-wrapper">
-                            <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                            <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
+                                <div class="container">
+                                    <i class="now-ui-icons travel_info"></i>
+                                    <p>Sorry, but you can only add up to 5 friends</p>
+                                </div>
+                            </ngb-alert>
+
+                            <div class="col-lg-12 invitation-button-wrapper">
+                                <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                            </div>
                         </div>
                     </div>
                 </div>
