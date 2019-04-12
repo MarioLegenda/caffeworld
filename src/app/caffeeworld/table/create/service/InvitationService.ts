@@ -2,64 +2,82 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export default class InvitationService {
-    private invites = [];
     private currentAdded = 0;
     private addedTracker = [];
+    private invitations = {};
+    private emailValidRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     private initCurrentAdded = this.currentAdded;
 
     constructor(private maxInvites: number) {}
 
-    init(currentAdded: number) {
+    init(currentAdded: number): void {
         this.currentAdded = currentAdded;
         this.addedTracker.push(currentAdded);
         this.initCurrentAdded = currentAdded;
     }
 
-    add(identifier: string) {
-        this.invites.push(identifier);
+    addInvitation($event: any, index: number): void {
+        this.invitations[index] = $event.target.value;
+
     }
 
-    remove(index: number) {
+    isInvitationValidByIndex(index): boolean {
+        return this.emailValidRegex.test(this.getInvitation(index));
+    }
+
+    isInvitationValidByString(invitation: string): boolean {
+        return this.emailValidRegex.test(invitation);
+    }
+
+    getInvitation(index): string {
+        return this.invitations[index];
+    }
+
+    hasInvitation(index): boolean {
+        return this.invitations.hasOwnProperty(index);
+    }
+
+    remove(index: number): void {
         this.addedTracker.splice(this.addedTracker.indexOf(index), 1);
         this.currentAdded--;
+
+        if (this.invitations.hasOwnProperty(index)) delete this.invitations[index];
     }
 
-    has(identifier: string) {
-        return this.invites.includes(identifier);
-    }
-
-    update() {
+    update(): void {
         if (this.valid) {
             this.currentAdded++;
             this.addedTracker.push(this.currentAdded);
         }
     }
 
-    clear() {
-        this.invites = [];
+    clear(): void {
         this.currentAdded = this.initCurrentAdded;
         this.addedTracker = [];
     }
 
-    log() {
-        console.log(this.currentAdded);
-        console.log(this.addedTracker);
-    }
-
-    get inviteIdentifiers() {
-        return this.invites;
-    }
-
-    get current() {
+    get current(): number {
         return this.currentAdded;
     }
 
-    get valid() {
+    get valid(): boolean {
         return this.currentAdded < this.maxInvites;
     }
 
-    get tracker() {
+    get tracker(): number[] {
         return this.addedTracker;
+    }
+
+    get onInvitationChange(): object {
+        return this.invitations;
+    }
+
+    get asArray(): string[] {
+        const values = (Object as any).values(this.invitations);
+
+        return values.filter((email) => {
+            return this.isInvitationValidByString(email);
+        })
     }
 }

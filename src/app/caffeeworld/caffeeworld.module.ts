@@ -9,11 +9,13 @@ import { CaffeeworldComponent } from './caffeeworld.component';
 import {CreateComponent} from './table/create/create.component';
 import {RouterModule} from '@angular/router';
 import InvitationService from './table/create/service/InvitationService';
+import {BrowserModule} from '@angular/platform-browser';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        BrowserModule,
         NgbModule,
         JwBootstrapSwitchNg2Module,
         RouterModule,
@@ -21,7 +23,7 @@ import InvitationService from './table/create/service/InvitationService';
     declarations: [
         CaffeeworldComponent,
         LandingComponent,
-        CreateComponent
+        CreateComponent,
     ],
     providers: [
         {

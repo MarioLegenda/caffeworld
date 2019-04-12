@@ -23,68 +23,179 @@
             </div>
 
             <div class="form">
-                <div class="row">
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-2 label" for="create-room-email">Email:</label>
-                            <input class="col-lg-8 input form-control" type="email" id="create-room-email" value="" placeholder="your email but its optional"/>
+                <form method="POST" #createTableForm="ngForm" (ngSubmit)="onSubmit(createTableForm.valid)">
+                    <div class="row">
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-2 label" for="create-room-email">Email:</label>
+                                <input
+                                        class="col-lg-8 input form-control"
+                                        type="email"
+                                        id="create-room-email"
+                                        placeholder="your email but its optional"
+                                        email="true"
+                                        name="email"
+                                        #email="ngModel"
+                                        maxlength="254"
+                                        [(ngModel)]="createTableModel.email"
+                                />
+
+                                <ngb-alert *ngIf="!email.valid && email.touched && email.value" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your email is invalid</p>
+                                    </div>
+                                </ngb-alert>
+
+                                <ngb-alert *ngIf="email.errors?.maxlength" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Maximum number of characters in email is 254</p>
+                                    </div>
+                                </ngb-alert>
+
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-2 label" for="create-room-name">Nickname:</label>
-                            <input class="col-lg-8 input form-control" type="text" id="create-room-name" value="" placeholder="your nickname"/>
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-2 label" for="create-room-name">Nickname:<span class="label-mandatory">*</span></label>
+                                <input
+                                        class="col-lg-8 input form-control"
+                                        type="text"
+                                        id="create-room-name"
+                                        placeholder="your nickname"
+                                        name="nickname"
+                                        required
+                                        #nickname="ngModel"
+                                        maxlength="255"
+                                        [(ngModel)]="createTableModel.nickname"
+                                />
+                                <span class="col-lg-8 input-info-message">Only nickname is mandatory</span>
+
+                                <ngb-alert *ngIf="!nickname.valid && nickname.touched && nickname.errors?.required" class="col-lg-8 error unrecoverable-error" type="info" [dismissible]="false">
+                                    <div class="container">
+                                        <p>You haven't given us your nickname</p>
+                                    </div>
+                                </ngb-alert>
+
+                                <ngb-alert *ngIf="nickname.errors?.maxlength" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your nickname is too big. Maximum number of characters in a nickname is 255</p>
+                                    </div>
+                                </ngb-alert>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
-                            <input class="col-lg-8 input form-control" type="text" id="create-room-subject" value="" placeholder="a news article, an event ..."/>
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
+
+                                <input
+                                        class="col-lg-8 input form-control"
+                                        type="text" id="create-room-subject"
+                                        placeholder="a news article, an event ..."
+                                        name="subject"
+                                        #subject="ngModel"
+                                        maxlength="100"
+                                        [(ngModel)]="createTableModel.subject"
+                                />
+
+                                <ngb-alert *ngIf="subject.errors?.maxlength && subject.touched" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your subject is too big. Maximum number of characters for a subject is 100. Yours is {{createTableModel.subject.length}}</p>
+                                    </div>
+                                </ngb-alert>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-4 label" for="create-room-subject-description">Subject description:</label>
-                            <textarea class="col-lg-8 textarea form-control" rows="4" cols="80" id="create-room-subject-description" placeholder="describe your subject for your friends"></textarea>
-                        </div>
-                    </div>
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group subject-description-group">
+                                <label class="col-lg-4 label" for="create-room-subject-description">Subject description:</label>
 
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
+                                <span class="max-length-message">Maximum number of characters is 250. Currently available {{250 - createTableModel.subjectDescription.length}}</span>
 
-                            <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
-                                <input class="col-lg-12 input invitation-input form-control" id="create-room-add-email" placeholder="invite your friend with email" />
-                                <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
+                                <textarea
+                                        class="col-lg-8 textarea form-control"
+                                        rows="4"
+                                        cols="80"
+                                        id="create-room-subject-description"
+                                        placeholder="describe your subject for your friends"
+                                        name="subjectDescription"
+                                        #subjectDescription="ngModel"
+                                        maxlength="250"
+                                        [(ngModel)]="createTableModel.subjectDescription">
+                                </textarea>
+
+                                <ngb-alert *ngIf="subjectDescription.errors?.maxlength && subjectDescription.touched" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your description is too big. Maximum number of characters for a subject description is 250. Yours is {{createTableModel.subjectDescription.length}}</p>
+                                    </div>
+                                </ngb-alert>
                             </div>
 
-                            <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
-                                <div class="container">
-                                    <i class="now-ui-icons travel_info"></i>
-                                    <p>Sorry, but you can only add up to 5 friends</p>
+                        </div>
+
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
+
+                                <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
+                                    <input
+                                            class="col-lg-12 input invitation-input form-control"
+                                            id="create-room-add-email"
+                                            placeholder="invite your friend with an email"
+                                            [name]="'email-' + index"
+                                            (blur)="invitationService.addInvitation($event, index)">
+                                    <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
+
+                                    <ngb-alert *ngIf="invitationService.onInvitationChange && invitationService.hasInvitation(index) && !invitationService.isInvitationValidByIndex(index)" class="col-lg-12 error unrecoverable-error" type="danger" [dismissible]="false">
+                                        <div class="container">
+                                            <p>Invitation email '{{invitationService.getInvitation(index)}}' is not valid</p>
+                                        </div>
+                                    </ngb-alert>
                                 </div>
-                            </ngb-alert>
 
-                            <div class="col-lg-12 invitation-button-wrapper">
-                                <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                                <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
+                                    <div class="container">
+                                        <i class="now-ui-icons travel_info"></i>
+                                        <p>Sorry, but you can only add up to 5 friends</p>
+                                    </div>
+                                </ngb-alert>
+
+                                <div class="col-lg-12 invitation-button-wrapper">
+                                    <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-8 form-element">
-                        <div class="form-group">
-                            <label class="col-lg-8 label" for="create-room-friends-message">Say hi to your friends with a brief message:</label>
-                            <textarea class="col-lg-8 textarea form-control" rows="4" cols="80" id="create-room-friends-message" placeholder="tell your friends to have fun with you with a brief message"></textarea>
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-8 label" for="create-room-friends-message">Say hi to your friends with a brief message:</label>
+                                <span class="max-length-message">Maximum number of characters is 100. Currently available {{100 - createTableModel.briefMessage.length}}</span>
+
+                                <textarea
+                                        class="col-lg-8 textarea form-control"
+                                        rows="4" cols="80"
+                                        id="create-room-friends-message"
+                                        placeholder="tell your friends to have fun with you with a brief message"
+                                        name="briefMessage"
+                                        #briefMessage="ngModel"
+                                        [(ngModel)]="createTableModel.briefMessage"
+                                        maxlength="100">
+                                </textarea>
+
+                                <ngb-alert *ngIf="briefMessage.errors?.maxlength && briefMessage.touched" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your message is too big. Maximum number of characters for a message is 100. Yours is {{createTableModel.subjectDescription.length}}</p>
+                                    </div>
+                                </ngb-alert>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 form-element">
+                            <button [disabled]="createTableForm.invalid" type="submit" class="btn btn-primary btn-get-a-table">Get a table</button>
                         </div>
                     </div>
-
-                    <div class="col-lg-8 form-element">
-                        <button type="button" class="btn btn-primary btn-get-a-table">Get a table</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
