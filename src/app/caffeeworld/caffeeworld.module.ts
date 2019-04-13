@@ -11,6 +11,7 @@ import {RouterModule} from '@angular/router';
 import InvitationService from './table/create/service/InvitationService';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {AboutComponent} from './about/about.component';
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
         LandingComponent,
         CreateComponent,
         PageNotFoundComponent,
+        AboutComponent
     ],
     providers: [
         {
