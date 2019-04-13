@@ -169,6 +169,33 @@
 
                         <div class="col-lg-8 form-element">
                             <div class="form-group">
+                                <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Pick a date for your coffee:</label>
+
+                                <input
+                                        class="form-control datetimepicker coffee-date input col-lg-4"
+                                        placeholder="pick a date (yyyy-mm-dd)"
+                                        name="date"
+                                        ngbDatepicker
+                                        #d="ngbDatepicker"
+                                        (dateSelect)="createTableModel.onDateSelect($event)"
+                                        [minDate]="createTableModel.datetime.minDate"
+                                        (click)="d.toggle()"
+                                />
+
+                                <input
+                                        class="form-control coffee-time input col-lg-7"
+                                        placeholder="pick a time, in your own words"
+                                        name="time"
+                                        maxlength="100"
+                                        [(ngModel)]="createTableModel.datetime.time"
+                                />
+
+                                <span class="info-message">Your friends might not be ready right now so send them a date and the time you want to meet</span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
                                 <label class="col-lg-8 label" for="create-room-friends-message">Say hi to your friends with a brief message:</label>
                                 <span class="max-length-message">Maximum number of characters is 100. Currently available {{100 - createTableModel.briefMessage.length}}</span>
 

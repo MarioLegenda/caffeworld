@@ -61,6 +61,17 @@
       margin-left: 14px;
     }
 
+    .info-message {
+      width: 100%;
+      display: block;
+      float: left;
+      font-size: 0.9em;
+
+      margin-left: 14px;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
     .field-info {
       position: absolute;
       color: gray;
@@ -184,5 +195,9 @@
   .btn:disabled {
     background-color: #fcc0a6;
     opacity: 1 !important;
+  }
+
+  .coffee-date {
+    float: left !important;
   }
 }
