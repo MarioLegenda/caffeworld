@@ -1,3 +1,5 @@
+@import "../../../../styles/variables.scss";
+
 .create-room {
   margin-top: 50px;
 
@@ -21,10 +23,15 @@
     margin: 0 auto;
 
     margin-bottom: 20px;
+
+    a {
+      color: $orangeBold;
+      font-weight: bold;
+    }
   }
 
   .intro-text:last-child {
-    color: #f46525;
+    color: $orangeBold;
     font-weight: bold;
     font-family: "Amatic SC", cursive;
     font-size: 2.5em;
@@ -47,7 +54,7 @@
     .input-info-message {
       display: block;
       float: right;
-      color: #f46525;
+      color: $orangeBold;
       font-style: italic;
       text-align: right;
     }
@@ -122,7 +129,7 @@
         width: 200px;
         display: block;
         float: left;
-        color: #f46525;
+        color: $orangeBold;
 
         margin-left: 35%;
 

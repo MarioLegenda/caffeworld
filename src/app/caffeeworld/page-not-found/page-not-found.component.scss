@@ -1,3 +1,6 @@
+@import "../../../styles/variables.scss";
+
+
 .not-found {
   margin-top: 50px;
 
@@ -5,11 +8,11 @@
     font-family: "Amatic SC", cursive;
     font-size: 5em;
     text-align: center;
-    color: #f46525;
+    color: $orangeBold;
   }
 
   .not-found-status {
-    color: #f46525;
+    color: $orangeBold;
     font-weight: bolder;
     font-size: 10em;
     text-align: center;
