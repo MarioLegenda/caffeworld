@@ -10,6 +10,7 @@ import {CreateComponent} from './table/create/create.component';
 import {RouterModule} from '@angular/router';
 import InvitationService from './table/create/service/InvitationService';
 import {BrowserModule} from '@angular/platform-browser';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import {BrowserModule} from '@angular/platform-browser';
         CaffeeworldComponent,
         LandingComponent,
         CreateComponent,
+        PageNotFoundComponent,
     ],
     providers: [
         {
