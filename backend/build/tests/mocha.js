@@ -1,4 +1,4 @@
-require('dotenv').config();
+const config = require('dotenv').config();
 if (process.env.ENV !== 'test') {
     console.warn('It is forbidden to run tests in any other environment other than test. Running environment is ' + process.env.ENV);
     process.exit(1);
