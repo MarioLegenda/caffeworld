@@ -1,8 +1,8 @@
-import ITableRepository from "../ITableRepository";
-import ITable from "../ITable";
+import ITableRepository from "../contract/ITableRepository";
+import ITable from "../contract/ITable";
 import {inject, injectable} from "inversify";
-import ISource from "../contract/ISource";
-import {Sources} from "../Sources";
+import ISource from "../../source/contract/ISource";
+import {Sources} from "../../source/Sources";
 import {Symbols} from "../../container/Symbols";
 
 @injectable()

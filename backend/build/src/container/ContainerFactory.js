@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const RedisSource_1 = __importDefault(require("../source/redis/RedisSource"));
 const Symbols_1 = require("./Symbols");
-const TableRepository_1 = __importDefault(require("../source/implementation/TableRepository"));
+const TableRepository_1 = __importDefault(require("../repository/implementation/TableRepository"));
 const TableInterpreter_1 = __importDefault(require("../interpreter/TableInterpreter"));
 const CreateTableBoundary_1 = __importDefault(require("../boundry/implementation/CreateTableBoundary"));
 class ContainerFactory {

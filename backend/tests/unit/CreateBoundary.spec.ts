@@ -12,6 +12,6 @@ const factory = new ContainerFactory();
 factory.create();
 factory.bindDependencies();
 
-it('should create a new boundary', function(done) {
+it('should create a new table', function(done) {
 
 });
