@@ -9,6 +9,7 @@ const Symbols_1 = require("./Symbols");
 const TableRepository_1 = __importDefault(require("../repository/implementation/TableRepository"));
 const TableInterpreter_1 = __importDefault(require("../interpreter/TableInterpreter"));
 const CreateTableBoundary_1 = __importDefault(require("../boundry/implementation/CreateTableBoundary"));
+const WebPresenter_1 = __importDefault(require("../presenter/WebPresenter"));
 class ContainerFactory {
     constructor() {
         this.inversify = null;
@@ -32,7 +33,7 @@ class ContainerFactory {
                 }
             };
         });
-        this.inversify.bind(Symbols_1.Symbols.WebPresenter).toFactory((context) => {
+        this.inversify.bind(Symbols_1.Symbols.PresenterFactory).toFactory((context) => {
             return (type) => {
                 switch (type) {
                     case 1: {
@@ -56,6 +57,7 @@ class ContainerFactory {
                 }
             };
         });
+        this.inversify.bind(Symbols_1.Symbols.WebPresenter).to(WebPresenter_1.default);
         this.inversify.bind(Symbols_1.Symbols.TableRepository).to(TableRepository_1.default);
         this.inversify.bind(Symbols_1.Symbols.RedisSource).to(RedisSource_1.default);
         this.inversify.bind(Symbols_1.Symbols.TableInterpreter).to(TableInterpreter_1.default);

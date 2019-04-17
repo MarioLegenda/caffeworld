@@ -19,12 +19,13 @@ let TableRepository = class TableRepository {
     constructor(factory) {
         this.source = factory(Sources_1.Sources.Redis);
     }
-    getTable(identifier) {
+    getTable(identifier, callback) {
+        this.source.getObject(identifier, callback);
     }
-    hasTable(identifier) {
+    hasTable(identifier, callback) {
         return false;
     }
-    updateTable(identifier, data) {
+    updateTable(identifier, data, callback) {
     }
 };
 TableRepository = __decorate([

@@ -15,14 +15,15 @@ export default class TableRepository implements ITableRepository {
         this.source = factory(Sources.Redis);
     }
 
-    getTable(identifier: string) {
+    getTable(identifier: string, callback: Function) {
+        this.source.getObject(identifier, callback);
     }
 
-    hasTable(identifier: string): boolean {
+    hasTable(identifier: string, callback: Function): boolean {
         return false;
     }
 
-    updateTable(identifier: string, data: ITable) {
+    updateTable(identifier: string, data: ITable, callback: Function) {
     }
 
 }

@@ -17,7 +17,12 @@ const Symbols_1 = require("../container/Symbols");
 const BoundaryType_1 = require("../boundry/BoundaryType");
 let WebPresenter = class WebPresenter {
     constructor(boundaryFactory) {
-        this.boundary = boundaryFactory(BoundaryType_1.BoundaryType.CreateTableBoundary);
+        this.boundaryFactory = boundaryFactory;
+    }
+    createTable(data) {
+        const createTableModel = data;
+        const boundary = this.boundaryFactory(BoundaryType_1.BoundaryType.CreateTableBoundary);
+        return boundary.createTable(createTableModel);
     }
 };
 WebPresenter = __decorate([

@@ -6,7 +6,7 @@ import ITableRepository from "../repository/contract/ITableRepository";
 import TableRepository from "../repository/implementation/TableRepository";
 import TableInterpreter from "../interpreter/TableInterpreter";
 import CreateTableBoundary from "../boundry/implementation/CreateTableBoundary";
-import IBoundary from "../boundry/IBoundary";
+import IBoundary from "../boundry/contract/IBoundary";
 import WebPresenter from "../presenter/WebPresenter";
 
 export default class ContainerFactory {
@@ -35,7 +35,7 @@ export default class ContainerFactory {
             };
         });
 
-        this.inversify.bind<interfaces.Factory<WebPresenter>>(Symbols.WebPresenter).toFactory<WebPresenter>((context: interfaces.Context) => {
+        this.inversify.bind<interfaces.Factory<WebPresenter>>(Symbols.PresenterFactory).toFactory<WebPresenter>((context: interfaces.Context) => {
             return (type: number) => {
                 switch (type) {
                     case 1: {
@@ -63,10 +63,12 @@ export default class ContainerFactory {
             };
         });
 
+        this.inversify.bind<WebPresenter>(Symbols.WebPresenter).to(WebPresenter);
         this.inversify.bind<ITableRepository>(Symbols.TableRepository).to(TableRepository);
         this.inversify.bind<ISource>(Symbols.RedisSource).to(RedisSource);
         this.inversify.bind<TableInterpreter>(Symbols.TableInterpreter).to(TableInterpreter);
         this.inversify.bind<IBoundary>(Symbols.CreateTableBoundary).to(CreateTableBoundary);
+
     }
 
     get container() {

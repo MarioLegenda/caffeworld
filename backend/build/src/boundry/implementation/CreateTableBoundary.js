@@ -22,7 +22,7 @@ let CreateTableBoundary = class CreateTableBoundary {
     constructor(tableInterpreter) {
         this.tableInterpreter = tableInterpreter;
     }
-    getResult() {
+    createTable(createTableModel) {
         return { success: true, data: null };
     }
 };

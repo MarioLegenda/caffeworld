@@ -1,4 +1,4 @@
-import ITableRepository from "../source/ITableRepository";
+import ITableRepository from "../repository/contract/ITableRepository";
 import {inject, injectable} from "inversify";
 import {Symbols} from "../container/Symbols";
 

@@ -11,12 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var _a;
-const ITableRepository_1 = __importDefault(require("../source/ITableRepository"));
 const inversify_1 = require("inversify");
 const Symbols_1 = require("../container/Symbols");
 let TableInterpreter = class TableInterpreter {
@@ -29,6 +24,6 @@ let TableInterpreter = class TableInterpreter {
 TableInterpreter = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(Symbols_1.Symbols.TableRepository)),
-    __metadata("design:paramtypes", [typeof (_a = typeof ITableRepository_1.default !== "undefined" && ITableRepository_1.default) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [Object])
 ], TableInterpreter);
 exports.default = TableInterpreter;

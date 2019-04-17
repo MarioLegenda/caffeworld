@@ -1,8 +1,9 @@
-import IBoundary from "../IBoundary";
+import IBoundary from "../contract/IBoundary";
 import {inject, injectable} from "inversify";
 import IBoundaryResult from "../model/contract/IBoundaryResult";
 import TableInterpreter from "../../interpreter/TableInterpreter";
 import {Symbols} from "../../container/Symbols";
+import ICreateTable from "../model/contract/ICreateTable";
 
 @injectable()
 export default class CreateTableBoundary implements IBoundary {
@@ -14,7 +15,7 @@ export default class CreateTableBoundary implements IBoundary {
         this.tableInterpreter = tableInterpreter;
     }
 
-    getResult(): IBoundaryResult {
+    createTable(createTableModel: ICreateTable): IBoundaryResult {
         return {success: true, data: null}
     }
 }

@@ -5,5 +5,6 @@ export const Symbols = {
     BoundaryFactory: Symbol.for('Factory<IBoundary>'),
     TableInterpreter: Symbol.for('TableInterpreter'),
     CreateTableBoundary: Symbol.for('CreateTableBoundary'),
+    PresenterFactory: Symbol.for('Factory<Presenter>'),
     WebPresenter: Symbol.for('WebPresenter'),
 };
