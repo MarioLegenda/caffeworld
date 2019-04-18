@@ -1,1 +1,1 @@
-#### Still in development. Checkout the dev branch.
+#### Still in development. Working on the dev branch.
