@@ -18,7 +18,7 @@ let TableInterpreter = class TableInterpreter {
     constructor(repository) {
         this.repository = repository;
     }
-    createTable() {
+    createTable(createTableModel, callback) {
     }
 };
 TableInterpreter = __decorate([

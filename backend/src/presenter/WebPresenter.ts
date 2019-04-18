@@ -16,11 +16,11 @@ export default class WebPresenter {
         this.boundaryFactory = boundaryFactory;
     }
 
-    createTable(data: object) {
+    createTable(data: object, callback: Function) {
         const createTableModel: ICreateTable = data as CreateTable;
 
         const boundary: ICreateTableBoundary = this.boundaryFactory(BoundaryType.CreateTableBoundary);
 
-        return boundary.createTable(createTableModel);
+        return boundary.createTable(createTableModel, callback);
     }
 }

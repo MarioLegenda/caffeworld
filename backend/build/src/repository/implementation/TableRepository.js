@@ -19,6 +19,9 @@ let TableRepository = class TableRepository {
     constructor(factory) {
         this.source = factory(Sources_1.Sources.Redis);
     }
+    createTable(identifier, callback) {
+        this.createTable(identifier, callback);
+    }
     getTable(identifier, callback) {
         this.source.getObject(identifier, callback);
     }

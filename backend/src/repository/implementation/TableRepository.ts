@@ -15,6 +15,10 @@ export default class TableRepository implements ITableRepository {
         this.source = factory(Sources.Redis);
     }
 
+    createTable(identifier: string, callback: Function) {
+        this.createTable(identifier, callback);
+    }
+
     getTable(identifier: string, callback: Function) {
         this.source.getObject(identifier, callback);
     }

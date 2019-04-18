@@ -22,8 +22,8 @@ let CreateTableBoundary = class CreateTableBoundary {
     constructor(tableInterpreter) {
         this.tableInterpreter = tableInterpreter;
     }
-    createTable(createTableModel) {
-        return { success: true, data: null };
+    createTable(createTableModel, callback) {
+        return this.tableInterpreter.createTable(createTableModel, callback);
     }
 };
 CreateTableBoundary = __decorate([

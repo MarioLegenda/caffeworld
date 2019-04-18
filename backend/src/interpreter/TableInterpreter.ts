@@ -1,6 +1,8 @@
 import ITableRepository from "../repository/contract/ITableRepository";
 import {inject, injectable} from "inversify";
 import {Symbols} from "../container/Symbols";
+import ICreateTable from "../boundry/model/contract/ICreateTable";
+import IBoundaryResult from "../boundry/model/contract/IBoundaryResult";
 
 @injectable()
 export default class TableInterpreter {
@@ -12,7 +14,7 @@ export default class TableInterpreter {
         this.repository = repository;
     }
 
-    createTable() {
+    createTable(createTableModel: ICreateTable, callback: Function) {
 
     }
 }

@@ -19,10 +19,10 @@ let WebPresenter = class WebPresenter {
     constructor(boundaryFactory) {
         this.boundaryFactory = boundaryFactory;
     }
-    createTable(data) {
+    createTable(data, callback) {
         const createTableModel = data;
         const boundary = this.boundaryFactory(BoundaryType_1.BoundaryType.CreateTableBoundary);
-        return boundary.createTable(createTableModel);
+        return boundary.createTable(createTableModel, callback);
     }
 };
 WebPresenter = __decorate([

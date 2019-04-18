@@ -1,6 +1,5 @@
 import IBoundary from "../contract/IBoundary";
 import {inject, injectable} from "inversify";
-import IBoundaryResult from "../model/contract/IBoundaryResult";
 import TableInterpreter from "../../interpreter/TableInterpreter";
 import {Symbols} from "../../container/Symbols";
 import ICreateTable from "../model/contract/ICreateTable";
@@ -15,7 +14,9 @@ export default class CreateTableBoundary implements IBoundary {
         this.tableInterpreter = tableInterpreter;
     }
 
-    createTable(createTableModel: ICreateTable): IBoundaryResult {
-        return {success: true, data: null}
+    createTable(createTableModel: ICreateTable, callback: Function) {
+
+
+        return this.tableInterpreter.createTable(createTableModel, callback);
     }
 }

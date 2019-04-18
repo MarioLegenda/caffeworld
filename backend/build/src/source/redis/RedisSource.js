@@ -7,10 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
-var redis = require("redis"), client = redis.createClient();
+const redis = require("redis"), client = redis.createClient();
 let RedisSource = class RedisSource {
     getObject(identifier, callback) {
         return undefined;
+    }
+    async asyncGetObject() {
+        client.set();
     }
 };
 RedisSource = __decorate([
