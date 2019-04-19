@@ -38,6 +38,7 @@
     "rellax": "1.4.0",
     "rxjs": "6.4.0",
     "rxjs-compat": "6.4.0",
+    "socket.io-client": "^2.2.0",
     "tslib": "1.9.3",
     "zone.js": "0.8.29"
   },
@@ -48,6 +49,7 @@
     "@angular/language-service": "7.2.9",
     "@types/jasmine": "3.3.9",
     "@types/node": "11.11.3",
+    "@types/socket.io": "^2.1.2",
     "codelyzer": "5.0.0-beta.0",
     "jasmine-core": "3.3.0",
     "jasmine-spec-reporter": "4.2.1",

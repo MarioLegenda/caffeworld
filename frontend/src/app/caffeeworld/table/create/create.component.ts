@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import InvitationService from './service/InvitationService';
-import CreateTableModel from '../model/CreateTableModel';
+import CreateTableModel from '../../infrastructure/model/CreateTableModel';
+import {TableSocketService} from "../../infrastructure/TableSocketService";
 
 @Component({
     selector: 'app-create-room',
@@ -13,7 +14,10 @@ export class CreateComponent {
 
     @Output() open: EventEmitter<any> = new EventEmitter();
 
-    constructor(private invitationService: InvitationService) {
+    constructor(
+        private invitationService: InvitationService,
+        private tableSocketService: TableSocketService
+    ) {
         this.invitationService.clear();
         this.invitationService.init(1);
     }
@@ -25,12 +29,10 @@ export class CreateComponent {
     onSubmit(isValid: boolean) {
         if (isValid) {
             this.createTableModel.invitations = this.invitationService.asArray;
+            // @ts-ignore
+            this.tableSocketService.emitCreateTable(this.createTableModel).subscribe((data) => {
 
-            console.log(this.createTableModel);
+            })
         }
-    }
-
-    get debugging() {
-        return JSON.stringify(this.createTableModel);
     }
 }

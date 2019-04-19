@@ -11,6 +11,9 @@ export function onCreateTable(data: object, cb: Function) {
 }
 
 export function onSocketConnect(socket: Socket) {
+
+    console.log('Socket connection established');
+
     socket.on('disconnect', onSocketDisconnect);
 }
 

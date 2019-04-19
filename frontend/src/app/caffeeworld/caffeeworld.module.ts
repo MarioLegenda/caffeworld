@@ -12,6 +12,8 @@ import InvitationService from './table/create/service/InvitationService';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
+import {TableSocketService} from "./infrastructure/TableSocketService";
+import AppSocket from "./infrastructure/AppSocket";
 
 @NgModule({
     imports: [
@@ -33,7 +35,12 @@ import {AboutComponent} from './about/about.component';
         {
             provide: InvitationService,
             useFactory: () => new InvitationService(5),
-        }
+        },
+        {
+            provide: AppSocket,
+            useFactory: () => AppSocket.create('http://11.11.11.12/', {}),
+        },
+        {provide: TableSocketService, useClass: TableSocketService}
     ]
 })
 export class CaffeeworldModule { }

@@ -31,36 +31,6 @@
                     <div class="row">
                         <div class="col-lg-8 form-element">
                             <div class="form-group">
-                                <label class="col-lg-2 label" for="create-room-email">Email:</label>
-                                <input
-                                        class="col-lg-8 input form-control"
-                                        type="email"
-                                        id="create-room-email"
-                                        placeholder="your email but its optional"
-                                        email="true"
-                                        name="email"
-                                        #email="ngModel"
-                                        maxlength="254"
-                                        [(ngModel)]="createTableModel.email"
-                                />
-
-                                <ngb-alert *ngIf="!email.valid && email.touched && email.value" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
-                                    <div class="container">
-                                        <p>Your email is invalid</p>
-                                    </div>
-                                </ngb-alert>
-
-                                <ngb-alert *ngIf="email.errors?.maxlength" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
-                                    <div class="container">
-                                        <p>Maximum number of characters in email is 254</p>
-                                    </div>
-                                </ngb-alert>
-
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 form-element">
-                            <div class="form-group">
                                 <label class="col-lg-2 label" for="create-room-name">Nickname:<span class="label-mandatory">*</span></label>
                                 <input
                                         class="col-lg-8 input form-control"
@@ -86,6 +56,36 @@
                                         <p>Your nickname is too big. Maximum number of characters in a nickname is 255</p>
                                     </div>
                                 </ngb-alert>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 form-element">
+                            <div class="form-group">
+                                <label class="col-lg-2 label" for="create-room-email">Email:</label>
+                                <input
+                                        class="col-lg-8 input form-control"
+                                        type="email"
+                                        id="create-room-email"
+                                        placeholder="your email but its optional"
+                                        email="true"
+                                        name="email"
+                                        #email="ngModel"
+                                        maxlength="254"
+                                        [(ngModel)]="createTableModel.email"
+                                />
+
+                                <ngb-alert *ngIf="!email.valid && email.touched && email.value" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Your email is invalid</p>
+                                    </div>
+                                </ngb-alert>
+
+                                <ngb-alert *ngIf="email.errors?.maxlength" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
+                                    <div class="container">
+                                        <p>Maximum number of characters in email is 254</p>
+                                    </div>
+                                </ngb-alert>
+
                             </div>
                         </div>
 
