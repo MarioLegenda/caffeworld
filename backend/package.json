@@ -17,7 +17,6 @@
     "express": "^4.16.4",
     "inversify": "^5.0.1",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
@@ -32,7 +31,7 @@
     "@types/socket.io": "^2.1.2",
     "chai": "^4.2.0",
     "faker": "^4.1.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "nodemon": "^1.18.9",
     "requirejs": "^2.3.6",
     "typescript": "^3.3.1"
