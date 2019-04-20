@@ -8,13 +8,10 @@ import { LandingComponent } from './landing/landing.component';
 import { CaffeeworldComponent } from './caffeeworld.component';
 import {CreateComponent} from './table/create/create.component';
 import {RouterModule} from '@angular/router';
-import InvitationService from './table/create/service/InvitationService';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import {TableSocketService} from "./infrastructure/TableSocketService";
-import AppSocket from "./infrastructure/AppSocket";
-import ObservableFactory from "./infrastructure/ObservableFactory";
 
 @NgModule({
     imports: [

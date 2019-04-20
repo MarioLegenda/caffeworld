@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import InvitationService from './service/InvitationService';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {TableSocketService} from "../../infrastructure/TableSocketService";
 
@@ -13,16 +12,8 @@ export class CreateComponent {
     formDisabled = true;
 
     constructor(
-        private invitationService: InvitationService,
         private tableSocketService: TableSocketService
-    ) {
-        this.invitationService.clear();
-        this.invitationService.init(1);
-    }
-
-    addInvitationField() {
-        this.invitationService.update();
-    }
+    ) {}
 
     onSubmit(isValid: boolean) {
         if (isValid) {

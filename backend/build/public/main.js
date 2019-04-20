@@ -350,12 +350,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _caffeeworld_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./caffeeworld.component */ "./src/app/caffeeworld/caffeeworld.component.ts");
 /* harmony import */ var _table_create_create_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./table/create/create.component */ "./src/app/caffeeworld/table/create/create.component.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _table_create_service_InvitationService__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./table/create/service/InvitationService */ "./src/app/caffeeworld/table/create/service/InvitationService.ts");
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
-/* harmony import */ var _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
-/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
-/* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
-
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+/* harmony import */ var _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
+/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
+/* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
 
 
 
@@ -378,7 +376,7 @@ var CaffeeworldModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__["BrowserModule"],
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_10__["BrowserModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModule"],
                 jw_bootstrap_switch_ng2__WEBPACK_IMPORTED_MODULE_5__["JwBootstrapSwitchNg2Module"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_9__["RouterModule"],
@@ -387,15 +385,11 @@ var CaffeeworldModule = /** @class */ (function () {
                 _caffeeworld_component__WEBPACK_IMPORTED_MODULE_7__["CaffeeworldComponent"],
                 _landing_landing_component__WEBPACK_IMPORTED_MODULE_6__["LandingComponent"],
                 _table_create_create_component__WEBPACK_IMPORTED_MODULE_8__["CreateComponent"],
-                _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_12__["PageNotFoundComponent"],
-                _about_about_component__WEBPACK_IMPORTED_MODULE_13__["AboutComponent"]
+                _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_11__["PageNotFoundComponent"],
+                _about_about_component__WEBPACK_IMPORTED_MODULE_12__["AboutComponent"]
             ],
             providers: [
-                {
-                    provide: _table_create_service_InvitationService__WEBPACK_IMPORTED_MODULE_10__["default"],
-                    useFactory: function () { return new _table_create_service_InvitationService__WEBPACK_IMPORTED_MODULE_10__["default"](5); },
-                },
-                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] },
+                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__["TableSocketService"] },
             ]
         })
     ], CaffeeworldModule);
@@ -696,26 +690,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateComponent", function() { return CreateComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _service_InvitationService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./service/InvitationService */ "./src/app/caffeeworld/table/create/service/InvitationService.ts");
-/* harmony import */ var _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../infrastructure/model/CreateTableModel */ "./src/app/caffeeworld/infrastructure/model/CreateTableModel.ts");
-/* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
-
+/* harmony import */ var _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../infrastructure/model/CreateTableModel */ "./src/app/caffeeworld/infrastructure/model/CreateTableModel.ts");
+/* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
 
 
 
 
 var CreateComponent = /** @class */ (function () {
-    function CreateComponent(invitationService, tableSocketService) {
-        this.invitationService = invitationService;
+    function CreateComponent(tableSocketService) {
         this.tableSocketService = tableSocketService;
-        this.createTableModel = new _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_3__["default"]();
+        this.createTableModel = new _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_2__["default"]();
         this.formDisabled = true;
-        this.invitationService.clear();
-        this.invitationService.init(1);
     }
-    CreateComponent.prototype.addInvitationField = function () {
-        this.invitationService.update();
-    };
     CreateComponent.prototype.onSubmit = function (isValid) {
         if (isValid) {
             this.tableSocketService.emitCreateTable(this.createTableModel);
@@ -727,120 +713,11 @@ var CreateComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./create.component.html */ "./src/app/caffeeworld/table/create/create.component.html"),
             styles: [__webpack_require__(/*! ./create.component.scss */ "./src/app/caffeeworld/table/create/create.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_service_InvitationService__WEBPACK_IMPORTED_MODULE_2__["default"],
-            _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_4__["TableSocketService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_3__["TableSocketService"]])
     ], CreateComponent);
     return CreateComponent;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/app/caffeeworld/table/create/service/InvitationService.ts":
-/*!***********************************************************************!*\
-  !*** ./src/app/caffeeworld/table/create/service/InvitationService.ts ***!
-  \***********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var InvitationService = /** @class */ (function () {
-    function InvitationService(maxInvites) {
-        this.maxInvites = maxInvites;
-        this.currentAdded = 0;
-        this.addedTracker = [];
-        this.invitations = {};
-        this.emailValidRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        this.initCurrentAdded = this.currentAdded;
-    }
-    InvitationService.prototype.init = function (currentAdded) {
-        this.currentAdded = currentAdded;
-        this.addedTracker.push(currentAdded);
-        this.initCurrentAdded = currentAdded;
-    };
-    InvitationService.prototype.addInvitation = function ($event, index) {
-        this.invitations[index] = $event.target.value;
-    };
-    InvitationService.prototype.isInvitationValidByIndex = function (index) {
-        return this.emailValidRegex.test(this.getInvitation(index));
-    };
-    InvitationService.prototype.isInvitationValidByString = function (invitation) {
-        return this.emailValidRegex.test(invitation);
-    };
-    InvitationService.prototype.getInvitation = function (index) {
-        return this.invitations[index];
-    };
-    InvitationService.prototype.hasInvitation = function (index) {
-        return this.invitations.hasOwnProperty(index);
-    };
-    InvitationService.prototype.remove = function (index) {
-        this.addedTracker.splice(this.addedTracker.indexOf(index), 1);
-        this.currentAdded--;
-        if (this.invitations.hasOwnProperty(index))
-            delete this.invitations[index];
-    };
-    InvitationService.prototype.update = function () {
-        if (this.valid) {
-            this.currentAdded++;
-            this.addedTracker.push(this.currentAdded);
-        }
-    };
-    InvitationService.prototype.clear = function () {
-        this.currentAdded = this.initCurrentAdded;
-        this.addedTracker = [];
-    };
-    Object.defineProperty(InvitationService.prototype, "current", {
-        get: function () {
-            return this.currentAdded;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(InvitationService.prototype, "valid", {
-        get: function () {
-            return this.currentAdded < this.maxInvites;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(InvitationService.prototype, "tracker", {
-        get: function () {
-            return this.addedTracker;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(InvitationService.prototype, "onInvitationChange", {
-        get: function () {
-            return this.invitations;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(InvitationService.prototype, "asArray", {
-        get: function () {
-            var _this = this;
-            var values = Object.values(this.invitations);
-            return values.filter(function (email) {
-                return _this.isInvitationValidByString(email);
-            });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    InvitationService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Number])
-    ], InvitationService);
-    return InvitationService;
-}());
-/* harmony default export */ __webpack_exports__["default"] = (InvitationService);
 
 
 /***/ }),
