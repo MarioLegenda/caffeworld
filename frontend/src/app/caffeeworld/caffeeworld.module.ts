@@ -33,10 +33,6 @@ import ObservableFactory from "./infrastructure/ObservableFactory";
         AboutComponent
     ],
     providers: [
-        {
-            provide: InvitationService,
-            useFactory: () => new InvitationService(5),
-        },
         {provide: TableSocketService, useClass: TableSocketService},
     ]
 })
