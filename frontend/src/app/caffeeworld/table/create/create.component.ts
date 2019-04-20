@@ -26,13 +26,7 @@ export class CreateComponent {
 
     onSubmit(isValid: boolean) {
         if (isValid) {
-            this.createTableModel.invitations = this.invitationService.asArray;
-
             this.tableSocketService.emitCreateTable(this.createTableModel);
-
-            this.tableSocketService.onCreateTable().subscribe((data) => {
-                console.log(data);
-            });
         }
     }
 }

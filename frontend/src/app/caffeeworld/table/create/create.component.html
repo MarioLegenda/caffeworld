@@ -61,36 +61,6 @@
 
                         <div class="col-lg-8 form-element">
                             <div class="form-group">
-                                <label class="col-lg-2 label" for="create-room-email">Email:</label>
-                                <input
-                                        class="col-lg-8 input form-control"
-                                        type="email"
-                                        id="create-room-email"
-                                        placeholder="your email but its optional"
-                                        email="true"
-                                        name="email"
-                                        #email="ngModel"
-                                        maxlength="254"
-                                        [(ngModel)]="createTableModel.email"
-                                />
-
-                                <ngb-alert *ngIf="!email.valid && email.touched && email.value" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
-                                    <div class="container">
-                                        <p>Your email is invalid</p>
-                                    </div>
-                                </ngb-alert>
-
-                                <ngb-alert *ngIf="email.errors?.maxlength" class="col-lg-8 error unrecoverable-error" type="danger" [dismissible]="false">
-                                    <div class="container">
-                                        <p>Maximum number of characters in email is 254</p>
-                                    </div>
-                                </ngb-alert>
-
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 form-element">
-                            <div class="form-group">
                                 <label class="col-lg-2 label" for="create-room-subject">Subject:</label>
 
                                 <input
@@ -136,66 +106,6 @@
                                 </ngb-alert>
                             </div>
 
-                        </div>
-
-                        <div class="col-lg-8 form-element">
-                            <div class="form-group">
-                                <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Invite up to 5 of your friends to the table:</label>
-
-                                <div *ngFor="let index of invitationService.tracker" class="multiple-input-wrapper col-lg-8">
-                                    <input
-                                            class="col-lg-12 input invitation-input form-control"
-                                            id="create-room-add-email"
-                                            placeholder="invite your friend with an email"
-                                            [name]="'email-' + index"
-                                            (blur)="invitationService.addInvitation($event, index)">
-                                    <i (click)="invitationService.remove(index)" *ngIf="invitationService.current !== 1" class="now-ui-icons ui-1_simple-remove"></i>
-
-                                    <ngb-alert *ngIf="invitationService.onInvitationChange && invitationService.hasInvitation(index) && !invitationService.isInvitationValidByIndex(index)" class="col-lg-12 error unrecoverable-error" type="danger" [dismissible]="false">
-                                        <div class="container">
-                                            <p>Invitation email '{{invitationService.getInvitation(index)}}' is not valid</p>
-                                        </div>
-                                    </ngb-alert>
-                                </div>
-
-                                <ngb-alert *ngIf="!invitationService.valid" class="col-lg-8 error invitation-error" type="info" [dismissible]="false">
-                                    <div class="container">
-                                        <i class="now-ui-icons travel_info"></i>
-                                        <p>Sorry, but you can only add up to 5 friends</p>
-                                    </div>
-                                </ngb-alert>
-
-                                <div class="col-lg-12 invitation-button-wrapper">
-                                    <button (click)="addInvitationField()" type="button" class="btn btn-neutral add-invitation-button">Add another friend</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 form-element">
-                            <div class="form-group">
-                                <label class="col-lg-12 label invitation-label" for="create-room-subject-description">Pick a date for your coffee:</label>
-
-                                <input
-                                        class="form-control datetimepicker coffee-date input col-lg-4"
-                                        placeholder="pick a date (yyyy-mm-dd)"
-                                        name="date"
-                                        ngbDatepicker
-                                        #d="ngbDatepicker"
-                                        (dateSelect)="createTableModel.onDateSelect($event)"
-                                        [minDate]="createTableModel.datetime.minDate"
-                                        (click)="d.toggle()"
-                                />
-
-                                <input
-                                        class="form-control coffee-time input col-lg-7"
-                                        placeholder="pick a time, in your own words"
-                                        name="time"
-                                        maxlength="100"
-                                        [(ngModel)]="createTableModel.datetime.time"
-                                />
-
-                                <span class="info-message">Your friends might not be ready right now so send them a date and the time you want to meet</span>
-                            </div>
                         </div>
 
                         <div class="col-lg-8 form-element">
