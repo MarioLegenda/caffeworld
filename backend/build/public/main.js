@@ -58,18 +58,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var rxjs_add_operator_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/add/operator/filter */ "./node_modules/rxjs-compat/_esm5/add/operator/filter.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./caffeeworld/infrastructure/ObservableFactory */ "./src/app/caffeeworld/infrastructure/ObservableFactory.ts");
+
+
 
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent() {
+    function AppComponent(router, observableFactory) {
+        var _this = this;
+        this.router = router;
+        this.observableFactory = observableFactory;
+        this.router.events.subscribe(function (event) {
+            if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_3__["NavigationEnd"]) {
+                if (_this.previousRoute === '/table/create') {
+                    _this.observableFactory.unsubscribe();
+                }
+                _this.previousRoute = event.url;
+            }
+        });
     }
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-root',
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.scss */ "./src/app/app.component.scss")]
-        })
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
+            _caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_4__["default"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -99,8 +116,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _shared_navbar_navbar_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./shared/navbar/navbar.component */ "./src/app/shared/navbar/navbar.component.ts");
 /* harmony import */ var _caffeeworld_caffeeworld_module__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./caffeeworld/caffeeworld.module */ "./src/app/caffeeworld/caffeeworld.module.ts");
+/* harmony import */ var _caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./caffeeworld/infrastructure/ObservableFactory */ "./src/app/caffeeworld/infrastructure/ObservableFactory.ts");
+/* harmony import */ var _caffeeworld_infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./caffeeworld/infrastructure/AppSocket */ "./src/app/caffeeworld/infrastructure/AppSocket.ts");
 
  // this is needed!
+
+
 
 
 
@@ -128,7 +149,14 @@ var AppModule = /** @class */ (function () {
                 _components_components_module__WEBPACK_IMPORTED_MODULE_7__["ComponentsModule"],
                 _caffeeworld_caffeeworld_module__WEBPACK_IMPORTED_MODULE_10__["CaffeeworldModule"]
             ],
-            providers: [],
+            providers: [
+                {
+                    provide: _caffeeworld_infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_12__["default"],
+                    useFactory: function (observableFactory) { return new _caffeeworld_infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_12__["default"]('http://11.11.11.12/', { path: '/socket', reconnectionAttempts: 5 }, observableFactory); },
+                    deps: [_caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_11__["default"]]
+                },
+                { provide: _caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_11__["default"], useClass: _caffeeworld_infrastructure_ObservableFactory__WEBPACK_IMPORTED_MODULE_11__["default"] }
+            ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"]]
         })
     ], AppModule);
@@ -327,8 +355,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
 /* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
 /* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
-/* harmony import */ var _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./infrastructure/AppSocket */ "./src/app/caffeeworld/infrastructure/AppSocket.ts");
-
 
 
 
@@ -369,11 +395,7 @@ var CaffeeworldModule = /** @class */ (function () {
                     provide: _table_create_service_InvitationService__WEBPACK_IMPORTED_MODULE_10__["default"],
                     useFactory: function () { return new _table_create_service_InvitationService__WEBPACK_IMPORTED_MODULE_10__["default"](5); },
                 },
-                {
-                    provide: _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"],
-                    useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12/', { path: '/socket', reconnectionAttempts: 5 }); },
-                },
-                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] }
+                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] },
             ]
         })
     ], CaffeeworldModule);
@@ -396,53 +418,80 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _ObservableFactory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ObservableFactory */ "./src/app/caffeeworld/infrastructure/ObservableFactory.ts");
 
 
 
 
 var AppSocket = /** @class */ (function () {
-    function AppSocket() {
-        this.observables = {};
+    function AppSocket(url, config, observableFactory) {
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1___default()(url, config);
+        this.observableFactory = observableFactory;
     }
-    AppSocket_1 = AppSocket;
-    AppSocket.create = function (url, config) {
-        if (AppSocket_1.singleton) {
-            return AppSocket_1.singleton;
-        }
-        AppSocket_1.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1___default()(url, config);
-        AppSocket_1.singleton = new AppSocket_1();
-        return AppSocket_1.singleton;
-    };
     AppSocket.prototype.emit = function (event, data) {
-        AppSocket_1.socket.emit(event, data);
+        this.socket.emit(event, data);
     };
     AppSocket.prototype.observe = function (event) {
-        this.createObservable(event);
-        AppSocket_1.socket.on(event, function () {
-            AppSocket_1.socket.emit('app.example');
+        var subject = this.observableFactory.createAndGetObservable(event);
+        this.socket.on(event, function (data) {
+            subject.next(data);
         });
-        return this.getObservable(event);
+        return this.observableFactory.getObservable(event);
     };
-    AppSocket.prototype.createObservable = function (event) {
-        if (!this.observables.hasOwnProperty(event)) {
-            this.observables[event] = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-        }
-    };
-    AppSocket.prototype.getObservable = function (event) {
-        if (!this.observables.hasOwnProperty(event)) {
-            throw new Error("Cannot get observable. Observable under name '" + event + "' does not exist");
-        }
-        return this.observables[event];
-    };
-    var AppSocket_1;
-    AppSocket = AppSocket_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Injectable"])()
+    AppSocket = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [String, Object, _ObservableFactory__WEBPACK_IMPORTED_MODULE_3__["default"]])
     ], AppSocket);
     return AppSocket;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (AppSocket);
+
+
+/***/ }),
+
+/***/ "./src/app/caffeeworld/infrastructure/ObservableFactory.ts":
+/*!*****************************************************************!*\
+  !*** ./src/app/caffeeworld/infrastructure/ObservableFactory.ts ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var ObservableFactory = /** @class */ (function () {
+    function ObservableFactory() {
+        this.observables = new Map();
+    }
+    ObservableFactory.prototype.createAndGetObservable = function (name) {
+        if (!this.observables.has(name)) {
+            this.observables.set(name, new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]());
+        }
+        return this.observables.get(name);
+    };
+    ObservableFactory.prototype.getObservable = function (name) {
+        return this.observables.get(name);
+    };
+    ObservableFactory.prototype.unsubscribe = function () {
+        this.observables.forEach(function (value, key) {
+            value.unsubscribe();
+        });
+        this.observables.clear();
+    };
+    ObservableFactory = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
+    ], ObservableFactory);
+    return ObservableFactory;
+}());
+/* harmony default export */ __webpack_exports__["default"] = (ObservableFactory);
 
 
 /***/ }),

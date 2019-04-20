@@ -22,7 +22,7 @@ let ObservableFactory = class ObservableFactory {
         return this.observables.get(name);
     }
     unsubscribe() {
-        this.observables.forEach((value, kex) => {
+        this.observables.forEach((value, key) => {
             value.unsubscribe();
         });
         this.observables.clear();

@@ -1,51 +1,36 @@
 import io from 'socket.io-client';
-import {Observable, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import * as SocketIO from "socket.io";
 import {Injectable} from "@angular/core";
+import ObservableFactory from "./ObservableFactory";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export default class AppSocket {
-    private static socket: SocketIO.Server;
-    private static singleton: AppSocket;
+    private socket: SocketIO.Server;
+    private observableFactory: ObservableFactory;
 
-    private observables = {};
-
-    static create(url: string, config: object): AppSocket {
-        if (AppSocket.singleton) {
-            return AppSocket.singleton;
-        }
-
-        AppSocket.socket = io(url, config);
-        AppSocket.singleton = new AppSocket();
-
-        return AppSocket.singleton;
+    constructor(
+        url: string,
+        config: object,
+        observableFactory: ObservableFactory
+    ) {
+        this.socket = io(url, config);
+        this.observableFactory = observableFactory;
     }
 
     emit(event: string, data: any): void {
-        AppSocket.socket.emit(event, data);
+        this.socket.emit(event, data);
     }
 
     observe(event: string): Observable<any> {
-        this.createObservable(event);
+        const subject = this.observableFactory.createAndGetObservable(event);
 
-        AppSocket.socket.on(event, () => {
-            AppSocket.socket.emit('app.example');
+        this.socket.on(event, (data) => {
+            subject.next(data);
         });
 
-        return this.getObservable(event);
-    }
-
-    private createObservable(event: string): void {
-        if (!this.observables.hasOwnProperty(event)) {
-            this.observables[event] = new Subject();
-        }
-    }
-
-    private getObservable(event: string): Subject<any> {
-        if (!this.observables.hasOwnProperty(event)) {
-            throw new Error(`Cannot get observable. Observable under name '${event}' does not exist`)
-        }
-
-        return this.observables[event];
+        return this.observableFactory.getObservable(event);
     }
 }

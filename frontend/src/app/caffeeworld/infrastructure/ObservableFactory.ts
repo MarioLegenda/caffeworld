@@ -1,7 +1,7 @@
+import {Injectable} from "@angular/core";
 import {Observable, Subject} from "rxjs";
-import {injectable} from "inversify";
 
-@injectable()
+@Injectable()
 export default class ObservableFactory {
     private observables = new Map();
 
