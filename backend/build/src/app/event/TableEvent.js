@@ -23,10 +23,11 @@ let TableEvent = class TableEvent {
         this.createTableEvent = 'app.event.table.create';
         this.observableFactory = observableFactory;
     }
-    onTableCreate(socket) {
+    onTableCreate(socket, middlewareImpl) {
         const subject = this.observableFactory.createAndGetObservable(this.createTableEvent);
         socket.on(this.createTableEvent, (data) => {
-            subject.next(data);
+            const middlewareData = middlewareImpl(data);
+            subject.next(middlewareData.data);
         });
         return this.observableFactory.getObservable(this.createTableEvent);
     }

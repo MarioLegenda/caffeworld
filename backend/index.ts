@@ -8,6 +8,8 @@ import {Symbols} from "./src/container/Symbols";
 import SocketCommunicator from "./src/app/SocketCommunicator";
 import TableEvent from "./src/app/event/TableEvent";
 import TableService from "./src/app/service/TableService";
+import {middlewareFactory} from "./src/app/util/middlewareFactory";
+import {validateTable} from "./src/app/util/middleware";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -31,7 +33,9 @@ app.init()
         socketCommunicator.onConnect((socket) => {
             console.log('Socket is connected');
 
-            tableEvent.onTableCreate(socket).subscribe(tableService.createTable);
+            const middlewareImpl = middlewareFactory([validateTable]);
+
+            tableEvent.onTableCreate(socket, middlewareImpl).subscribe(tableService.createTable);
 
             socket.on('disconnect', () => {
                 tableEvent.flushEvents();

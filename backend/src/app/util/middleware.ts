@@ -1,9 +1,13 @@
-export default function middleware(middleware: Function[], context?: object) {
-    this.state = {};
+const Joi = require('joi');
 
-    for (let m of middleware) {
-        m.call((context) ? context : this, [this.state]);
+export function validateTable(state) {
+    const schema = Joi.object().keys({
+        nickname: Joi.string().alphanum().max(255).required(),
+    });
+
+    const result = Joi.validate(state.data, schema);
+
+    if (result.error) {
+        throw new Error('Bad validation');
     }
-
-    this.state = {};
 }

@@ -8,6 +8,8 @@ require('dotenv').config();
 const app_1 = require("./app");
 const ContainerWrapper_1 = __importDefault(require("./src/container/ContainerWrapper"));
 const Symbols_1 = require("./src/container/Symbols");
+const middlewareFactory_1 = require("./src/app/util/middlewareFactory");
+const middleware_1 = require("./src/app/util/middleware");
 app_1.app.expressApp.use(app_1.app.express.static(app_1.app.path.join(__dirname, 'public')));
 app_1.app.expressApp.get('/table/create', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
 app_1.app.expressApp.get('/', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
@@ -25,7 +27,8 @@ app_1.app.init()
     const tableService = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.TableService);
     socketCommunicator.onConnect((socket) => {
         console.log('Socket is connected');
-        tableEvent.onTableCreate(socket).subscribe(tableService.createTable);
+        const middlewareImpl = middlewareFactory_1.middlewareFactory([middleware_1.validateTable]);
+        tableEvent.onTableCreate(socket, middlewareImpl).subscribe(tableService.createTable);
         socket.on('disconnect', () => {
             tableEvent.flushEvents();
         });

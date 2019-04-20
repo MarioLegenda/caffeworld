@@ -16,11 +16,13 @@ export default class TableEvent {
         this.observableFactory = observableFactory;
     }
 
-    onTableCreate(socket: Socket): Observable<object> {
+    onTableCreate(socket: Socket, middlewareImpl: Function): Observable<object> {
         const subject = this.observableFactory.createAndGetObservable(this.createTableEvent);
 
         socket.on(this.createTableEvent, (data) => {
-            subject.next(data);
+            const middlewareData = middlewareImpl(data);
+
+            subject.next(middlewareData.data);
         });
 
         return this.observableFactory.getObservable(this.createTableEvent);

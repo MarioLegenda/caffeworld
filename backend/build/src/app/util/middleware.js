@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function middleware(middleware, context) {
-    this.state = {};
-    for (let m of middleware) {
-        m.call((context) ? context : this, [this.state]);
+const Joi = require('joi');
+function validateTable(state) {
+    const schema = Joi.object().keys({
+        nickname: Joi.string().alphanum().max(255).required(),
+    });
+    const result = Joi.validate(state.data, schema);
+    if (result.error) {
+        throw new Error('Bad validation');
     }
-    this.state = {};
 }
-exports.default = middleware;
+exports.validateTable = validateTable;
