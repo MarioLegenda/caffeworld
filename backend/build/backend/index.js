@@ -28,6 +28,7 @@ app_1.app.init()
     socketCommunicator.onConnect((socket) => {
         console.log('Socket is connected');
         const createTableMiddleware = middlewareFactory_1.middlewareFactory([
+            middleware_1.createCreateTableModel,
             middleware_1.validateTable
         ]);
         tableEvent.onTableCreate(socket, createTableMiddleware).subscribe(tableService.createTable);

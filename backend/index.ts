@@ -33,9 +33,11 @@ app.init()
         socketCommunicator.onConnect((socket) => {
             console.log('Socket is connected');
 
-            const middlewareImpl = middlewareFactory([validateTable]);
+            const createTableMiddleware = middlewareFactory([
+                validateTable
+            ]);
 
-            tableEvent.onTableCreate(socket, middlewareImpl).subscribe(tableService.createTable);
+            tableEvent.onTableCreate(socket, createTableMiddleware).subscribe(tableService.createTable);
 
             socket.on('disconnect', () => {
                 tableEvent.flushEvents();

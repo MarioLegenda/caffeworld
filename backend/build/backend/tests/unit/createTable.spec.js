@@ -8,12 +8,12 @@ const middleware_1 = require("../../src/app/util/middleware");
 const middlewareFactory_1 = require("../../src/app/util/middlewareFactory");
 const chai = require('chai'), expect = chai.expect, it = mocha_1.default.it;
 it('should validate the create table and return the validated state object', function () {
-    const impl = middlewareFactory_1.middlewareFactory([middleware_1.validateTable]);
+    const impl = middlewareFactory_1.middlewareFactory([middleware_1.createCreateTableModel, middleware_1.validateTable]);
     const data = {
         nickname: '',
-        subject: null,
-        subjectDescription: null,
-        briefMessage: null,
+        subject: '',
+        subjectDescription: '',
+        briefMessage: '',
     };
     const state = impl(data);
     expect(state).to.have.property('data');
@@ -22,7 +22,4 @@ it('should validate the create table and return the validated state object', fun
     expect(createTableModel).to.have.property('subject');
     expect(createTableModel).to.have.property('subjectDescription');
     expect(createTableModel).to.have.property('briefMessage');
-    expect(createTableModel.subject).to.be.equals(null);
-    expect(createTableModel.subjectDescription).to.be.equals(null);
-    expect(createTableModel.briefMessage).to.be.equals(null);
 });
