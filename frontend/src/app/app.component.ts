@@ -24,6 +24,5 @@ export class AppComponent {
                 this.previousRoute = event.url;
             }
         });
-
     }
 }
