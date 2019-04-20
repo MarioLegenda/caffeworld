@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import InvitationService from './service/InvitationService';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {TableSocketService} from "../../infrastructure/TableSocketService";
@@ -11,8 +11,6 @@ import {TableSocketService} from "../../infrastructure/TableSocketService";
 export class CreateComponent {
     createTableModel: CreateTableModel = new CreateTableModel();
     formDisabled = true;
-
-    @Output() open: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private invitationService: InvitationService,
@@ -29,10 +27,12 @@ export class CreateComponent {
     onSubmit(isValid: boolean) {
         if (isValid) {
             this.createTableModel.invitations = this.invitationService.asArray;
-            // @ts-ignore
-            this.tableSocketService.emitCreateTable(this.createTableModel).subscribe((data) => {
 
-            })
+            this.tableSocketService.emitCreateTable(this.createTableModel);
+
+            this.tableSocketService.onCreateTable().subscribe((data) => {
+                console.log(data);
+            });
         }
     }
 }

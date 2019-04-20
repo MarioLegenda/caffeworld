@@ -2,30 +2,34 @@ import 'reflect-metadata';
 
 require('dotenv').config();
 
-import {Express} from "express";
-const express = require('express');
-const app: Express = express();
-const path = require('path');
-const http = require('http').Server(app);
+import {app} from './app';
 import ContainerWrapper from "./src/container/ContainerWrapper";
-import Redis from "./src/dataSource/redis";
-import {onCreateTable, onSocketConnect} from "./src/app/events";
+import {Symbols} from "./src/container/Symbols";
+import SocketCommunicator from "./src/app/SocketCommunicator";
+import TableService from "./src/app/TableService";
 
-const io = require("socket.io")(http, { pingTimeout: 60000 });
+app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.expressApp.get('/table/create', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
+app.expressApp.get('/', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
 
-app.get('/table/create', function(req, res) {res.sendFile(path.join(`${__dirname}/public/index.html`));});
-app.get('/', function(req, res) {res.sendFile(path.join(`${__dirname}/public/index.html`));});
+app.init()
+    .on('app.event.redis.ready', () => {
+        console.log('Redis is ready');
+    })
+    .on('app.event.redis.error', (err) => {
+        console.error(`Redis event error occurred: ${err.message}`)
+    })
+    .on('app.event.server.ready', () => {
+        ContainerWrapper.createContainer().bindDependencies();
 
-Redis.client.on('ready', () => {
-    ContainerWrapper.createContainer().bindDependencies();
+        const socketCommunicator: SocketCommunicator = ContainerWrapper.container.getDependency(Symbols.SocketCommunicator);
+        const tableService: TableService = ContainerWrapper.container.getDependency(Symbols.TableService);
 
-    http.listen(3000, () => {
-        io.on('connection', onSocketConnect);
+        socketCommunicator.onConnect((socket) => {
+            console.log('Socket is connected');
 
-        io.on('app.create-table', onCreateTable);
-
-        console.log('Application started. Listening on port 3000');
+            tableService.onTableCreate(socket);
+        });
+        console.log('Server is ready. Listening on port 3000');
     });
-});

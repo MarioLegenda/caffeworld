@@ -15,7 +15,7 @@ export default class AppSocket {
             return AppSocket.singleton;
         }
 
-        AppSocket.socket = io(url);
+        AppSocket.socket = io(url, config);
         AppSocket.singleton = new AppSocket();
 
         return AppSocket.singleton;
@@ -28,10 +28,9 @@ export default class AppSocket {
     observe(event: string): Observable<any> {
         this.createObservable(event);
 
-        AppSocket.socket.on(event, (data: object) => {
-            this.getObservable(event).subscribe((subject) => {
-                subject.emit(data);
-            });
+        AppSocket.socket.on(event, () => {
+            console.log('Event ' + event + ' has been received');
+            AppSocket.socket.emit('app.example');
         });
 
         return this.getObservable(event);

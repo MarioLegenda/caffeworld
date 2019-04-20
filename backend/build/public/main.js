@@ -371,7 +371,7 @@ var CaffeeworldModule = /** @class */ (function () {
                 },
                 {
                     provide: _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"],
-                    useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12/', {}); },
+                    useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12/', { path: '/socket' }); },
                 },
                 { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] }
             ]
@@ -411,7 +411,7 @@ var AppSocket = /** @class */ (function () {
         if (AppSocket_1.singleton) {
             return AppSocket_1.singleton;
         }
-        AppSocket_1.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1___default()(url);
+        AppSocket_1.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1___default()(url, config);
         AppSocket_1.singleton = new AppSocket_1();
         return AppSocket_1.singleton;
     };
@@ -419,12 +419,10 @@ var AppSocket = /** @class */ (function () {
         AppSocket_1.socket.emit(event, data);
     };
     AppSocket.prototype.observe = function (event) {
-        var _this = this;
         this.createObservable(event);
-        AppSocket_1.socket.on(event, function (data) {
-            _this.getObservable(event).subscribe(function (subject) {
-                subject.emit(data);
-            });
+        AppSocket_1.socket.on(event, function () {
+            console.log('Event ' + event + ' has been received');
+            AppSocket_1.socket.emit('app.example');
         });
         return this.getObservable(event);
     };
@@ -471,9 +469,10 @@ var TableSocketService = /** @class */ (function () {
         this.socket = socket;
     }
     TableSocketService.prototype.emitCreateTable = function (data) {
-        this.socket.emit("app.create-table", data);
+        this.socket.emit('app.table.create', data);
     };
     TableSocketService.prototype.onCreateTable = function () {
+        return this.socket.observe('app.table.created');
     };
     TableSocketService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])(),
@@ -678,7 +677,6 @@ var CreateComponent = /** @class */ (function () {
         this.tableSocketService = tableSocketService;
         this.createTableModel = new _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_3__["default"]();
         this.formDisabled = true;
-        this.open = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.invitationService.clear();
         this.invitationService.init(1);
     }
@@ -688,15 +686,12 @@ var CreateComponent = /** @class */ (function () {
     CreateComponent.prototype.onSubmit = function (isValid) {
         if (isValid) {
             this.createTableModel.invitations = this.invitationService.asArray;
-            // @ts-ignore
-            this.tableSocketService.emitCreateTable(this.createTableModel).subscribe(function (data) {
+            this.tableSocketService.emitCreateTable(this.createTableModel);
+            this.tableSocketService.onCreateTable().subscribe(function (data) {
+                console.log(data);
             });
         }
     };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
-    ], CreateComponent.prototype, "open", void 0);
     CreateComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-create-room',

@@ -1,12 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Symbols = {
-    RedisSource: Symbol.for('RedisSource'),
-    TableRepository: Symbol.for('TableRepository'),
-    ISourceFactory: Symbol.for('Factory<ISource>'),
-    BoundaryFactory: Symbol.for('Factory<IBoundary>'),
-    TableInterpreter: Symbol.for('TableInterpreter'),
-    CreateTableBoundary: Symbol.for('CreateTableBoundary'),
-    PresenterFactory: Symbol.for('Factory<Presenter>'),
-    WebPresenter: Symbol.for('WebPresenter'),
+    SocketCommunicator: Symbol.for('SocketCommunicator'),
+    TableService: Symbol.for('TableService'),
 };

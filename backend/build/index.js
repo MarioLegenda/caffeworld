@@ -5,22 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 require('dotenv').config();
-const express = require('express');
-const app = express();
-const path = require('path');
-const http = require('http').Server(app);
+const app_1 = require("./app");
 const ContainerWrapper_1 = __importDefault(require("./src/container/ContainerWrapper"));
-const redis_1 = __importDefault(require("./src/dataSource/redis"));
-const events_1 = require("./src/app/events");
-const io = require("socket.io")(http, { pingTimeout: 60000 });
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/table/create', function (req, res) { res.sendFile(path.join(`${__dirname}/public/index.html`)); });
-app.get('/', function (req, res) { res.sendFile(path.join(`${__dirname}/public/index.html`)); });
-redis_1.default.client.on('ready', () => {
+const Symbols_1 = require("./src/container/Symbols");
+app_1.app.expressApp.use(app_1.app.express.static(app_1.app.path.join(__dirname, 'public')));
+app_1.app.expressApp.get('/table/create', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
+app_1.app.expressApp.get('/', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
+app_1.app.init()
+    .on('app.event.redis.ready', () => {
+    console.log('Redis is ready');
+})
+    .on('app.event.redis.error', (err) => {
+    console.error(`Redis event error occurred: ${err.message}`);
+})
+    .on('app.event.server.ready', () => {
     ContainerWrapper_1.default.createContainer().bindDependencies();
-    http.listen(3000, () => {
-        io.on('connection', events_1.onSocketConnect);
-        io.on('app.create-table', events_1.onCreateTable);
-        console.log('Application started. Listening on port 3000');
+    const socketCommunicator = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.SocketCommunicator);
+    const tableService = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.TableService);
+    socketCommunicator.onConnect((socket) => {
+        console.log('Socket is connected');
+        tableService.onTableCreate(socket);
     });
+    console.log('Server is ready. Listening on port 3000');
 });
