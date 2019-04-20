@@ -6,7 +6,8 @@ import {app} from './app';
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Symbols} from "./src/container/Symbols";
 import SocketCommunicator from "./src/app/SocketCommunicator";
-import TableService from "./src/app/TableService";
+import TableEvent from "./src/app/event/TableEvent";
+import TableService from "./src/app/service/TableService";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -24,12 +25,18 @@ app.init()
         ContainerWrapper.createContainer().bindDependencies();
 
         const socketCommunicator: SocketCommunicator = ContainerWrapper.container.getDependency(Symbols.SocketCommunicator);
+        const tableEvent: TableEvent = ContainerWrapper.container.getDependency(Symbols.TableEvent);
         const tableService: TableService = ContainerWrapper.container.getDependency(Symbols.TableService);
 
         socketCommunicator.onConnect((socket) => {
             console.log('Socket is connected');
 
-            tableService.onTableCreate(socket);
+            tableEvent.onTableCreate(socket).subscribe(tableService.createTable);
         });
+
+        socketCommunicator.onDisconnect((socket) => {
+
+        });
+
         console.log('Server is ready. Listening on port 3000');
     });

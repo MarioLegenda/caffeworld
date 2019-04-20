@@ -6,22 +6,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("../../app");
+const rxjs_1 = require("rxjs");
 const inversify_1 = require("inversify");
-const io = require("socket.io")(app_1.app.http, { pingTimeout: 10, path: '/socket' });
-let SocketCommunicator = class SocketCommunicator {
-    onConnect(callback) {
-        io.on('connection', callback);
+let ObservableFactory = class ObservableFactory {
+    constructor() {
+        this.observables = {};
     }
-    onDisconnect(callback) {
-        io.on('disconnect', callback);
+    createAndGetObservable(name) {
+        if (!this.observables.hasOwnProperty(name)) {
+            this.observables[name] = new rxjs_1.Subject();
+        }
+        return this.observables[name];
     }
-    emit() {
-    }
-    observe() {
+    getObservable(name) {
+        return this.observables[name];
     }
 };
-SocketCommunicator = __decorate([
+ObservableFactory = __decorate([
     inversify_1.injectable()
-], SocketCommunicator);
-exports.default = SocketCommunicator;
+], ObservableFactory);
+exports.default = ObservableFactory;

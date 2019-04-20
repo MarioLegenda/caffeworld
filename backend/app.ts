@@ -1,6 +1,5 @@
 import {Express} from "express";
 import Redis from "./src/dataSource/redis";
-import ContainerWrapper from "./src/container/ContainerWrapper";
 const EventEmitter = require('events').EventEmitter;
 const express = require('express');
 const expressApp: Express = express();

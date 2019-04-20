@@ -6,22 +6,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("../../app");
 const inversify_1 = require("inversify");
-const io = require("socket.io")(app_1.app.http, { pingTimeout: 10, path: '/socket' });
-let SocketCommunicator = class SocketCommunicator {
-    onConnect(callback) {
-        io.on('connection', callback);
-    }
-    onDisconnect(callback) {
-        io.on('disconnect', callback);
-    }
-    emit() {
-    }
-    observe() {
+let TableService = class TableService {
+    createTable(data) {
+        console.log(data);
     }
 };
-SocketCommunicator = __decorate([
+TableService = __decorate([
     inversify_1.injectable()
-], SocketCommunicator);
-exports.default = SocketCommunicator;
+], TableService);
+exports.default = TableService;

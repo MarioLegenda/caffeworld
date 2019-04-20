@@ -21,10 +21,13 @@ app_1.app.init()
     .on('app.event.server.ready', () => {
     ContainerWrapper_1.default.createContainer().bindDependencies();
     const socketCommunicator = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.SocketCommunicator);
+    const tableEvent = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.TableEvent);
     const tableService = ContainerWrapper_1.default.container.getDependency(Symbols_1.Symbols.TableService);
     socketCommunicator.onConnect((socket) => {
         console.log('Socket is connected');
-        tableService.onTableCreate(socket);
+        tableEvent.onTableCreate(socket).subscribe(tableService.createTable);
+    });
+    socketCommunicator.onDisconnect((socket) => {
     });
     console.log('Server is ready. Listening on port 3000');
 });

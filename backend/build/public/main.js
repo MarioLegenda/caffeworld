@@ -371,7 +371,7 @@ var CaffeeworldModule = /** @class */ (function () {
                 },
                 {
                     provide: _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"],
-                    useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12/', { path: '/socket' }); },
+                    useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12/', { path: '/socket', reconnectionAttempts: 5 }); },
                 },
                 { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] }
             ]
@@ -421,7 +421,6 @@ var AppSocket = /** @class */ (function () {
     AppSocket.prototype.observe = function (event) {
         this.createObservable(event);
         AppSocket_1.socket.on(event, function () {
-            console.log('Event ' + event + ' has been received');
             AppSocket_1.socket.emit('app.example');
         });
         return this.getObservable(event);
@@ -469,10 +468,10 @@ var TableSocketService = /** @class */ (function () {
         this.socket = socket;
     }
     TableSocketService.prototype.emitCreateTable = function (data) {
-        this.socket.emit('app.table.create', data);
+        this.socket.emit('app.event.table.create', data);
     };
     TableSocketService.prototype.onCreateTable = function () {
-        return this.socket.observe('app.table.created');
+        return this.socket.observe('app.event.table.create');
     };
     TableSocketService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])(),

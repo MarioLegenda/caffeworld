@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import {from, Observable, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import * as SocketIO from "socket.io";
 import {Injectable} from "@angular/core";
 
@@ -29,7 +29,6 @@ export default class AppSocket {
         this.createObservable(event);
 
         AppSocket.socket.on(event, () => {
-            console.log('Event ' + event + ' has been received');
             AppSocket.socket.emit('app.example');
         });
 

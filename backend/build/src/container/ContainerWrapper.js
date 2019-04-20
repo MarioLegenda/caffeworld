@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const SocketCommunicator_1 = __importDefault(require("../app/SocketCommunicator"));
 const Symbols_1 = require("./Symbols");
-const TableService_1 = __importDefault(require("../app/TableService"));
+const TableEvent_1 = __importDefault(require("../app/event/TableEvent"));
+const ObservableFactory_1 = __importDefault(require("../app/util/ObservableFactory"));
+const TableService_1 = __importDefault(require("../app/service/TableService"));
 class ContainerWrapper {
     constructor(container) {
         ContainerWrapper.inversify = container;
@@ -20,6 +22,8 @@ class ContainerWrapper {
     }
     bindDependencies() {
         ContainerWrapper.inversify.bind(Symbols_1.Symbols.SocketCommunicator).to(SocketCommunicator_1.default);
+        ContainerWrapper.inversify.bind(Symbols_1.Symbols.TableEvent).to(TableEvent_1.default);
+        ContainerWrapper.inversify.bind(Symbols_1.Symbols.ObservableFactory).to(ObservableFactory_1.default);
         ContainerWrapper.inversify.bind(Symbols_1.Symbols.TableService).to(TableService_1.default);
     }
     getDependency(identifier) {

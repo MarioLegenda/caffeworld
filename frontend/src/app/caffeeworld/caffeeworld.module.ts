@@ -38,7 +38,7 @@ import AppSocket from "./infrastructure/AppSocket";
         },
         {
             provide: AppSocket,
-            useFactory: () => AppSocket.create('http://11.11.11.12/', {path: '/socket'}),
+            useFactory: () => AppSocket.create('http://11.11.11.12/', {path: '/socket', reconnectionAttempts: 5}),
         },
         {provide: TableSocketService, useClass: TableSocketService}
     ]
