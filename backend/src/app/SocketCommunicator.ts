@@ -7,16 +7,4 @@ export default class SocketCommunicator {
     onConnect(callback: Function) {
         io.on('connection', callback);
     }
-
-    onDisconnect(callback: Function) {
-        io.on('disconnect', callback);
-    }
-
-    emit() {
-
-    }
-
-    observe() {
-
-    }
 }

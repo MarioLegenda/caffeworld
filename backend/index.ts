@@ -32,10 +32,10 @@ app.init()
             console.log('Socket is connected');
 
             tableEvent.onTableCreate(socket).subscribe(tableService.createTable);
-        });
 
-        socketCommunicator.onDisconnect((socket) => {
-
+            socket.on('disconnect', () => {
+                tableEvent.flushEvents();
+            });
         });
 
         console.log('Server is ready. Listening on port 3000');

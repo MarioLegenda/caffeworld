@@ -9,7 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 let TableService = class TableService {
     createTable(data) {
-        console.log(data);
     }
 };
 TableService = __decorate([

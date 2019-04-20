@@ -1,9 +1,9 @@
-export default function middleware(middleware: Function[]) {
+export default function middleware(middleware: Function[], context?: object) {
     this.state = {};
 
     for (let m of middleware) {
-        const boundMiddleware = m.bind(this);
-
-        process.nextTick(boundMiddleware);
+        m.call((context) ? context : this, [this.state]);
     }
+
+    this.state = {};
 }

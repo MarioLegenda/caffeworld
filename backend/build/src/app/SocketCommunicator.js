@@ -13,13 +13,6 @@ let SocketCommunicator = class SocketCommunicator {
     onConnect(callback) {
         io.on('connection', callback);
     }
-    onDisconnect(callback) {
-        io.on('disconnect', callback);
-    }
-    emit() {
-    }
-    observe() {
-    }
 };
 SocketCommunicator = __decorate([
     inversify_1.injectable()

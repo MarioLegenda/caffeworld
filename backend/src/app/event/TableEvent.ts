@@ -25,4 +25,8 @@ export default class TableEvent {
 
         return this.observableFactory.getObservable(this.createTableEvent);
     }
+
+    flushEvents() {
+        this.observableFactory.unsubscribe();
+    }
 }

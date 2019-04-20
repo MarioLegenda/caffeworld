@@ -10,16 +10,22 @@ const rxjs_1 = require("rxjs");
 const inversify_1 = require("inversify");
 let ObservableFactory = class ObservableFactory {
     constructor() {
-        this.observables = {};
+        this.observables = new Map();
     }
     createAndGetObservable(name) {
-        if (!this.observables.hasOwnProperty(name)) {
-            this.observables[name] = new rxjs_1.Subject();
+        if (!this.observables.has(name)) {
+            this.observables.set(name, new rxjs_1.Subject());
         }
-        return this.observables[name];
+        return this.observables.get(name);
     }
     getObservable(name) {
-        return this.observables[name];
+        return this.observables.get(name);
+    }
+    unsubscribe() {
+        this.observables.forEach((value, kex) => {
+            value.unsubscribe();
+        });
+        this.observables.clear();
     }
 };
 ObservableFactory = __decorate([

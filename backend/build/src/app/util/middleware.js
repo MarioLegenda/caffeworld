@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function middleware(middleware) {
+function middleware(middleware, context) {
     this.state = {};
     for (let m of middleware) {
-        const boundMiddleware = m.bind(this);
-        process.nextTick(boundMiddleware);
+        m.call((context) ? context : this, [this.state]);
     }
+    this.state = {};
 }
 exports.default = middleware;

@@ -30,6 +30,9 @@ let TableEvent = class TableEvent {
         });
         return this.observableFactory.getObservable(this.createTableEvent);
     }
+    flushEvents() {
+        this.observableFactory.unsubscribe();
+    }
 };
 TableEvent = __decorate([
     inversify_1.injectable(),
