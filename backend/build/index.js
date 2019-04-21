@@ -11,8 +11,7 @@ const Symbols_1 = require("./src/container/Symbols");
 const middlewareFactory_1 = require("./src/app/util/middlewareFactory");
 const middleware_1 = require("./src/app/util/middleware");
 app_1.app.expressApp.use(app_1.app.express.static(app_1.app.path.join(__dirname, 'public')));
-app_1.app.expressApp.get('/table/create', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
-app_1.app.expressApp.get('/', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
+app_1.app.expressApp.get('**', function (req, res) { res.sendFile(app_1.app.path.join(`${__dirname}/public/index.html`)); });
 app_1.app.init()
     .on('app.event.redis.ready', () => {
     console.log('Redis is ready');

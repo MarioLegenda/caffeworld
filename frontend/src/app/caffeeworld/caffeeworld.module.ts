@@ -12,6 +12,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import {TableSocketService} from "./infrastructure/TableSocketService";
+import {RoomComponent} from "./table/room/room.component";
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import {TableSocketService} from "./infrastructure/TableSocketService";
         CreateComponent,
         PageNotFoundComponent,
         AboutComponent,
+        RoomComponent,
     ],
     providers: [
         {provide: TableSocketService, useClass: TableSocketService},

@@ -13,8 +13,7 @@ import {validateTable} from "./src/app/util/middleware";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
-app.expressApp.get('/table/create', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
-app.expressApp.get('/', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
+app.expressApp.get('**', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
 
 app.init()
     .on('app.event.redis.ready', () => {
