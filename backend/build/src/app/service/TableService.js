@@ -20,7 +20,8 @@ let TableService = class TableService {
         const redisData = {
             table: data,
             room: {
-                url: url
+                url: url,
+                path: `/table/${roomIdentifier}`
             },
         };
         redis_1.default.client.set(roomIdentifier, JSON.stringify(redisData));

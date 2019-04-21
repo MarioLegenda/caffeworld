@@ -1,11 +1,17 @@
 <div class="wrapper">
     <div>
         <div class="container-fluid create-room col-xl-9">
-            <ng-template #content class="modal" role="dialog" tabindex="-1">
+            <ng-template #content class="modal" role="dialog" tabindex="-1" let-c="close">
                 <div class="modal-header justify-content-center">
                     <h5 class="title title-left">Hello, {{roomData.table.nickname}}</h5>
                 </div>
                 <div class="modal-body">
+
+                    <p class="modal-info">
+                        Copy the url and share it with your friends. When your friends visit the url,
+                        you will be able to talk to them.
+                    </p>
+
                     <div class="modal-share-wrapper">
                         <p class="modal-url">{{roomData.room.url}}</p>
                         <p [hidden]="!copied" class="content-copied animated fadeIn">Copied!</p>
@@ -14,7 +20,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary modal-go-to-table-button">Go to your table</button>
+                    <a routerLink="{{roomData.room.path}}" class="btn btn-primary modal-go-to-table-button" (click)="c()">Go to your table</a>
                 </div>
 
             </ng-template>
