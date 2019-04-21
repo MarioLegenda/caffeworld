@@ -5,10 +5,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
+const redis_1 = __importDefault(require("../../dataSource/redis"));
+const uuid = require('uuid/v4');
 let TableService = class TableService {
-    createTable(data) {
+    createTable(socketMiddlewareResult) {
+        const { data, socket } = socketMiddlewareResult;
+        const roomIdentifier = uuid();
+        const url = `${process.env.SITE_URL}/${roomIdentifier}`;
+        const redisData = {
+            table: data,
+            room: {
+                url: url
+            },
+        };
+        redis_1.default.client.set(roomIdentifier, JSON.stringify(redisData));
+        socket.join(roomIdentifier);
+        socket.emit('app.event.table.created', redisData);
     }
 };
 TableService = __decorate([

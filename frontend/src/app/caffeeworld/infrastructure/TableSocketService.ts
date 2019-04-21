@@ -10,7 +10,7 @@ export class TableSocketService {
         this.socket.emit('app.event.table.create', data);
     }
 
-    onCreateTable(): Observable<any> {
-        return this.socket.observe('app.event.table.create');
+    onTableCreated(): Observable<any> {
+        return this.socket.observe('app.event.table.created');
     }
 }

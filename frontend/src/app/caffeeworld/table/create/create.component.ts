@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, Input, Output} from '@angular/core';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {TableSocketService} from "../../infrastructure/TableSocketService";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-create-room',
@@ -10,14 +11,27 @@ import {TableSocketService} from "../../infrastructure/TableSocketService";
 export class CreateComponent {
     createTableModel: CreateTableModel = new CreateTableModel();
     formDisabled = true;
+    roomData = null;
+    copied = false;
 
     constructor(
-        private tableSocketService: TableSocketService
+        private tableSocketService: TableSocketService,
+        private modalService: NgbModal
     ) {}
 
-    onSubmit(isValid: boolean) {
+    onSubmit(isValid: boolean, content) {
         if (isValid) {
+
             this.tableSocketService.emitCreateTable(this.createTableModel);
+
+            this.tableSocketService.onTableCreated().subscribe((data) => {
+                this.roomData = data;
+                this.modalService.open(content);
+            });
         }
+    }
+
+    onCopy() {
+        this.copied = true;
     }
 }

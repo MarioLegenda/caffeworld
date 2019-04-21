@@ -30,7 +30,9 @@ app_1.app.init()
         const createTableMiddleware = middlewareFactory_1.middlewareFactory([
             middleware_1.validateTable
         ]);
-        tableEvent.onTableCreate(socket, createTableMiddleware).subscribe(tableService.createTable);
+        tableEvent
+            .onTableCreate(socket, createTableMiddleware)
+            .subscribe(tableService.createTable);
         socket.on('disconnect', () => {
             tableEvent.flushEvents();
         });

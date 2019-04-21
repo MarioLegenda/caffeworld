@@ -37,7 +37,9 @@ app.init()
                 validateTable
             ]);
 
-            tableEvent.onTableCreate(socket, createTableMiddleware).subscribe(tableService.createTable);
+            tableEvent
+                .onTableCreate(socket, createTableMiddleware)
+                .subscribe(tableService.createTable);
 
             socket.on('disconnect', () => {
                 tableEvent.flushEvents();

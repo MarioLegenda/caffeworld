@@ -1,7 +1,7 @@
 import {inject, injectable} from "inversify";
 import {Socket} from "socket.io";
 import {Symbols} from "../../container/Symbols";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import ObservableFactory from "../util/ObservableFactory";
 
 @injectable()
@@ -17,12 +17,12 @@ export default class TableEvent {
     }
 
     onTableCreate(socket: Socket, middlewareImpl: Function): Observable<object> {
-        const subject = this.observableFactory.createAndGetObservable(this.createTableEvent);
+        const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.createTableEvent);
 
         socket.on(this.createTableEvent, (data) => {
             const middlewareData = middlewareImpl(data);
 
-            subject.next(middlewareData.data);
+            subject.next({data: middlewareData.data, socket: socket});
         });
 
         return this.observableFactory.getObservable(this.createTableEvent);

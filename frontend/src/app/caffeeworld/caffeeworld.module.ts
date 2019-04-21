@@ -27,7 +27,7 @@ import {TableSocketService} from "./infrastructure/TableSocketService";
         LandingComponent,
         CreateComponent,
         PageNotFoundComponent,
-        AboutComponent
+        AboutComponent,
     ],
     providers: [
         {provide: TableSocketService, useClass: TableSocketService},

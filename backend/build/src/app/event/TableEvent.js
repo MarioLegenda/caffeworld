@@ -27,7 +27,7 @@ let TableEvent = class TableEvent {
         const subject = this.observableFactory.createAndGetObservable(this.createTableEvent);
         socket.on(this.createTableEvent, (data) => {
             const middlewareData = middlewareImpl(data);
-            subject.next(middlewareData.data);
+            subject.next({ data: middlewareData.data, socket: socket });
         });
         return this.observableFactory.getObservable(this.createTableEvent);
     }
