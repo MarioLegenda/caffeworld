@@ -11,7 +11,7 @@ import {AboutComponent} from './caffeeworld/about/about.component';
 const routes: Routes =[
     { path: '',     component: LandingComponent },
     {path: 'table/create', component: CreateComponent },
-    {path: 'table', loadChildren: './caffeeworld/module/room.module#RoomModule'},
+    {path: 'table', loadChildren: './caffeeworld/module/room/room.module#RoomModule'},
     {path: 'about', component: AboutComponent },
     {path: '**', component: PageNotFoundComponent },
 ];
