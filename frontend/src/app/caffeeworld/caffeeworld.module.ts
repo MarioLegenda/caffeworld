@@ -12,6 +12,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import {TableSocketService} from "./infrastructure/TableSocketService";
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import {TableSocketService} from "./infrastructure/TableSocketService";
         NgbModule,
         JwBootstrapSwitchNg2Module,
         RouterModule,
+        ClipboardModule,
     ],
     declarations: [
         CaffeeworldComponent,

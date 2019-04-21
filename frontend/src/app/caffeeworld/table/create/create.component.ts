@@ -2,6 +2,7 @@ import {Component, Input, Output} from '@angular/core';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {TableSocketService} from "../../infrastructure/TableSocketService";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
     selector: 'app-create-room',
@@ -16,7 +17,8 @@ export class CreateComponent {
 
     constructor(
         private tableSocketService: TableSocketService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private clipboardService: ClipboardService
     ) {}
 
     onSubmit(isValid: boolean, content) {
@@ -33,5 +35,7 @@ export class CreateComponent {
 
     onCopy() {
         this.copied = true;
+
+        this.clipboardService.copyFromContent(this.roomData.room.url);
     }
 }

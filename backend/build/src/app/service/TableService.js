@@ -16,7 +16,7 @@ let TableService = class TableService {
     createTable(socketMiddlewareResult) {
         const { data, socket } = socketMiddlewareResult;
         const roomIdentifier = uuid();
-        const url = `${process.env.SITE_URL}/${roomIdentifier}`;
+        const url = `${process.env.SITE_URL}/table/${roomIdentifier}`;
         const redisData = {
             table: data,
             room: {

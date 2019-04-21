@@ -1,9 +1,6 @@
 import {injectable} from "inversify";
-import CreateTable from "../model/CreateTable";
 import ISocketMiddlewareResult from "../util/ISocketMiddlewareResult";
-import {Socket} from "socket.io";
 import Redis from "../../dataSource/redis";
-import redis from "../../dataSource/redis";
 const uuid = require('uuid/v4');
 
 @injectable()
@@ -13,7 +10,7 @@ export default class TableService {
 
         const roomIdentifier: string = uuid();
 
-        const url = `${process.env.SITE_URL}/${roomIdentifier}`;
+        const url = `${process.env.SITE_URL}/table/${roomIdentifier}`;
 
         const redisData = {
             table: data,

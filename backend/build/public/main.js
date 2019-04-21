@@ -367,6 +367,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
 /* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
 /* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
+/* harmony import */ var ngx_clipboard__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ngx-clipboard */ "./node_modules/ngx-clipboard/fesm5/ngx-clipboard.js");
+
 
 
 
@@ -393,6 +395,7 @@ var CaffeeworldModule = /** @class */ (function () {
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModule"],
                 jw_bootstrap_switch_ng2__WEBPACK_IMPORTED_MODULE_5__["JwBootstrapSwitchNg2Module"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_9__["RouterModule"],
+                ngx_clipboard__WEBPACK_IMPORTED_MODULE_14__["ClipboardModule"],
             ],
             declarations: [
                 _caffeeworld_component__WEBPACK_IMPORTED_MODULE_7__["CaffeeworldComponent"],
@@ -707,15 +710,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../infrastructure/model/CreateTableModel */ "./src/app/caffeeworld/infrastructure/model/CreateTableModel.ts");
 /* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
+/* harmony import */ var ngx_clipboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ngx-clipboard */ "./node_modules/ngx-clipboard/fesm5/ngx-clipboard.js");
+
 
 
 
 
 
 var CreateComponent = /** @class */ (function () {
-    function CreateComponent(tableSocketService, modalService) {
+    function CreateComponent(tableSocketService, modalService, clipboardService) {
         this.tableSocketService = tableSocketService;
         this.modalService = modalService;
+        this.clipboardService = clipboardService;
         this.createTableModel = new _infrastructure_model_CreateTableModel__WEBPACK_IMPORTED_MODULE_2__["default"]();
         this.formDisabled = true;
         this.roomData = null;
@@ -733,6 +739,7 @@ var CreateComponent = /** @class */ (function () {
     };
     CreateComponent.prototype.onCopy = function () {
         this.copied = true;
+        this.clipboardService.copyFromContent(this.roomData.room.url);
     };
     CreateComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -741,7 +748,8 @@ var CreateComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./create.component.scss */ "./src/app/caffeeworld/table/create/create.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_3__["TableSocketService"],
-            _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"]])
+            _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"],
+            ngx_clipboard__WEBPACK_IMPORTED_MODULE_5__["ClipboardService"]])
     ], CreateComponent);
     return CreateComponent;
 }());
