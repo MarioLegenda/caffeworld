@@ -5,21 +5,33 @@
   !*** ./src/$$_lazy_route_resource lazy namespace object ***!
   \**********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncaught exception popping up in devtools
-	return Promise.resolve().then(function() {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
+var map = {
+	"./caffeeworld/module/room.module": [
+		"./src/app/caffeeworld/module/room.module.ts",
+		"caffeeworld-module-room-module"
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+	return __webpack_require__.e(ids[1]).then(function() {
+		var id = ids[0];
+		return __webpack_require__(id);
 	});
 }
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+module.exports = webpackAsyncContext;
 
 /***/ }),
 
@@ -186,8 +198,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _caffeeworld_table_create_create_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./caffeeworld/table/create/create.component */ "./src/app/caffeeworld/table/create/create.component.ts");
 /* harmony import */ var _caffeeworld_page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./caffeeworld/page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
 /* harmony import */ var _caffeeworld_about_about_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./caffeeworld/about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
-/* harmony import */ var _caffeeworld_table_room_room_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./caffeeworld/table/room/room.component */ "./src/app/caffeeworld/table/room/room.component.ts");
-
 
 
 
@@ -200,8 +210,8 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     { path: '', component: _caffeeworld_landing_landing_component__WEBPACK_IMPORTED_MODULE_5__["LandingComponent"] },
     { path: 'table/create', component: _caffeeworld_table_create_create_component__WEBPACK_IMPORTED_MODULE_6__["CreateComponent"] },
+    { path: 'table', loadChildren: './caffeeworld/module/room.module#RoomModule' },
     { path: 'about', component: _caffeeworld_about_about_component__WEBPACK_IMPORTED_MODULE_8__["AboutComponent"] },
-    { path: 'table/:identifier', component: _caffeeworld_table_room_room_component__WEBPACK_IMPORTED_MODULE_9__["RoomComponent"] },
     { path: '**', component: _caffeeworld_page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_7__["PageNotFoundComponent"] },
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -357,8 +367,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./page-not-found/page-not-found.component */ "./src/app/caffeeworld/page-not-found/page-not-found.component.ts");
 /* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./about/about.component */ "./src/app/caffeeworld/about/about.component.ts");
 /* harmony import */ var _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./infrastructure/TableSocketService */ "./src/app/caffeeworld/infrastructure/TableSocketService.ts");
-/* harmony import */ var _table_room_room_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./table/room/room.component */ "./src/app/caffeeworld/table/room/room.component.ts");
-
 
 
 
@@ -392,8 +400,8 @@ var CaffeeworldModule = /** @class */ (function () {
                 _table_create_create_component__WEBPACK_IMPORTED_MODULE_8__["CreateComponent"],
                 _page_not_found_page_not_found_component__WEBPACK_IMPORTED_MODULE_11__["PageNotFoundComponent"],
                 _about_about_component__WEBPACK_IMPORTED_MODULE_12__["AboutComponent"],
-                _table_room_room_component__WEBPACK_IMPORTED_MODULE_14__["RoomComponent"],
             ],
+            exports: [_caffeeworld_component__WEBPACK_IMPORTED_MODULE_7__["CaffeeworldComponent"]],
             providers: [
                 { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_13__["TableSocketService"] },
             ]
@@ -736,59 +744,6 @@ var CreateComponent = /** @class */ (function () {
             _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModal"]])
     ], CreateComponent);
     return CreateComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/caffeeworld/table/room/room.component.html":
-/*!************************************************************!*\
-  !*** ./src/app/caffeeworld/table/room/room.component.html ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"wrapper\">\n    Room\n</div>\n"
-
-/***/ }),
-
-/***/ "./src/app/caffeeworld/table/room/room.component.scss":
-/*!************************************************************!*\
-  !*** ./src/app/caffeeworld/table/room/room.component.scss ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NhZmZlZXdvcmxkL3RhYmxlL3Jvb20vcm9vbS5jb21wb25lbnQuc2NzcyJ9 */"
-
-/***/ }),
-
-/***/ "./src/app/caffeeworld/table/room/room.component.ts":
-/*!**********************************************************!*\
-  !*** ./src/app/caffeeworld/table/room/room.component.ts ***!
-  \**********************************************************/
-/*! exports provided: RoomComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RoomComponent", function() { return RoomComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var RoomComponent = /** @class */ (function () {
-    function RoomComponent() {
-    }
-    RoomComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-room',
-            template: __webpack_require__(/*! ./room.component.html */ "./src/app/caffeeworld/table/room/room.component.html"),
-            styles: [__webpack_require__(/*! ./room.component.scss */ "./src/app/caffeeworld/table/room/room.component.scss")]
-        })
-    ], RoomComponent);
-    return RoomComponent;
 }());
 
 
