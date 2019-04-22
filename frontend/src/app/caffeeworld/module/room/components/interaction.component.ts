@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import GetUserMedia from "../../infrastructure/GetUserMedia";
+import PeerConnection from "../../infrastructure/PeerConnection";
 
 @Component({
     selector: 'app-interaction',
@@ -12,11 +13,12 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
     @Input('onDestroy') onDestroy;
     @Input('onGetUserMediaCreated') onGetUserMediaCreated;
 
-    private getUserMedia: GetUserMedia;
+    constructor(
+        private getUserMedia: GetUserMedia,
+        private peerConnection: PeerConnection
+    ) {}
 
     ngAfterViewInit() {
-        this.getUserMedia = GetUserMedia.create({idealLow: true});
-
         this.getUserMedia.subscribe((stream) => {
             if (this.onGetUserMediaCreated && this.onGetUserMediaCreated instanceof Function) {
                 this.onGetUserMediaCreated.call(null, ...[stream]);

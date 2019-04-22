@@ -6,14 +6,16 @@ export default class GetUserMedia {
     private subject: Subject<any>;
     private stream;
 
-    constructor(constraints) {
-        if (constraints.hasOwnProperty('idealLow') && constraints.idealLow === true) {
-            constraints = {
-                audio: true,
-                video: {
-                    width: 160,
-                    height: 160,
-                    frameRate: 8
+    constructor(constraints?) {
+        if (constraints) {
+            if (constraints.hasOwnProperty('idealLow') && constraints.idealLow === true) {
+                constraints = {
+                    audio: true,
+                    video: {
+                        width: 160,
+                        height: 160,
+                        frameRate: 8
+                    }
                 }
             }
         }
