@@ -9,7 +9,7 @@
 
   h4 {
     text-align: center;
-    border-bottom: #d3d3d3;
+    border-bottom: $light-gray;
     font-family: "Amatic SC", cursive;
     font-size: 3em;
     word-spacing: 0.2em;
@@ -44,7 +44,7 @@
 
     padding: 15px;
 
-    border-bottom: 1px solid #d3d3d3;
+    border-bottom: 1px solid $light-gray;
 
     .label-mandatory {
       color: red;
@@ -99,11 +99,11 @@
       padding: 25px;
       font-size: 1.2em;
 
-      border: 1px solid #d3d3d3;
+      border: 1px solid $light-gray;
     }
 
     .textarea {
-      border: 1px solid #d3d3d3;
+      border: 1px solid $light-gray;
       border-radius: 20px;
       font-size: 1.2em;
 
@@ -111,34 +111,6 @@
       float: left;
 
       margin-top: 20px;
-    }
-
-    .invitation-label {
-      float: none;
-    }
-
-    .invitation-input {
-      float: left;
-
-      margin-top: 20px;
-    }
-
-    .invitation-button-wrapper {
-      float: left;
-      .add-invitation-button {
-        width: 200px;
-        display: block;
-        float: left;
-        color: $orangeBold;
-
-        margin-left: 35%;
-
-        font-size: 1.05em;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
     }
 
     .error {
@@ -157,28 +129,6 @@
       border-radius: 40px;
       float: right;
       margin-top: 30px;
-    }
-
-    .invitation-error {
-      margin-top: 40px;
-      border-radius: 40px;
-    }
-
-    .multiple-input-wrapper {
-      position: relative;
-      float: left;
-
-      i {
-        font-size: 2em;
-        color: gray;
-        position: absolute;
-        top: 30px; right: 25px;
-
-        &:hover {
-          color: red;
-          cursor: pointer;
-        }
-      }
     }
   }
 
@@ -207,4 +157,98 @@
   .coffee-date {
     float: left !important;
   }
+}
+
+.modal-header h5 {
+  font-weight: normal;
+  text-align: left;
+}
+
+.modal-body {
+  .modal-share-wrapper {
+    width: 100%;
+    float: left;
+
+    position: relative;
+
+    padding: 20px 0 20px 0;
+  }
+
+  .modal-share-button {
+    width: 20%;
+    float: right;
+
+    border-radius: 40px;
+  }
+
+  .modal-url {
+    width: 70%;
+    float: left;
+
+    padding: 10px;
+    border: 1px solid $light-gray;
+  }
+
+  .content-copied {
+    position: absolute;
+    width: 90px;
+    opacity: 1;
+
+    bottom: 0;
+    right: 136px;
+
+    border: 1px solid $light-gray;
+    padding: 10px;
+
+    border-radius: 40px;
+    background-color: white;
+
+    text-align: center;
+  }
+}
+
+.modal-footer {
+  display: block;
+
+  .modal-go-to-table-button {
+    display: block;
+    font-size: 1.2em;
+    float: right !important;
+
+    border-radius: 40px;
+  }
+}
+
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.animated {
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
+
+.fadeOut {
+  animation-name: fadeOut;
 }

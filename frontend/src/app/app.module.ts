@@ -9,6 +9,9 @@ import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import {CaffeeworldModule} from './caffeeworld/caffeeworld.module';
+import ObservableFactory from "./caffeeworld/infrastructure/ObservableFactory";
+import AppSocket from "./caffeeworld/infrastructure/AppSocket";
+import {environment} from "../environments/environment";
 
 @NgModule({
     declarations: [
@@ -24,7 +27,18 @@ import {CaffeeworldModule} from './caffeeworld/caffeeworld.module';
         ComponentsModule,
         CaffeeworldModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: AppSocket,
+            useFactory: (observableFactory: ObservableFactory) => new AppSocket(
+                environment.siteUrl + '/',
+                {path: '/socket', reconnectionAttempts: 5},
+                observableFactory
+            ),
+            deps: [ObservableFactory]
+        },
+        {provide: ObservableFactory, useClass: ObservableFactory}
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

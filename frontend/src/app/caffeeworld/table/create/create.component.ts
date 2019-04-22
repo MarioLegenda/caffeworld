@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import InvitationService from './service/InvitationService';
-import CreateTableModel from '../model/CreateTableModel';
+import {Component, Input, Output} from '@angular/core';
+import CreateTableModel from '../../infrastructure/model/CreateTableModel';
+import {TableSocketService} from "../../infrastructure/TableSocketService";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
     selector: 'app-create-room',
@@ -10,27 +12,30 @@ import CreateTableModel from '../model/CreateTableModel';
 export class CreateComponent {
     createTableModel: CreateTableModel = new CreateTableModel();
     formDisabled = true;
+    roomData = null;
+    copied = false;
 
-    @Output() open: EventEmitter<any> = new EventEmitter();
+    constructor(
+        private tableSocketService: TableSocketService,
+        private modalService: NgbModal,
+        private clipboardService: ClipboardService
+    ) {}
 
-    constructor(private invitationService: InvitationService) {
-        this.invitationService.clear();
-        this.invitationService.init(1);
-    }
-
-    addInvitationField() {
-        this.invitationService.update();
-    }
-
-    onSubmit(isValid: boolean) {
+    onSubmit(isValid: boolean, content) {
         if (isValid) {
-            this.createTableModel.invitations = this.invitationService.asArray;
 
-            console.log(this.createTableModel);
+            this.tableSocketService.emitCreateTable(this.createTableModel);
+
+            this.tableSocketService.onTableCreated().subscribe((data) => {
+                this.roomData = data;
+                this.modalService.open(content);
+            });
         }
     }
 
-    get debugging() {
-        return JSON.stringify(this.createTableModel);
+    onCopy() {
+        this.copied = true;
+
+        this.clipboardService.copyFromContent(this.roomData.room.url);
     }
 }

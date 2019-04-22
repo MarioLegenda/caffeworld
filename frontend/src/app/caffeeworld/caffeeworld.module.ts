@@ -8,10 +8,11 @@ import { LandingComponent } from './landing/landing.component';
 import { CaffeeworldComponent } from './caffeeworld.component';
 import {CreateComponent} from './table/create/create.component';
 import {RouterModule} from '@angular/router';
-import InvitationService from './table/create/service/InvitationService';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
+import {TableSocketService} from "./infrastructure/TableSocketService";
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
     imports: [
@@ -21,19 +22,18 @@ import {AboutComponent} from './about/about.component';
         NgbModule,
         JwBootstrapSwitchNg2Module,
         RouterModule,
+        ClipboardModule,
     ],
     declarations: [
         CaffeeworldComponent,
         LandingComponent,
         CreateComponent,
         PageNotFoundComponent,
-        AboutComponent
+        AboutComponent,
     ],
+    exports: [CaffeeworldComponent],
     providers: [
-        {
-            provide: InvitationService,
-            useFactory: () => new InvitationService(5),
-        }
+        {provide: TableSocketService, useClass: TableSocketService},
     ]
 })
 export class CaffeeworldModule { }
