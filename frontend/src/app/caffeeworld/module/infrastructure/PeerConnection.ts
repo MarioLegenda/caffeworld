@@ -6,27 +6,23 @@ export default class PeerConnection {
 
     private rtcPeerConnection: RTCPeerConnection;
 
-    private subject: Subject<any>;
-
     setConfiguration(configuration?: IRTCConfiguration | null): PeerConnection {
         this.configuration = configuration;
 
         return this;
     }
 
-    onIceCandidate(subscriber: (value: any) => void) {
+    onIceCandidate(subscriber: Function) {
     }
 
-    onNegotiationNeeded(subscriber: (value: any) => void) {
+    onNegotiationNeeded(subscriber: Function) {
     }
 
-    onTrack(subscriber: (value: any) => void) {
+    onTrack(subscriber: Function) {
 
     }
 
     create(): RTCPeerConnection {
-        this.subject = new Subject();
-
         this.rtcPeerConnection = new RTCPeerConnection(this.configuration);
 
         return this.rtcPeerConnection;
