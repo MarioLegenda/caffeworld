@@ -22,6 +22,7 @@ export default class ObservableFactory {
             value.unsubscribe();
         });
 
-        this.observables.clear();
+        this.observables = null;
+        this.observables = new Map();
     }
 }

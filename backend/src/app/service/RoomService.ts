@@ -8,6 +8,7 @@ export default class RoomService {
         // data variable is the room identifier in this case
         const {data, socket} = socketMiddlewareResult;
         const max = 6;
+
         const sessionUpdateEvent = 'app.events.room.session_updated';
 
         // see how many users are in this room
@@ -26,7 +27,10 @@ export default class RoomService {
             const sData = JSON.parse(sessionData);
             const room = sData.room;
 
+            console.log(`Client data fetched: ${sessionData}`);
+
             if (!room.hasOwnProperty('sessions')) {
+                console.log('Client has no sessions. Session is set to 1');
                 room['sessions'] = 1;
 
                 sData.room = room;
@@ -35,11 +39,26 @@ export default class RoomService {
 
                 socket.join(data);
 
+                console.log(`${sessionUpdateEvent} is sent to the client`);
                 socket.emit(sessionUpdateEvent, sData);
-            }
+            } else if (room.hasOwnProperty('sessions')) {
+                console.log(`Redis has session property: ${room.sessions}`);
 
-            if (room.hasOwnProperty('sessions')) {
-                if (room.sessions >= max) socket.emit('app.events.room.max_session_reached');
+                if (room.sessions >= max) {
+                    console.log(`Max number of sessions reached. Sending app.event.error`);
+                    socket.emit('app.event.error');
+
+                    return;
+                }
+
+                room.sessions += 1;
+
+                sData.room = room;
+
+                socket.join(data);
+
+                console.log(`Emitting ${sessionUpdateEvent}`);
+                socket.emit(sessionUpdateEvent, sData);
             }
         });
     }

@@ -23,7 +23,6 @@ export class CreateComponent {
 
     onSubmit(isValid: boolean, content) {
         if (isValid) {
-
             this.tableSocketService.emitCreateTable(this.createTableModel);
 
             this.tableSocketService.onTableCreated().subscribe((data) => {
@@ -31,6 +30,10 @@ export class CreateComponent {
                 this.modalService.open(content);
             });
         }
+    }
+
+    goToTable(url) {
+        (window as any).location.href = url;
     }
 
     onCopy() {

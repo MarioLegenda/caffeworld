@@ -1,9 +1,14 @@
 import {IRTCConfiguration} from "./contract/IRTCConfiguration";
+import {Injectable} from "@angular/core";
 
+@Injectable()
 export default class PeerConnection {
     private configuration: IRTCConfiguration | null;
 
     private rtcPeerConnection: RTCPeerConnection;
+
+    constructor() {
+    }
 
     setConfiguration(configuration?: IRTCConfiguration | null): PeerConnection {
         this.configuration = configuration;
@@ -24,6 +29,10 @@ export default class PeerConnection {
     }
 
     create(): RTCPeerConnection {
+        if (this.rtcPeerConnection) {
+            throw new Error(`Invalid usage of PeerConnection. RTCPeerConnection already created`);
+        }
+
         this.rtcPeerConnection = new RTCPeerConnection(this.configuration);
 
         return this.rtcPeerConnection;

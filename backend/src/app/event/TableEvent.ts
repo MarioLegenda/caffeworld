@@ -25,6 +25,7 @@ export default class TableEvent {
             }
 
             subject.next({data: data, socket: socket});
+            subject.complete();
         });
 
         return this.observableFactory.getObservable(this.createTableEvent);

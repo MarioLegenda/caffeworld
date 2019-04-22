@@ -25,6 +25,7 @@ export default class RoomEvent {
             }
 
             subject.next({data: data, socket: socket});
+            subject.complete();
         });
 
         return this.observableFactory.getObservable(this.roomEnteredEvent);

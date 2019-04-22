@@ -1,7 +1,9 @@
 import {ObservableInput, Subject} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {of} from "rxjs/internal/observable/of";
+import {Injectable} from "@angular/core";
 
+@Injectable()
 export default class GetUserMedia {
     private subject: Subject<any>;
     private stream;
@@ -29,10 +31,14 @@ export default class GetUserMedia {
     }
 
     destroy() {
-        this.subject.unsubscribe();
+        if (!this.subject.closed) {
+            this.subject.unsubscribe();
+        }
+
         this.subject = null;
         this.stream.getTracks().forEach(track => track.stop());
         this.stream = null;
+        this.constraints = null;
     }
 
     subscribe(subscriber: (value: any) => void, context: object | null = null) {

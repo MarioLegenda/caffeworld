@@ -4,7 +4,8 @@ require('dotenv').config();
 
 import {app} from './app';
 
-const io = require("socket.io")(app.http, { pingTimeout: 10, path: '/socket' });
+const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
+
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Symbols} from "./src/container/Symbols";
 import TableEvent from "./src/app/event/TableEvent";
@@ -43,8 +44,12 @@ app.init()
             roomEvent.onRoomEntered(socket).subscribe(roomService.roomEntered);
 
             socket.on('disconnect', () => {
+                console.log('Server has disconnected');
+
                 tableEvent.flushEvents();
                 roomEvent.flushEvents();
+
+                socket.disconnect();
             });
         });
 

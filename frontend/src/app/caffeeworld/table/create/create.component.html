@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a routerLink="{{roomData.room.path}}" class="btn btn-primary modal-go-to-table-button" (click)="c()">Go to your table</a>
+                    <a (click)="goToTable(roomData.room.url)" class="btn btn-primary modal-go-to-table-button">Go to your table</a>
                 </div>
 
             </ng-template>
