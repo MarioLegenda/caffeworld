@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
+import {InteractionComponent} from "./components/interaction.component";
 
 @NgModule({
     imports: [
@@ -12,7 +13,8 @@ import {RoomRoutingModule} from "./room-routing.module";
         RoomRoutingModule,
     ],
     declarations: [
-        RoomComponent
+        RoomComponent,
+        InteractionComponent
     ],
     bootstrap: [RoomComponent],
     providers: []
