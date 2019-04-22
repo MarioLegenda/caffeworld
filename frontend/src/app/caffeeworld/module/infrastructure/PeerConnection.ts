@@ -1,5 +1,4 @@
 import {IRTCConfiguration} from "./contract/IRTCConfiguration";
-import {Subject} from "rxjs";
 
 export default class PeerConnection {
     private configuration: IRTCConfiguration | null;
@@ -12,14 +11,16 @@ export default class PeerConnection {
         return this;
     }
 
-    onIceCandidate(subscriber: Function) {
+    onIceCandidate(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
+        this.rtcPeerConnection.onicecandidate = subscriber;
     }
 
-    onNegotiationNeeded(subscriber: Function) {
+    onNegotiationNeeded(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
+        this.rtcPeerConnection.onnegotiationneeded = subscriber;
     }
 
-    onTrack(subscriber: Function) {
-
+    onTrack(subscriber: (event: RTCTrackEvent) => any) {
+        this.rtcPeerConnection.ontrack = subscriber;
     }
 
     create(): RTCPeerConnection {
