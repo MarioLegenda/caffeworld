@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, ElementRef} from '@angular/core';
+import GetUserMedia from "../infrastructure/GetUserMedia";
 
 @Component({
     selector: 'app-room',
