@@ -5,6 +5,7 @@ import {of} from "rxjs/internal/observable/of";
 export default class GetUserMedia {
     private subject: Subject<any>;
     private stream;
+    private constraints;
 
     constructor(constraints?) {
         if (constraints) {
@@ -20,14 +21,11 @@ export default class GetUserMedia {
             }
         }
 
+        this.constraints = constraints;
+
         this.subject = new Subject();
 
         this.subject.pipe(catchError(this.onError));
-
-        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            this.stream = stream;
-            this.subject.next(stream);
-        });
     }
 
     destroy() {
@@ -38,9 +36,16 @@ export default class GetUserMedia {
     }
 
     subscribe(subscriber: (value: any) => void, context: object | null = null) {
-        return this.subject.subscribe((stream) => {
-            subscriber.call((context) ? context: this, ...[stream]);
+        navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
+            this.stream = stream;
+            this.subject.next(stream);
+
+            this.subject.subscribe((stream) => {
+                subscriber.call((context) ? context: this, ...[stream]);
+            });
         });
+
+        return this.subject;
     }
 
     private onError(err: any, observable: ObservableInput<any>): ObservableInput<any> {

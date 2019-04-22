@@ -17,6 +17,7 @@ app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
 app.expressApp.get('**', function(req, res) {res.sendFile(app.path.join(`${__dirname}/public/index.html`));});
 
+let socketConnected = false;
 app.init()
     .on('app.event.redis.ready', () => {
         console.log('Redis is ready');
@@ -34,22 +35,26 @@ app.init()
         const roomService: RoomService = ContainerWrapper.container.getDependency(Symbols.RoomService);
 
         socketCommunicator.onConnect((socket) => {
-            console.log('Socket is connected');
+            if (!socketConnected) {
+                console.log('Socket is connected');
 
-            const createTableMiddleware = middlewareFactory([
-                validateTable
-            ]);
+                const createTableMiddleware = middlewareFactory([
+                    validateTable
+                ]);
 
-            tableEvent
-                .onTableCreate(socket, createTableMiddleware)
-                .subscribe(tableService.createTable);
+                tableEvent
+                    .onTableCreate(socket, createTableMiddleware)
+                    .subscribe(tableService.createTable);
 
-            roomEvent.onRoomEntered(socket).subscribe(roomService.roomEntered);
+                roomEvent.onRoomEntered(socket).subscribe(roomService.roomEntered);
 
-            socket.on('disconnect', () => {
-                tableEvent.flushEvents();
-                roomEvent.flushEvents();
-            });
+                socket.on('disconnect', () => {
+                    tableEvent.flushEvents();
+                    roomEvent.flushEvents();
+                });
+
+                socketConnected = true;
+            }
         });
 
         console.log('Server is ready. Listening on port 3000');

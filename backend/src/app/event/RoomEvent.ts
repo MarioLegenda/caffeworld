@@ -8,7 +8,7 @@ import ObservableFactory from "../util/ObservableFactory";
 export default class RoomEvent {
     private observableFactory;
 
-    private readonly createTableEvent = 'app.event.room.entered';
+    private readonly roomEnteredEvent = 'app.events.room.entered';
 
     constructor(
         @inject(Symbols.ObservableFactory) observableFactory: ObservableFactory
@@ -17,15 +17,17 @@ export default class RoomEvent {
     }
 
     onRoomEntered(socket: Socket, middlewareImpl?: Function | null): Observable<object> {
-        const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.createTableEvent);
+        const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.roomEnteredEvent);
 
-        socket.on(this.createTableEvent, (data) => {
-            const middlewareData = middlewareImpl(data);
+        socket.on(this.roomEnteredEvent, (data) => {
+            if (middlewareImpl) {
+                data = middlewareImpl(data);
+            }
 
-            subject.next({data: middlewareData.data, socket: socket});
+            subject.next({data: data, socket: socket});
         });
 
-        return this.observableFactory.getObservable(this.createTableEvent);
+        return this.observableFactory.getObservable(this.roomEnteredEvent);
     }
 
     flushEvents() {

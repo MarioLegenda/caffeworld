@@ -6,8 +6,10 @@ const uuid = require('uuid/v4');
 @injectable()
 export default class RoomService {
     roomEntered(socketMiddlewareResult: ISocketMiddlewareResult | any) {
-        const {identifier, socket} = socketMiddlewareResult;
+        // data variable is the room identifier in this case
+        const {data, socket} = socketMiddlewareResult;
         const max = 6;
+        const sessionUpdateEvent = 'app.events.room.session_updated';
 
         // see how many users are in this room
         // if there are none, create and add 1
@@ -15,7 +17,7 @@ export default class RoomService {
         // if it is equal of higher than 6, do nothing
         // if it is lower than 6, add the current user (socket) to the room
         // then, send the app.event.room.user_added event to the client
-        Redis.client.get(identifier, function(err, sessionData: string) {
+        Redis.client.get(data, function(err, sessionData: string) {
             if (err) {
                 console.error(`An error occurred with message: ${err.message}`);
 
@@ -30,11 +32,11 @@ export default class RoomService {
 
                 sData.room = room;
 
-                Redis.client.set(identifier, JSON.stringify(sData));
+                Redis.client.set(data, JSON.stringify(sData));
 
-                socket.join(identifier);
+                socket.join(data);
 
-                socket.emit('app.events.room.session_updated', sData);
+                socket.emit(sessionUpdateEvent, sData);
             }
 
             if (room.hasOwnProperty('sessions')) {
