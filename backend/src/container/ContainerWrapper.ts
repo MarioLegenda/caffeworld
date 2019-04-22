@@ -1,5 +1,4 @@
 import {Container} from "inversify";
-import SocketCommunicator from "../app/SocketCommunicator";
 import {Symbols} from "./Symbols";
 import TableEvent from "../app/event/TableEvent";
 import ObservableFactory from "../app/util/ObservableFactory";
@@ -27,7 +26,6 @@ export default class ContainerWrapper {
     }
 
     bindDependencies() {
-        ContainerWrapper.inversify.bind<SocketCommunicator>(Symbols.SocketCommunicator).to(SocketCommunicator);
         ContainerWrapper.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
         ContainerWrapper.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
         ContainerWrapper.inversify.bind<ObservableFactory>(Symbols.ObservableFactory).to(ObservableFactory);

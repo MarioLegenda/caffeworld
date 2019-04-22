@@ -3,9 +3,10 @@ import 'reflect-metadata';
 require('dotenv').config();
 
 import {app} from './app';
+
+const io = require("socket.io")(app.http, { pingTimeout: 10, path: '/socket' });
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Symbols} from "./src/container/Symbols";
-import SocketCommunicator from "./src/app/SocketCommunicator";
 import TableEvent from "./src/app/event/TableEvent";
 import TableService from "./src/app/service/TableService";
 import {middlewareFactory} from "./src/app/util/middlewareFactory";
@@ -27,21 +28,16 @@ app.init()
     .on('app.event.server.ready', () => {
         ContainerWrapper.createContainer().bindDependencies();
 
-        const socketCommunicator: SocketCommunicator = ContainerWrapper.container.getDependency(Symbols.SocketCommunicator);
         const tableEvent: TableEvent = ContainerWrapper.container.getDependency(Symbols.TableEvent);
         const roomEvent: RoomEvent = ContainerWrapper.container.getDependency(Symbols.RoomEvent);
         const tableService: TableService = ContainerWrapper.container.getDependency(Symbols.TableService);
         const roomService: RoomService = ContainerWrapper.container.getDependency(Symbols.RoomService);
 
-        socketCommunicator.onConnect((socket) => {
+        io.on('connection', (socket) => {
             console.log('Socket is connected');
 
-            const createTableMiddleware = middlewareFactory([
-                validateTable
-            ]);
-
             tableEvent
-                .onTableCreate(socket, createTableMiddleware)
+                .onTableCreate(socket, middlewareFactory([validateTable]))
                 .subscribe(tableService.createTable);
 
             roomEvent.onRoomEntered(socket).subscribe(roomService.roomEntered);

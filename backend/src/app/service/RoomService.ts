@@ -1,11 +1,10 @@
 import {injectable} from "inversify";
-import ISocketMiddlewareResult from "../util/ISocketMiddlewareResult";
+import ISocketData from "../util/ISocketData";
 import Redis from "../../dataSource/redis";
-const uuid = require('uuid/v4');
 
 @injectable()
 export default class RoomService {
-    roomEntered(socketMiddlewareResult: ISocketMiddlewareResult | any) {
+    roomEntered(socketMiddlewareResult: ISocketData | any) {
         // data variable is the room identifier in this case
         const {data, socket} = socketMiddlewareResult;
         const max = 6;
