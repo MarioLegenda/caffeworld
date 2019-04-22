@@ -11,6 +11,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import {CaffeeworldModule} from './caffeeworld/caffeeworld.module';
 import ObservableFactory from "./caffeeworld/infrastructure/ObservableFactory";
 import AppSocket from "./caffeeworld/infrastructure/AppSocket";
+import {environment} from "../environments/environment";
 
 @NgModule({
     declarations: [
@@ -30,7 +31,7 @@ import AppSocket from "./caffeeworld/infrastructure/AppSocket";
         {
             provide: AppSocket,
             useFactory: (observableFactory: ObservableFactory) => new AppSocket(
-                'http://11.11.11.12/',
+                environment.siteUrl + '/',
                 {path: '/socket', reconnectionAttempts: 5},
                 observableFactory
             ),
