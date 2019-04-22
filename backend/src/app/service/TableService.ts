@@ -22,8 +22,6 @@ export default class TableService {
 
         Redis.client.set(roomIdentifier, JSON.stringify(redisData));
 
-        socket.join(roomIdentifier);
-
         socket.emit('app.event.table.created', redisData)
     }
 }

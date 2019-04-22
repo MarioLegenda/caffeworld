@@ -1,14 +1,24 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import GetUserMedia from "../../infrastructure/GetUserMedia";
 import PeerConnection from "../../infrastructure/PeerConnection";
+import AppSocket from "../../../infrastructure/AppSocket";
 
 @Component({
     selector: 'app-interaction',
     templateUrl: './interaction.component.html',
     styleUrls: ['./interaction.component.scss'],
+    providers: [
+        {
+            provide: GetUserMedia,
+            useFactory: () => {
+                return new GetUserMedia({idealLow: true});
+            }
+        },
+        {provide: PeerConnection, useClass: PeerConnection}
+    ]
 })
 export class InteractionComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('localVideo') localVideo: ElementRef;
+    @ViewChild('video') video: ElementRef;
 
     @Input('onDestroy') onDestroy;
     @Input('onGetUserMediaCreated') onGetUserMediaCreated;
@@ -19,6 +29,20 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
     ) {}
 
     ngAfterViewInit() {
+        this.peerConnection.create();
+
+        this.peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
+            console.log('onIceCandidate')
+        });
+
+        this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
+            console.log('onNegotiationNeeded');
+        });
+
+        this.peerConnection.onTrack((event: RTCTrackEvent) => {
+            console.log('onTrack');
+        });
+
         this.getUserMedia.subscribe((stream) => {
             if (this.onGetUserMediaCreated && this.onGetUserMediaCreated instanceof Function) {
                 this.onGetUserMediaCreated.call(null, ...[stream]);
@@ -26,21 +50,21 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
                 return;
             }
 
-            this.localVideo.nativeElement.volume = 0;
-            this.localVideo.nativeElement.muted = 0;
+            this.video.nativeElement.volume = 0;
+            this.video.nativeElement.muted = 0;
 
-            this.localVideo.nativeElement.srcObject = stream;
+            this.video.nativeElement.srcObject = stream;
         });
     }
 
     ngOnDestroy(): void {
         if (this.onDestroy && this.onDestroy instanceof Function) {
-            this.onDestroy.call(null, ...[this.getUserMedia, this.localVideo])
+            this.onDestroy.call(null, ...[this.getUserMedia, this.video])
         }
 
         this.getUserMedia.destroy();
         this.getUserMedia = null;
-        this.localVideo.nativeElement.srcObject = null;
-        this.localVideo.nativeElement.remove();
+        this.video.nativeElement.srcObject = null;
+        this.video.nativeElement.remove();
     }
 }

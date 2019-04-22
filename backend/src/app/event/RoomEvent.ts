@@ -5,10 +5,10 @@ import {Observable, Subject} from "rxjs";
 import ObservableFactory from "../util/ObservableFactory";
 
 @injectable()
-export default class TableEvent {
+export default class RoomEvent {
     private observableFactory;
 
-    private readonly createTableEvent = 'app.event.table.create';
+    private readonly createTableEvent = 'app.event.room.entered';
 
     constructor(
         @inject(Symbols.ObservableFactory) observableFactory: ObservableFactory
@@ -16,15 +16,13 @@ export default class TableEvent {
         this.observableFactory = observableFactory;
     }
 
-    onTableCreate(socket: Socket, middlewareImpl?: Function | null): Observable<object> {
+    onRoomEntered(socket: Socket, middlewareImpl?: Function | null): Observable<object> {
         const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.createTableEvent);
 
         socket.on(this.createTableEvent, (data) => {
-            if (middlewareImpl) {
-                data = middlewareImpl(data).data;
-            }
+            const middlewareData = middlewareImpl(data);
 
-            subject.next({data: data, socket: socket});
+            subject.next({data: middlewareData.data, socket: socket});
         });
 
         return this.observableFactory.getObservable(this.createTableEvent);

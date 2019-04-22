@@ -5,9 +5,6 @@ import {RouterModule} from '@angular/router';
 import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
 import {InteractionComponent} from "./components/interaction.component";
-import AppSocket from "../../infrastructure/AppSocket";
-import ObservableFactory from "../../infrastructure/ObservableFactory";
-import {environment} from "../../../../environments/environment";
 import GetUserMedia from "../infrastructure/GetUserMedia";
 import PeerConnection from "../infrastructure/PeerConnection";
 
@@ -29,7 +26,7 @@ import PeerConnection from "../infrastructure/PeerConnection";
                 return new GetUserMedia({idealLow: true});
             }
         },
-        {provide: PeerConnection}
+        {provide: PeerConnection, useClass: PeerConnection}
     ]
 })
 export class RoomModule { }

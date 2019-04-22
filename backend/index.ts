@@ -10,6 +10,8 @@ import TableEvent from "./src/app/event/TableEvent";
 import TableService from "./src/app/service/TableService";
 import {middlewareFactory} from "./src/app/util/middlewareFactory";
 import {validateTable} from "./src/app/util/middleware";
+import RoomEvent from "./src/app/event/RoomEvent";
+import RoomService from "./src/app/service/RoomService";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -27,7 +29,9 @@ app.init()
 
         const socketCommunicator: SocketCommunicator = ContainerWrapper.container.getDependency(Symbols.SocketCommunicator);
         const tableEvent: TableEvent = ContainerWrapper.container.getDependency(Symbols.TableEvent);
+        const roomEvent: RoomEvent = ContainerWrapper.container.getDependency(Symbols.RoomEvent);
         const tableService: TableService = ContainerWrapper.container.getDependency(Symbols.TableService);
+        const roomService: RoomService = ContainerWrapper.container.getDependency(Symbols.RoomService);
 
         socketCommunicator.onConnect((socket) => {
             console.log('Socket is connected');
@@ -40,8 +44,11 @@ app.init()
                 .onTableCreate(socket, createTableMiddleware)
                 .subscribe(tableService.createTable);
 
+            roomEvent.onRoomEntered(socket).subscribe(roomService.roomEntered);
+
             socket.on('disconnect', () => {
                 tableEvent.flushEvents();
+                roomEvent.flushEvents();
             });
         });
 
