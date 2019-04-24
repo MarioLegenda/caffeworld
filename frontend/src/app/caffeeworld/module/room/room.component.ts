@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import AppSocket from "../../infrastructure/AppSocket";
+import {Component, OnInit} from '@angular/core';
+import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import {Router} from "@angular/router";
 
 @Component({
@@ -7,9 +7,9 @@ import {Router} from "@angular/router";
     templateUrl: './room.component.html',
     styleUrls: ['./room.component.scss'],
 })
-export class RoomComponent implements OnInit{
+export class RoomComponent implements OnInit {
     constructor(
-        private socket: AppSocket,
+        private roomEnteredEvent: RoomEnteredEvent,
         private router: Router
     ) {}
 
@@ -17,6 +17,6 @@ export class RoomComponent implements OnInit{
         const url: string = this.router.url;
         const identifier: string = url.split('/')[2];
 
-        this.socket.emit('app.events.room.entered', identifier);
+        this.roomEnteredEvent.emitRoomEntered(identifier);
     }
 }

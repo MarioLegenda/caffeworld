@@ -1,30 +1,31 @@
-import {Component, Input, OnDestroy, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
-import {TableSocketService} from "../../infrastructure/TableSocketService";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ClipboardService} from "ngx-clipboard";
+import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
+import IResponseData from "../../infrastructure/web/IResponseData";
 
 @Component({
     selector: 'app-create-room',
     templateUrl: './create.component.html',
     styleUrls: ['./create.component.scss'],
 })
-export class CreateComponent implements OnDestroy {
+export class CreateComponent {
     createTableModel: CreateTableModel = new CreateTableModel();
     formDisabled = true;
     roomData = null;
     copied = false;
 
     constructor(
-        private tableSocketService: TableSocketService,
+        private tableSocketService: CreateTableEvent,
         private modalService: NgbModal,
         private clipboardService: ClipboardService
     ) {}
 
     onSubmit(isValid: boolean, content) {
         if (isValid) {
-            this.tableSocketService.onTableCreated((data) => {
-                this.roomData = data;
+            this.tableSocketService.onTableCreated((data: IResponseData) => {
+                this.roomData = data.body;
                 this.modalService.open(content);
             });
 
@@ -40,9 +41,5 @@ export class CreateComponent implements OnDestroy {
         this.copied = true;
 
         this.clipboardService.copyFromContent(this.roomData.room.url);
-    }
-
-    ngOnDestroy(): void {
-        this.tableSocketService.unsubscribe();
     }
 }

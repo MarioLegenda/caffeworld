@@ -1,6 +1,8 @@
 import {injectable} from "inversify";
 import ISocketData from "../util/ISocketData";
 import Redis from "../../dataSource/redis";
+import IResponseData from "../web/IResponseData";
+import {TransportTypeEnum} from "../web/TrasportTypeEnum";
 
 @injectable()
 export default class RoomService {
@@ -38,7 +40,15 @@ export default class RoomService {
                 Redis.client.set(data, JSON.stringify(sData));
 
                 console.log(`${sessionUpdateEvent} is sent to the client`);
-                socket.emit(sessionUpdateEvent, sData);
+
+                const responseData: IResponseData = {
+                    transportType: TransportTypeEnum.Socket,
+                    http: null,
+                    socket: null,
+                    body: sData
+                };
+
+                socket.emit(sessionUpdateEvent, responseData);
             } else if (room.hasOwnProperty('sessions')) {
                 console.log(`Redis has session property: ${room.sessions}`);
 
@@ -52,6 +62,13 @@ export default class RoomService {
                 room.sessions += 1;
 
                 sData.room = room;
+
+                const responseData: IResponseData = {
+                    transportType: TransportTypeEnum.Socket,
+                    http: null,
+                    socket: null,
+                    body: sData
+                };
 
                 console.log(`Emitting ${sessionUpdateEvent}`);
                 socket.emit(sessionUpdateEvent, sData);

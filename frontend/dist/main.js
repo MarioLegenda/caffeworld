@@ -373,7 +373,7 @@ var CaffeeworldModule = /** @class */ (function () {
                     provide: _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"],
                     useFactory: function () { return _infrastructure_AppSocket__WEBPACK_IMPORTED_MODULE_15__["default"].create('http://11.11.11.12', {}); },
                 },
-                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketService"] }
+                { provide: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketServiceEvent"], useClass: _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_14__["TableSocketServiceEvent"] }
             ]
         })
     ], CaffeeworldModule);
@@ -704,7 +704,7 @@ var CreateComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./create.component.scss */ "./src/app/caffeeworld/table/create/create.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_service_InvitationService__WEBPACK_IMPORTED_MODULE_2__["default"],
-            _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_4__["TableSocketService"]])
+            _infrastructure_TableSocketService__WEBPACK_IMPORTED_MODULE_4__["TableSocketServiceEvent"]])
     ], CreateComponent);
     return CreateComponent;
 }());

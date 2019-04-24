@@ -1,6 +1,9 @@
 import {injectable} from "inversify";
 import Redis from "../../dataSource/redis";
 import ISocketData from "../util/ISocketData";
+import IResponseData from "../web/IResponseData";
+import {TransportTypeEnum} from "../web/TrasportTypeEnum";
+
 const uuid = require('uuid/v4');
 
 @injectable()
@@ -22,6 +25,13 @@ export default class TableService {
 
         Redis.client.set(roomIdentifier, JSON.stringify(redisData));
 
-        socket.emit('app.event.table.created', redisData)
+        const responseData: IResponseData = {
+            transportType: TransportTypeEnum.Socket,
+            http: null,
+            socket: null,
+            body: redisData
+        };
+
+        socket.emit('app.event.table.created', responseData);
     }
 }

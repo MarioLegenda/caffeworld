@@ -11,14 +11,8 @@ import {RouterModule} from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
-import {TableSocketService} from "./infrastructure/TableSocketService";
+import {CreateTableEvent} from "./infrastructure/event/CreateTableEvent";
 import { ClipboardModule } from 'ngx-clipboard';
-import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
-import AppSocket from "./infrastructure/AppSocket";
-import IObservableFactory from "./infrastructure/observableFactory/IObservableFactory";
-import SingleEventObservableFactory from "./infrastructure/observableFactory/SingleEventObservableFactory";
-import MultiEventObservableFactory from "./infrastructure/observableFactory/MultiEventObservableFactory";
-
 @NgModule({
     imports: [
         CommonModule,
@@ -38,14 +32,7 @@ import MultiEventObservableFactory from "./infrastructure/observableFactory/Mult
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        SingleEventObservableFactory,
-        MultiEventObservableFactory,
-        TableSocketService,
-        {
-            provide: AppSocket,
-            useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => new AppSocket(socketInstance, observableFactory),
-            deps: [SingletonSocketInstance, SingleEventObservableFactory]
-        }
+
     ]
 })
 export class CaffeeworldModule { }
