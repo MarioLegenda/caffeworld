@@ -16,7 +16,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
 import AppSocket from "./infrastructure/AppSocket";
 import IObservableFactory from "./infrastructure/observableFactory/IObservableFactory";
-import OnceObservableFactory from "./infrastructure/observableFactory/OnceObservableFactory";
+import SingleEventObservableFactory from "./infrastructure/observableFactory/SingleEventObservableFactory";
 
 @NgModule({
     imports: [
@@ -37,7 +37,7 @@ import OnceObservableFactory from "./infrastructure/observableFactory/OnceObserv
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        OnceObservableFactory,
+        SingleEventObservableFactory,
         {
             provide: TableSocketService,
             useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => {
@@ -45,7 +45,7 @@ import OnceObservableFactory from "./infrastructure/observableFactory/OnceObserv
                     new AppSocket(socketInstance, observableFactory),
                 );
             },
-            deps: [SingletonSocketInstance, OnceObservableFactory]
+            deps: [SingletonSocketInstance, SingleEventObservableFactory]
         }
     ]
 })

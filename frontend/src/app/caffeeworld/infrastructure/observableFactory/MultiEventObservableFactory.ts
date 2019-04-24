@@ -1,15 +1,15 @@
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
 import IObservableFactory from "./IObservableFactory";
-import OnceObservableFactory from "./OnceObservableFactory";
+import SingleEventObservableFactory from "./SingleEventObservableFactory";
 
 @Injectable()
-export default class CacheableObservableFactory implements IObservableFactory {
+export default class MultiEventObservableFactory implements IObservableFactory {
     private observables = new Map<string, Subject<any>>();
-    private observableFactory: OnceObservableFactory;
+    private singleEventObsFactory: SingleEventObservableFactory;
 
-    constructor(onceObservableFactory: OnceObservableFactory) {
-        this.observableFactory = onceObservableFactory;
+    constructor(singleEventObservableFactory: SingleEventObservableFactory) {
+        this.singleEventObsFactory = singleEventObservableFactory;
     }
 
     createObservable(name: string): void {
@@ -17,9 +17,9 @@ export default class CacheableObservableFactory implements IObservableFactory {
             throw new Error(`CacheableObservableFactory error. Observable '${name}' already exists`);
         }
 
-        this.observableFactory.createObservable(name);
+        this.singleEventObsFactory.createObservable(name);
 
-        this.observables.set(name, this.observableFactory.getObservable(name));
+        this.observables.set(name, this.singleEventObsFactory.getObservable(name));
     }
 
     hasObservable(name: string): boolean {

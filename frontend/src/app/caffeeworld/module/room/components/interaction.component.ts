@@ -4,7 +4,7 @@ import PeerConnection from "../../infrastructure/PeerConnection";
 import AppSocket from "../../../infrastructure/AppSocket";
 import SingletonSocketInstance from "../../../infrastructure/socket/SingletonSocketInstance";
 import IObservableFactory from "../../../infrastructure/observableFactory/IObservableFactory";
-import OnceObservableFactory from "../../../infrastructure/observableFactory/OnceObservableFactory";
+import SingleEventObservableFactory from "../../../infrastructure/observableFactory/SingleEventObservableFactory";
 
 @Component({
     selector: 'app-interaction',
@@ -17,6 +17,10 @@ import OnceObservableFactory from "../../../infrastructure/observableFactory/Onc
                 return new GetUserMedia({idealLow: true});
             }
         },
+        {
+            provide: SingleEventObservableFactory,
+            useFactory: () => new SingleEventObservableFactory()
+        },
         PeerConnection,
         {
             provide: AppSocket,
@@ -26,7 +30,7 @@ import OnceObservableFactory from "../../../infrastructure/observableFactory/Onc
                     observableFactory
                 );
             },
-            deps: [SingletonSocketInstance, OnceObservableFactory]
+            deps: [SingletonSocketInstance, SingleEventObservableFactory]
         }
     ]
 })
@@ -48,37 +52,27 @@ export class InteractionComponent implements OnDestroy {
             // create the peer connection
             this.interactionInit = true;
 
-            console.log(this.peerConnection);
+            this.peerConnection.create();
 
-            peerConnection.create();
-
-            peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
+            this.peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
                 console.log('onIceCandidate')
             });
 
-            peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
+            this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
                 console.log('onNegotiationNeeded');
             });
 
-            peerConnection.onTrack((event: RTCTrackEvent) => {
+            this.peerConnection.onTrack((event: RTCTrackEvent) => {
                 console.log('onTrack');
             });
 
-            getUserMedia.subscribe((stream) => {
-                if (this.onGetUserMediaCreated && this.onGetUserMediaCreated instanceof Function) {
-                    this.onGetUserMediaCreated.call(null, ...[stream]);
-
-                    return;
-                }
-
+            this.getUserMedia.subscribe((stream) => {
                 this.video.nativeElement.volume = 0;
                 this.video.nativeElement.muted = 0;
 
                 this.video.nativeElement.srcObject = stream;
             });
         });
-
-        this.socket.observe('app.events.room.session_updated');
     }
 
     ngOnDestroy(): void {

@@ -8,11 +8,7 @@ export default class PeerConnection {
 
     private rtcPeerConnection: RTCPeerConnection;
 
-    public uuid;
-
-    constructor() {
-        this.uuid = uuid();
-    }
+    public uuid = uuid();
 
     setConfiguration(configuration?: IRTCConfiguration | null): PeerConnection {
         this.configuration = configuration;

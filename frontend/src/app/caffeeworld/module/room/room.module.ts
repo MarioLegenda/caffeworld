@@ -10,7 +10,7 @@ import PeerConnection from "../infrastructure/PeerConnection";
 import AppSocket from "../../infrastructure/AppSocket";
 import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
 import IObservableFactory from "../../infrastructure/observableFactory/IObservableFactory";
-import OnceObservableFactory from "../../infrastructure/observableFactory/OnceObservableFactory";
+import SingleEventObservableFactory from "../../infrastructure/observableFactory/SingleEventObservableFactory";
 
 @NgModule({
     imports: [
@@ -32,7 +32,7 @@ import OnceObservableFactory from "../../infrastructure/observableFactory/OnceOb
                     observableFactory
                 );
             },
-            deps: [SingletonSocketInstance, OnceObservableFactory]
+            deps: [SingletonSocketInstance, SingleEventObservableFactory]
         },
         {
             provide: GetUserMedia,
