@@ -13,6 +13,9 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import {TableSocketService} from "./infrastructure/TableSocketService";
 import { ClipboardModule } from 'ngx-clipboard';
+import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
+import AppSocket from "./infrastructure/AppSocket";
+import ObservableFactoryFactory from "./infrastructure/observableFactory/ObservableFactoryFactory";
 
 @NgModule({
     imports: [
@@ -33,7 +36,15 @@ import { ClipboardModule } from 'ngx-clipboard';
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        {provide: TableSocketService, useClass: TableSocketService},
+        {
+            provide: TableSocketService,
+            useFactory: (socketInstance: SingletonSocketInstance) => {
+                return new TableSocketService(
+                    new AppSocket(socketInstance, ObservableFactoryFactory.createObservableFactory('once')),
+                );
+            },
+            deps: [SingletonSocketInstance]
+        }
     ]
 })
 export class CaffeeworldModule { }

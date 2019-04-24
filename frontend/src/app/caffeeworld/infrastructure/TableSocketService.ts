@@ -1,6 +1,5 @@
 import AppSocket from "./AppSocket";
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
 
 @Injectable()
 export class TableSocketService {
@@ -10,7 +9,11 @@ export class TableSocketService {
         this.socket.emit('app.event.table.create', data);
     }
 
-    onTableCreated(): Observable<any> {
-        return this.socket.observe('app.event.table.created');
+    onTableCreated(subscriber) {
+        this.socket.observe('app.event.table.created').subscribe(subscriber);
+    }
+
+    unsubscribe() {
+        this.socket.unsubscribe();
     }
 }

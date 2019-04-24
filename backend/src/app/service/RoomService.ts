@@ -37,8 +37,6 @@ export default class RoomService {
 
                 Redis.client.set(data, JSON.stringify(sData));
 
-                socket.join(data);
-
                 console.log(`${sessionUpdateEvent} is sent to the client`);
                 socket.emit(sessionUpdateEvent, sData);
             } else if (room.hasOwnProperty('sessions')) {
@@ -54,8 +52,6 @@ export default class RoomService {
                 room.sessions += 1;
 
                 sData.room = room;
-
-                socket.join(data);
 
                 console.log(`Emitting ${sessionUpdateEvent}`);
                 socket.emit(sessionUpdateEvent, sData);

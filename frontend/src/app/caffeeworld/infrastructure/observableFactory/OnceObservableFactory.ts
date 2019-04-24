@@ -3,7 +3,7 @@ import {Subject} from "rxjs";
 import IObservableFactory from "./IObservableFactory";
 
 @Injectable()
-export default class ObservableFactory implements IObservableFactory{
+export default class OnceObservableFactory implements IObservableFactory{
     private observable: Subject<any>;
     private name: string;
 
@@ -17,7 +17,7 @@ export default class ObservableFactory implements IObservableFactory{
     }
 
     getObservable(name: string): Subject<any> {
-        if (name !== this.name) throw new Error(`ObservableFactory error. Current observable is ${this.name} but you wanted ${name}. Create a new observable with the name '${name}' and call ObservableFactory::getObservable() with that name`);
+        if (name !== this.name) throw new Error(`OnceObservableFactory error. Current observable is ${this.name} but you wanted ${name}. Create a new observable with the name '${name}' and call ObservableFactory::getObservable() with that name`);
 
         return this.observable;
     }

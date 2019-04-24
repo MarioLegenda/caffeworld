@@ -1,22 +1,19 @@
-import io from 'socket.io-client';
-import {Observable} from "rxjs";
 import * as SocketIO from "socket.io";
 import {Injectable} from "@angular/core";
-import ObservableFactory from "./ObservableFactory";
+import SingletonSocketInstance from "./socket/SingletonSocketInstance";
+import IObservableFactory from "./observableFactory/IObservableFactory";
+import {Subject} from "rxjs";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export default class AppSocket {
     private socket: SocketIO.Server;
-    private observableFactory: ObservableFactory;
+    private observableFactory: IObservableFactory;
 
     constructor(
-        url: string,
-        config: object,
-        observableFactory: ObservableFactory
+        socketInstance: SingletonSocketInstance,
+        observableFactory: IObservableFactory
     ) {
-        this.socket = io(url, config);
+        this.socket = socketInstance.socket;
         this.observableFactory = observableFactory;
     }
 
@@ -24,13 +21,19 @@ export default class AppSocket {
         this.socket.emit(event, data);
     }
 
-    observe(event: string): Observable<any> {
-        const subject = this.observableFactory.createAndGetObservable(event);
+    observe(event: string): Subject<any> {
+        if (!this.observableFactory.hasObservable(event)) {
+            this.observableFactory.createObservable(event);
+        }
 
         this.socket.on(event, (data) => {
-            subject.next(data);
+            this.observableFactory.getObservable(event).next(data);
         });
 
         return this.observableFactory.getObservable(event);
+    }
+
+    unsubscribe() {
+        this.observableFactory.unsubscribe();
     }
 }

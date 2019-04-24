@@ -1,4 +1,4 @@
-import {Component, Input, Output} from '@angular/core';
+import {Component, Input, OnDestroy, Output} from '@angular/core';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {TableSocketService} from "../../infrastructure/TableSocketService";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
@@ -9,7 +9,7 @@ import {ClipboardService} from "ngx-clipboard";
     templateUrl: './create.component.html',
     styleUrls: ['./create.component.scss'],
 })
-export class CreateComponent {
+export class CreateComponent implements OnDestroy {
     createTableModel: CreateTableModel = new CreateTableModel();
     formDisabled = true;
     roomData = null;
@@ -23,12 +23,12 @@ export class CreateComponent {
 
     onSubmit(isValid: boolean, content) {
         if (isValid) {
-            this.tableSocketService.emitCreateTable(this.createTableModel);
-
-            this.tableSocketService.onTableCreated().subscribe((data) => {
+            this.tableSocketService.onTableCreated((data) => {
                 this.roomData = data;
                 this.modalService.open(content);
             });
+
+            this.tableSocketService.emitCreateTable(this.createTableModel);
         }
     }
 
@@ -40,5 +40,9 @@ export class CreateComponent {
         this.copied = true;
 
         this.clipboardService.copyFromContent(this.roomData.room.url);
+    }
+
+    ngOnDestroy(): void {
+        this.tableSocketService.unsubscribe();
     }
 }

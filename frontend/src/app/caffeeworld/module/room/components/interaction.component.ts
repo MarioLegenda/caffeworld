@@ -14,10 +14,10 @@ import AppSocket from "../../../infrastructure/AppSocket";
                 return new GetUserMedia({idealLow: true});
             }
         },
-        {provide: PeerConnection, useClass: PeerConnection}
+        PeerConnection
     ]
 })
-export class InteractionComponent implements AfterViewInit, OnDestroy {
+export class InteractionComponent implements OnDestroy {
     @ViewChild('video') video: ElementRef;
 
     @Input('onDestroy') onDestroy;
@@ -29,29 +29,28 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
         private getUserMedia: GetUserMedia,
         private peerConnection: PeerConnection,
         private socket: AppSocket
-    ) {}
-
-    ngAfterViewInit() {
-        this.socket.observe('app.events.room.session_updated').subscribe((event) => {
+    ) {
+        this.socket.collect('app.events.room.session_updated').subscribe((event) => {
             // a flag to tell us that the session is established and that we can
             // create the peer connection
             this.interactionInit = true;
 
-            this.peerConnection.create();
+            console.log('subscriber');
+            peerConnection.create();
 
-            this.peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
+            peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
                 console.log('onIceCandidate')
             });
 
-            this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
+            peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
                 console.log('onNegotiationNeeded');
             });
 
-            this.peerConnection.onTrack((event: RTCTrackEvent) => {
+            peerConnection.onTrack((event: RTCTrackEvent) => {
                 console.log('onTrack');
             });
 
-            this.getUserMedia.subscribe((stream) => {
+            getUserMedia.subscribe((stream) => {
                 if (this.onGetUserMediaCreated && this.onGetUserMediaCreated instanceof Function) {
                     this.onGetUserMediaCreated.call(null, ...[stream]);
 
@@ -64,6 +63,8 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
                 this.video.nativeElement.srcObject = stream;
             });
         });
+
+        this.socket.observe('app.events.room.session_updated');
     }
 
     ngOnDestroy(): void {
@@ -77,5 +78,9 @@ export class InteractionComponent implements AfterViewInit, OnDestroy {
             this.video.nativeElement.srcObject = null;
             this.video.nativeElement.remove();
         }
+    }
+
+    private eventSubscriber() {
+
     }
 }

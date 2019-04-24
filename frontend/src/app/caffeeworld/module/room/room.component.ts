@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import GetUserMedia from "../infrastructure/GetUserMedia";
 import AppSocket from "../../infrastructure/AppSocket";
 import {Router} from "@angular/router";
 

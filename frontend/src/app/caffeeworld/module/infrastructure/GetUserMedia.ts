@@ -44,7 +44,6 @@ export default class GetUserMedia {
     subscribe(subscriber: (value: any) => void, context: object | null = null) {
         navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
             this.stream = stream;
-            this.subject.next(stream);
 
             this.subject.subscribe((stream) => {
                 subscriber.call((context) ? context: this, ...[stream]);
