@@ -1,7 +1,10 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import GetUserMedia from "../../infrastructure/GetUserMedia";
 import PeerConnection from "../../infrastructure/PeerConnection";
 import AppSocket from "../../../infrastructure/AppSocket";
+import SingletonSocketInstance from "../../../infrastructure/socket/SingletonSocketInstance";
+import IObservableFactory from "../../../infrastructure/observableFactory/IObservableFactory";
+import OnceObservableFactory from "../../../infrastructure/observableFactory/OnceObservableFactory";
 
 @Component({
     selector: 'app-interaction',
@@ -14,7 +17,17 @@ import AppSocket from "../../../infrastructure/AppSocket";
                 return new GetUserMedia({idealLow: true});
             }
         },
-        PeerConnection
+        PeerConnection,
+        {
+            provide: AppSocket,
+            useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => {
+                return new AppSocket(
+                    socketInstance,
+                    observableFactory
+                );
+            },
+            deps: [SingletonSocketInstance, OnceObservableFactory]
+        }
     ]
 })
 export class InteractionComponent implements OnDestroy {
@@ -30,12 +43,13 @@ export class InteractionComponent implements OnDestroy {
         private peerConnection: PeerConnection,
         private socket: AppSocket
     ) {
-        this.socket.collect('app.events.room.session_updated').subscribe((event) => {
+        this.socket.observe('app.events.room.session_updated').subscribe((event) => {
             // a flag to tell us that the session is established and that we can
             // create the peer connection
             this.interactionInit = true;
 
-            console.log('subscriber');
+            console.log(this.peerConnection);
+
             peerConnection.create();
 
             peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {

@@ -22,9 +22,7 @@ export default class AppSocket {
     }
 
     observe(event: string): Subject<any> {
-        if (!this.observableFactory.hasObservable(event)) {
-            this.observableFactory.createObservable(event);
-        }
+        this.observableFactory.createObservable(event);
 
         this.socket.on(event, (data) => {
             this.observableFactory.getObservable(event).next(data);

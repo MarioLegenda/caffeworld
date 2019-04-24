@@ -7,6 +7,10 @@ import {RoomRoutingModule} from "./room-routing.module";
 import {InteractionComponent} from "./components/interaction.component";
 import GetUserMedia from "../infrastructure/GetUserMedia";
 import PeerConnection from "../infrastructure/PeerConnection";
+import AppSocket from "../../infrastructure/AppSocket";
+import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
+import IObservableFactory from "../../infrastructure/observableFactory/IObservableFactory";
+import OnceObservableFactory from "../../infrastructure/observableFactory/OnceObservableFactory";
 
 @NgModule({
     imports: [
@@ -20,6 +24,16 @@ import PeerConnection from "../infrastructure/PeerConnection";
     ],
     bootstrap: [RoomComponent],
     providers: [
+        {
+            provide: AppSocket,
+            useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => {
+                return new AppSocket(
+                    socketInstance,
+                    observableFactory
+                );
+            },
+            deps: [SingletonSocketInstance, OnceObservableFactory]
+        },
         {
             provide: GetUserMedia,
             useFactory: () => {

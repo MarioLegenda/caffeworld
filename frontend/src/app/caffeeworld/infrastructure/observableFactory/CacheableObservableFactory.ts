@@ -1,13 +1,25 @@
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs";
 import IObservableFactory from "./IObservableFactory";
+import OnceObservableFactory from "./OnceObservableFactory";
 
 @Injectable()
 export default class CacheableObservableFactory implements IObservableFactory {
     private observables = new Map<string, Subject<any>>();
+    private observableFactory: OnceObservableFactory;
+
+    constructor(onceObservableFactory: OnceObservableFactory) {
+        this.observableFactory = onceObservableFactory;
+    }
 
     createObservable(name: string): void {
-        this.observables.set(name, new Subject());
+        if (this.hasObservable(name)) {
+            throw new Error(`CacheableObservableFactory error. Observable '${name}' already exists`);
+        }
+
+        this.observableFactory.createObservable(name);
+
+        this.observables.set(name, this.observableFactory.getObservable(name));
     }
 
     hasObservable(name: string): boolean {
