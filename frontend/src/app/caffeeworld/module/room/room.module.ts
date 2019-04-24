@@ -40,7 +40,7 @@ import SingleEventObservableFactory from "../../infrastructure/observableFactory
                 return new GetUserMedia({idealLow: true});
             }
         },
-        {provide: PeerConnection, useClass: PeerConnection}
+        PeerConnection
     ]
 })
 export class RoomModule { }

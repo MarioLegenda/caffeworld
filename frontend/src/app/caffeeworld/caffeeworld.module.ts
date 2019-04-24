@@ -17,6 +17,7 @@ import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInst
 import AppSocket from "./infrastructure/AppSocket";
 import IObservableFactory from "./infrastructure/observableFactory/IObservableFactory";
 import SingleEventObservableFactory from "./infrastructure/observableFactory/SingleEventObservableFactory";
+import MultiEventObservableFactory from "./infrastructure/observableFactory/MultiEventObservableFactory";
 
 @NgModule({
     imports: [
@@ -38,13 +39,11 @@ import SingleEventObservableFactory from "./infrastructure/observableFactory/Sin
     exports: [CaffeeworldComponent],
     providers: [
         SingleEventObservableFactory,
+        MultiEventObservableFactory,
+        TableSocketService,
         {
-            provide: TableSocketService,
-            useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => {
-                return new TableSocketService(
-                    new AppSocket(socketInstance, observableFactory),
-                );
-            },
+            provide: AppSocket,
+            useFactory: (socketInstance: SingletonSocketInstance, observableFactory: IObservableFactory) => new AppSocket(socketInstance, observableFactory),
             deps: [SingletonSocketInstance, SingleEventObservableFactory]
         }
     ]
