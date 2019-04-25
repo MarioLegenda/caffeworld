@@ -8,6 +8,8 @@ import {InteractionComponent} from "./components/interaction.component";
 import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
+import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
+import {environment} from "../../../../environments/environment";
 
 @NgModule({
     imports: [
@@ -23,6 +25,13 @@ import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
     providers: [
         RoomEnteredEvent,
         SessionUpdatedEvent,
+        {
+            provide: SingletonSocketInstance,
+            useFactory: () => new SingletonSocketInstance(
+                environment.siteUrl + '/room',
+                {path: '/socket', reconnectionAttempts: 5},
+            ),
+        },
     ]
 })
 export class RoomModule { }

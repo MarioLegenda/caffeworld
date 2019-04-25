@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import {Router} from "@angular/router";
+import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
 
 @Component({
     selector: 'app-room',
@@ -10,7 +11,8 @@ import {Router} from "@angular/router";
 export class RoomComponent implements OnInit {
     constructor(
         private roomEnteredEvent: RoomEnteredEvent,
-        private router: Router
+        private router: Router,
+        private socketInstance: SingletonSocketInstance
     ) {}
 
     ngOnInit(): void {
@@ -18,5 +20,11 @@ export class RoomComponent implements OnInit {
         const identifier: string = url.split('/')[2];
 
         this.roomEnteredEvent.emitRoomEntered(identifier);
+
+        setTimeout(() => {
+            this.socketInstance.socket.emit('ping');
+        }, 10000);
+
+        this.socketInstance.socket.on('pong', () => {});
     }
 }

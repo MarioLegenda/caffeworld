@@ -16,14 +16,17 @@ export default class SocketFrontController {
         this.containerWrapper = containerWrapper;
     }
 
-    initApp() {
-        console.log('ulazak');
+    initTable() {
         const tableEvent: TableEvent = this.containerWrapper.getDependency(Symbols.TableEvent);
-        const roomEvent: RoomEvent = this.containerWrapper.getDependency(Symbols.RoomEvent);
         const tableService: TableService = this.containerWrapper.getDependency(Symbols.TableService);
-        const roomService: RoomService = this.containerWrapper.getDependency(Symbols.RoomService);
 
         tableEvent.onTableCreate(middlewareFactory([validateTable, tableService.createTable]));
+    }
+
+    initRoom() {
+        const roomEvent: RoomEvent = this.containerWrapper.getDependency(Symbols.RoomEvent);
+        const roomService: RoomService = this.containerWrapper.getDependency(Symbols.RoomService);
+
         roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]));
     }
 }
