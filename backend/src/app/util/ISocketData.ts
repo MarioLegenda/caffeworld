@@ -1,6 +1,6 @@
 import {Socket} from "socket.io";
 
-export default interface ISocketMiddlewareResult {
+export default interface ISocketData {
     data: any;
     socket: Socket
 }

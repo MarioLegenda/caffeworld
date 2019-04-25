@@ -3,10 +3,10 @@ import {Symbols} from "../../container/Symbols";
 import SingletonSocketInstance from "../web/SingletonSocketInstance";
 
 @injectable()
-export default class TableEvent {
+export default class RoomEvent {
     private socket;
 
-    private readonly createTableEvent = 'app.event.table.create';
+    private readonly roomEnteredEvent = 'app.events.room.entered';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -14,7 +14,7 @@ export default class TableEvent {
         this.socket = socket.socket;
     }
 
-    onTableCreate(middlewareImpl?: Function | null, context?: object): void {
-        this.socket.on(this.createTableEvent, (data) => middlewareImpl(data, (context) ? context : this));
+    onRoomEntered(middlewareImpl?: Function | null, context?: object) {
+        this.socket.on(this.roomEnteredEvent, (data) => middlewareImpl(data, (context) ? context : this));
     }
 }

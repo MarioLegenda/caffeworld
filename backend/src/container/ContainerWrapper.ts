@@ -1,37 +1,56 @@
 import {Container} from "inversify";
-import SocketCommunicator from "../app/SocketCommunicator";
 import {Symbols} from "./Symbols";
 import TableEvent from "../app/event/TableEvent";
-import ObservableFactory from "../app/util/ObservableFactory";
 import TableService from "../app/service/TableService";
+import RoomEvent from "../app/event/RoomEvent";
+import SingletonSocketInstance from "../app/web/SingletonSocketInstance";
+import RoomService from "../app/service/RoomService";
 
 export default class ContainerWrapper {
-    private static inversify: Container;
+    private readonly inversify: Container;
 
-    static container: ContainerWrapper;
+    private readonly containers = {
+        'default': {
+            bound: false,
+            init: (dependencies: Array<any>) => {
+                let [socket] = dependencies;
 
-    private constructor(container: Container) {
-        ContainerWrapper.inversify = container;
-    }
+                this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(socket));
+            }
+        },
+        table: {
+            bound: false,
+            init: () => {
 
-    static createContainer() {
-        if (ContainerWrapper.inversify) {
-            throw new Error('Container already created');
+                this.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
+                this.inversify.bind<TableService>(Symbols.TableService).to(TableService);
+            }
+        },
+        room: {
+            bound: false,
+            init: () => {
+                this.inversify.bind<RoomService>(Symbols.RoomService).to(RoomService);
+                this.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
+            }
         }
+    };
 
-        ContainerWrapper.container = new ContainerWrapper(new Container());
-
-        return ContainerWrapper.container;
+    public constructor(container: Container) {
+        this.inversify = container;
     }
 
-    bindDependencies() {
-        ContainerWrapper.inversify.bind<SocketCommunicator>(Symbols.SocketCommunicator).to(SocketCommunicator);
-        ContainerWrapper.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
-        ContainerWrapper.inversify.bind<ObservableFactory>(Symbols.ObservableFactory).to(ObservableFactory);
-        ContainerWrapper.inversify.bind<TableService>(Symbols.TableService).to(TableService);
+    bind(name: string, dependencies?: Array<any>): void {
+        const c = this.containers[name];
+
+        if (!c.bound) {
+            c.init(dependencies);
+            c.bound = true;
+
+            return;
+        }
     }
 
     getDependency(identifier: any): any {
-        return ContainerWrapper.inversify.get(identifier);
+        return this.inversify.get(identifier);
     }
 }

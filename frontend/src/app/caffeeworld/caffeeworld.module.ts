@@ -11,9 +11,8 @@ import {RouterModule} from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
-import {TableSocketService} from "./infrastructure/TableSocketService";
+import {CreateTableEvent} from "./infrastructure/event/CreateTableEvent";
 import { ClipboardModule } from 'ngx-clipboard';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +32,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        {provide: TableSocketService, useClass: TableSocketService},
+        CreateTableEvent,
     ]
 })
 export class CaffeeworldModule { }

@@ -3,13 +3,13 @@ import 'reflect-metadata';
 require('dotenv').config();
 
 import {app} from './app';
+
+const defaultNamespace = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
+const roomNamespace = defaultNamespace.of('/room');
+
+import SocketFrontController from "./src/app/SocketFrontController";
 import ContainerWrapper from "./src/container/ContainerWrapper";
-import {Symbols} from "./src/container/Symbols";
-import SocketCommunicator from "./src/app/SocketCommunicator";
-import TableEvent from "./src/app/event/TableEvent";
-import TableService from "./src/app/service/TableService";
-import {middlewareFactory} from "./src/app/util/middlewareFactory";
-import {validateTable} from "./src/app/util/middleware";
+import {Container} from "inversify";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -23,25 +23,43 @@ app.init()
         console.error(`Redis event error occurred: ${err.message}`)
     })
     .on('app.event.server.ready', () => {
-        ContainerWrapper.createContainer().bindDependencies();
+        defaultNamespace.on('connection', (socket) => {
+            console.log('Default namespace is connected');
 
-        const socketCommunicator: SocketCommunicator = ContainerWrapper.container.getDependency(Symbols.SocketCommunicator);
-        const tableEvent: TableEvent = ContainerWrapper.container.getDependency(Symbols.TableEvent);
-        const tableService: TableService = ContainerWrapper.container.getDependency(Symbols.TableService);
+            const cw = new ContainerWrapper(new Container());
 
-        socketCommunicator.onConnect((socket) => {
-            console.log('Socket is connected');
+            cw.bind('default', [socket]);
+            cw.bind('table');
 
-            const createTableMiddleware = middlewareFactory([
-                validateTable
-            ]);
+            const fc = new SocketFrontController(cw);
 
-            tableEvent
-                .onTableCreate(socket, createTableMiddleware)
-                .subscribe(tableService.createTable);
+            fc.initTable();
 
             socket.on('disconnect', () => {
-                tableEvent.flushEvents();
+                socket.disconnect();
+                console.log('Server has disconnected');
+            });
+        });
+
+        roomNamespace.on('connection', (socket) => {
+            console.log('Room namespace is connected');
+
+            const cw = new ContainerWrapper(new Container());
+
+            cw.bind('default', [socket]);
+            cw.bind('room');
+
+            const fc = new SocketFrontController(cw);
+
+            fc.initRoom();
+
+            socket.on('ping', () => {
+                socket.emit('pong');
+            });
+
+            socket.on('disconnect', () => {
+                socket.disconnect();
+                console.log('Server has disconnected');
             });
         });
 

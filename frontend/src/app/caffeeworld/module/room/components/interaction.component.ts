@@ -1,44 +1,44 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, Host, Input, OnDestroy, ViewChild} from '@angular/core';
+import SessionUpdatedEvent from "../../../infrastructure/event/SessionUpdatedEvent";
+import PeerConnection from "../../infrastructure/PeerConnection";
 import GetUserMedia from "../../infrastructure/GetUserMedia";
-
+import IResponseData from "../../../infrastructure/web/IResponseData";
 @Component({
     selector: 'app-interaction',
     templateUrl: './interaction.component.html',
     styleUrls: ['./interaction.component.scss'],
 })
-export class InteractionComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('localVideo') localVideo: ElementRef;
+export class InteractionComponent {
+    @ViewChild('video') video: ElementRef;
 
     @Input('onDestroy') onDestroy;
     @Input('onGetUserMediaCreated') onGetUserMediaCreated;
 
-    private getUserMedia: GetUserMedia;
+    constructor(
+        private sessionUpdatedEvent: SessionUpdatedEvent,
+    ) {
+        this.sessionUpdatedEvent.onSessionUpdated((data: IResponseData) => {
+            const peerConnection: PeerConnection = new PeerConnection(new RTCPeerConnection());
+            const getUserMedia: GetUserMedia = new GetUserMedia({idealLow: true});
 
-    ngAfterViewInit() {
-        this.getUserMedia = GetUserMedia.create({idealLow: true});
+            peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
+                console.log('onIceCandidate')
+            });
 
-        this.getUserMedia.subscribe((stream) => {
-            if (this.onGetUserMediaCreated && this.onGetUserMediaCreated instanceof Function) {
-                this.onGetUserMediaCreated.call(null, ...[stream]);
+            peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
+                console.log('onNegotiationNeeded');
+            });
 
-                return;
-            }
+            peerConnection.onTrack((event: RTCTrackEvent) => {
+                console.log('onTrack');
+            });
 
-            this.localVideo.nativeElement.volume = 0;
-            this.localVideo.nativeElement.muted = 0;
+            getUserMedia.onConnect((stream) => {
+                this.video.nativeElement.volume = 0;
+                this.video.nativeElement.muted = 0;
 
-            this.localVideo.nativeElement.srcObject = stream;
+                this.video.nativeElement.srcObject = stream;
+            }, this);
         });
-    }
-
-    ngOnDestroy(): void {
-        if (this.onDestroy && this.onDestroy instanceof Function) {
-            this.onDestroy.call(null, ...[this.getUserMedia, this.localVideo])
-        }
-
-        this.getUserMedia.destroy();
-        this.getUserMedia = null;
-        this.localVideo.nativeElement.srcObject = null;
-        this.localVideo.nativeElement.remove();
     }
 }

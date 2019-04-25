@@ -5,9 +5,7 @@ export function middlewareFactory(middleware: Function[]) {
         state.data = data;
 
         for (let m of middleware) {
-            m.call((context) ? context : null, [state]);
+            m.call((context) ? context : null, ...[state]);
         }
-
-        return state;
     };
 }
