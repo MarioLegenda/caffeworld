@@ -1,37 +1,20 @@
 import {inject, injectable} from "inversify";
-import {Socket} from "socket.io";
 import {Symbols} from "../../container/Symbols";
-import {Observable, Subject} from "rxjs";
-import ObservableFactory from "../util/ObservableFactory";
+import SingletonSocketInstance from "../web/SingletonSocketInstance";
 
 @injectable()
 export default class TableEvent {
-    private observableFactory;
+    private socket;
 
     private readonly createTableEvent = 'app.event.table.create';
 
     constructor(
-        @inject(Symbols.ObservableFactory) observableFactory: ObservableFactory
+        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
     ) {
-        this.observableFactory = observableFactory;
+        this.socket = socket.socket;
     }
 
-    onTableCreate(socket: Socket, middlewareImpl?: Function | null): Observable<object> {
-        const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.createTableEvent);
-
-        socket.on(this.createTableEvent, (data) => {
-            if (middlewareImpl) {
-                data = middlewareImpl(data).data;
-            }
-
-            subject.next({data: data, socket: socket});
-            subject.complete();
-        });
-
-        return this.observableFactory.getObservable(this.createTableEvent);
-    }
-
-    flushEvents() {
-        this.observableFactory.unsubscribe();
+    onTableCreate(middlewareImpl?: Function | null, context?: object): void {
+        this.socket.on(this.createTableEvent, (data) => middlewareImpl(data, (context) ? context : this));
     }
 }

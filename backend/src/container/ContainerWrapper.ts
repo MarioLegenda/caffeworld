@@ -1,39 +1,62 @@
 import {Container} from "inversify";
 import {Symbols} from "./Symbols";
 import TableEvent from "../app/event/TableEvent";
-import ObservableFactory from "../app/util/ObservableFactory";
 import TableService from "../app/service/TableService";
 import RoomEvent from "../app/event/RoomEvent";
 import RoomService from "../app/service/RoomService";
+import * as SocketIO from "socket.io";
+import SingletonSocketInstance from "../app/web/SingletonSocketInstance";
 
 export default class ContainerWrapper {
-    private static inversify: Container;
+    private readonly inversify: Container;
 
-    static container: ContainerWrapper;
+    private containerInit = false;
 
-    private constructor(container: Container) {
-        ContainerWrapper.inversify = container;
+    private readonly containers = [
+        {
+            name: 'root',
+            bound: false,
+            init: (socket) => {
+                this.inversify.bind<TableService>(Symbols.TableService).to(TableService);
+                this.inversify.bind<RoomService>(Symbols.RoomService).to(RoomService);
+            }
+        },
+        {
+            name: 'socketSpecific',
+            bound: false,
+            init: (socket) => {
+                this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(socket));
+                this.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
+                this.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
+            }
+        }
+    ];
+
+    public constructor(container: Container) {
+        this.inversify = container;
     }
 
-    static createContainer() {
-        if (ContainerWrapper.inversify) {
-            throw new Error('Container already created');
+    bindDependencies(
+        socket: SocketIO.Server
+    ) {
+        if (this.containerInit) return;
+
+        for (const c of this.containers) {
+            if (c.bound) continue;
+
+            c.init(socket);
+
+            c.bound = true;
         }
 
-        ContainerWrapper.container = new ContainerWrapper(new Container());
+        if (!this.containers.filter((c) => c.bound).length) {
+            this.containerInit = true;
 
-        return ContainerWrapper.container;
-    }
-
-    bindDependencies() {
-        ContainerWrapper.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
-        ContainerWrapper.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
-        ContainerWrapper.inversify.bind<ObservableFactory>(Symbols.ObservableFactory).to(ObservableFactory);
-        ContainerWrapper.inversify.bind<TableService>(Symbols.TableService).to(TableService);
-        ContainerWrapper.inversify.bind<RoomService>(Symbols.RoomService).to(RoomService);
+            console.log('All containers initiated');
+        }
     }
 
     getDependency(identifier: any): any {
-        return ContainerWrapper.inversify.get(identifier);
+        return this.inversify.get(identifier);
     }
 }

@@ -1,11 +1,21 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import ISocketData from "../util/ISocketData";
 import Redis from "../../dataSource/redis";
 import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
+import {Symbols} from "../../container/Symbols";
+import SingletonSocketInstance from "../web/SingletonSocketInstance";
 
 @injectable()
 export default class RoomService {
+    private socket;
+
+    constructor(
+        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
+    ) {
+        this.socket = socket.socket;
+    }
+
     roomEntered(socketMiddlewareResult: ISocketData | any) {
         // data variable is the room identifier in this case
         const {data, socket} = socketMiddlewareResult;
@@ -19,7 +29,7 @@ export default class RoomService {
         // if it is equal of higher than 6, do nothing
         // if it is lower than 6, add the current user (socket) to the room
         // then, send the app.event.room.user_added event to the client
-        Redis.client.get(data, function(err, sessionData: string) {
+        Redis.client.get(data, (err, sessionData: string) => {
             if (err) {
                 console.error(`An error occurred with message: ${err.message}`);
 
@@ -48,7 +58,7 @@ export default class RoomService {
                     body: sData
                 };
 
-                socket.emit(sessionUpdateEvent, responseData);
+                this.socket.emit(sessionUpdateEvent, responseData);
             } else if (room.hasOwnProperty('sessions')) {
                 console.log(`Redis has session property: ${room.sessions}`);
 
@@ -71,7 +81,8 @@ export default class RoomService {
                 };
 
                 console.log(`Emitting ${sessionUpdateEvent}`);
-                socket.emit(sessionUpdateEvent, sData);
+
+                this.socket.emit(sessionUpdateEvent, responseData);
             }
         });
     }

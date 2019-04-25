@@ -1,15 +1,26 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import Redis from "../../dataSource/redis";
 import ISocketData from "../util/ISocketData";
 import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
+import {Symbols} from "../../container/Symbols";
+import SingletonSocketInstance from "../web/SingletonSocketInstance";
 
 const uuid = require('uuid/v4');
 
 @injectable()
 export default class TableService {
+
+    private readonly socket;
+
+    constructor(
+        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
+    ) {
+        this.socket = socket.socket;
+    }
+
     createTable(socketMiddlewareResult: ISocketData) {
-        const {data, socket} = socketMiddlewareResult;
+        const {data} = socketMiddlewareResult;
 
         const roomIdentifier: string = uuid();
 
@@ -32,6 +43,6 @@ export default class TableService {
             body: redisData
         };
 
-        socket.emit('app.event.table.created', responseData);
+        this.socket.emit('app.event.table.created', responseData);
     }
 }

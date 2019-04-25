@@ -1,37 +1,20 @@
 import {inject, injectable} from "inversify";
-import {Socket} from "socket.io";
 import {Symbols} from "../../container/Symbols";
-import {Observable, Subject} from "rxjs";
-import ObservableFactory from "../util/ObservableFactory";
+import SingletonSocketInstance from "../web/SingletonSocketInstance";
 
 @injectable()
 export default class RoomEvent {
-    private observableFactory;
+    private socket;
 
     private readonly roomEnteredEvent = 'app.events.room.entered';
 
     constructor(
-        @inject(Symbols.ObservableFactory) observableFactory: ObservableFactory
+        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
     ) {
-        this.observableFactory = observableFactory;
+        this.socket = socket.socket;
     }
 
-    onRoomEntered(socket: Socket, middlewareImpl?: Function | null): Observable<object> {
-        const subject: Subject<any> = this.observableFactory.createAndGetObservable(this.roomEnteredEvent);
-
-        socket.on(this.roomEnteredEvent, (data) => {
-            if (middlewareImpl) {
-                data = middlewareImpl(data);
-            }
-
-            subject.next({data: data, socket: socket});
-            subject.complete();
-        });
-
-        return this.observableFactory.getObservable(this.roomEnteredEvent);
-    }
-
-    flushEvents() {
-        this.observableFactory.unsubscribe();
+    onRoomEntered(middlewareImpl?: Function | null, context?: object) {
+        this.socket.on(this.roomEnteredEvent, (data) => middlewareImpl(data, (context) ? context : this));
     }
 }

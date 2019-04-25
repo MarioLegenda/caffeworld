@@ -32,7 +32,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     ],
     exports: [CaffeeworldComponent],
     providers: [
-
+        CreateTableEvent,
     ]
 })
 export class CaffeeworldModule { }

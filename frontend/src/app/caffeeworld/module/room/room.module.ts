@@ -23,7 +23,6 @@ import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
     providers: [
         RoomEnteredEvent,
         SessionUpdatedEvent,
-        CreateTableEvent,
     ]
 })
 export class RoomModule { }
