@@ -20,13 +20,13 @@ export default class SocketFrontController {
         const tableEvent: TableEvent = this.containerWrapper.getDependency(Symbols.TableEvent);
         const tableService: TableService = this.containerWrapper.getDependency(Symbols.TableService);
 
-        tableEvent.onTableCreate(middlewareFactory([validateTable, tableService.createTable]));
+        tableEvent.onTableCreate(middlewareFactory([validateTable, tableService.createTable]), tableService);
     }
 
     initRoom() {
         const roomEvent: RoomEvent = this.containerWrapper.getDependency(Symbols.RoomEvent);
         const roomService: RoomService = this.containerWrapper.getDependency(Symbols.RoomService);
 
-        roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]));
+        roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]), roomService);
     }
 }

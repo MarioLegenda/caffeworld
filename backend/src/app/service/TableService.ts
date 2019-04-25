@@ -29,6 +29,7 @@ export default class TableService {
         const redisData = {
             table: data,
             room: {
+                identifier: roomIdentifier,
                 url: url,
                 path: `/table/${roomIdentifier}`
             },

@@ -13,9 +13,9 @@ export default class ContainerWrapper {
         'default': {
             bound: false,
             init: (dependencies: Array<any>) => {
-                let [socket] = dependencies;
+                let [socket, io] = dependencies;
 
-                this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(socket));
+                this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(io, socket));
             }
         },
         table: {

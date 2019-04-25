@@ -28,7 +28,7 @@ app.init()
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind('default', [socket]);
+            cw.bind('default', [socket, defaultNamespace]);
             cw.bind('table');
 
             const fc = new SocketFrontController(cw);
@@ -46,7 +46,7 @@ app.init()
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind('default', [socket]);
+            cw.bind('default', [socket, roomNamespace]);
             cw.bind('room');
 
             const fc = new SocketFrontController(cw);

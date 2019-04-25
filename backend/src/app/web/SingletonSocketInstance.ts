@@ -1,13 +1,11 @@
 import * as SocketIO from "socket.io";
 
 export default class SingletonSocketInstance {
-    private readonly socketIO: SocketIO.Server;
+    public readonly socket: SocketIO.Server;
+    public readonly io;
 
-    constructor(socket) {
-        this.socketIO = socket;
-    }
-
-    get socket(): SocketIO.Server {
-        return this.socketIO;
+    constructor(io, socket) {
+        this.socket = socket;
+        this.io = io;
     }
 }
