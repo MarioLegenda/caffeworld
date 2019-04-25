@@ -7,7 +7,6 @@ import {RoomRoutingModule} from "./room-routing.module";
 import {InteractionComponent} from "./components/interaction.component";
 import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
-import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
 import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
 import {environment} from "../../../../environments/environment";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";

@@ -4,11 +4,15 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ClipboardService} from "ngx-clipboard";
 import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
 import IResponseData from "../../infrastructure/web/IResponseData";
+import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'app-create-room',
     templateUrl: './create.component.html',
     styleUrls: ['./create.component.scss'],
+    providers: [
+    ]
 })
 export class CreateComponent {
     createTableModel: CreateTableModel = new CreateTableModel();

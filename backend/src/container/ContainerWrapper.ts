@@ -5,38 +5,41 @@ import TableService from "../app/service/TableService";
 import RoomEvent from "../app/event/RoomEvent";
 import SingletonSocketInstance from "../app/web/SingletonSocketInstance";
 import RoomService from "../app/service/RoomService";
+import {BindingTypeEnum} from "./BindingTypeEnum";
 
 export default class ContainerWrapper {
     private readonly inversify: Container;
 
-    private readonly containers = {
-        'default': {
+    private readonly containers = {};
+
+    public constructor(container: Container) {
+        this.inversify = container;
+
+        this.containers[BindingTypeEnum.DEFAULT] = {
             bound: false,
             init: (dependencies: Array<any>) => {
                 let [socket, io] = dependencies;
 
                 this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(io, socket));
             }
-        },
-        table: {
+        };
+
+        this.containers[BindingTypeEnum.TABLE] = {
             bound: false,
             init: () => {
 
                 this.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
                 this.inversify.bind<TableService>(Symbols.TableService).to(TableService);
             }
-        },
-        room: {
+        };
+
+        this.containers[BindingTypeEnum.ROOM] = {
             bound: false,
             init: () => {
                 this.inversify.bind<RoomService>(Symbols.RoomService).to(RoomService);
                 this.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
             }
-        }
-    };
-
-    public constructor(container: Container) {
-        this.inversify = container;
+        };
     }
 
     bind(name: string, dependencies?: Array<any>): void {

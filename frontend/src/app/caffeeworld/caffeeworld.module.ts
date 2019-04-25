@@ -13,6 +13,9 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import {CreateTableEvent} from "./infrastructure/event/CreateTableEvent";
 import { ClipboardModule } from 'ngx-clipboard';
+import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
+import {environment} from "../../environments/environment";
+
 @NgModule({
     imports: [
         CommonModule,
@@ -33,6 +36,13 @@ import { ClipboardModule } from 'ngx-clipboard';
     exports: [CaffeeworldComponent],
     providers: [
         CreateTableEvent,
+        {
+            provide: SingletonSocketInstance,
+            useFactory: () => new SingletonSocketInstance(
+                environment.siteUrl + '/table',
+                {path: '/socket', reconnectionAttempts: 5},
+            ),
+        },
     ]
 })
 export class CaffeeworldModule { }

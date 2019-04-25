@@ -4,12 +4,14 @@ require('dotenv').config();
 
 import {app} from './app';
 
-const defaultNamespace = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
-const roomNamespace = defaultNamespace.of('/room');
+const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
+const tableNamespace = io.of('/table');
+const roomNamespace = io.of('/room');
 
 import SocketFrontController from "./src/app/SocketFrontController";
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Container} from "inversify";
+import {BindingTypeEnum} from "./src/container/BindingTypeEnum";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -23,13 +25,13 @@ app.init()
         console.error(`Redis event error occurred: ${err.message}`)
     })
     .on('app.event.server.ready', () => {
-        defaultNamespace.on('connection', (socket) => {
-            console.log('Default namespace is connected');
+        tableNamespace.on('connection', (socket) => {
+            console.log('Table namespace is connected');
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind('default', [socket, defaultNamespace]);
-            cw.bind('table');
+            cw.bind(BindingTypeEnum.DEFAULT, [socket, tableNamespace]);
+            cw.bind(BindingTypeEnum.TABLE);
 
             const fc = new SocketFrontController(cw);
 
@@ -46,8 +48,8 @@ app.init()
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind('default', [socket, roomNamespace]);
-            cw.bind('room');
+            cw.bind(BindingTypeEnum.DEFAULT, [socket, roomNamespace]);
+            cw.bind(BindingTypeEnum.ROOM);
 
             const fc = new SocketFrontController(cw);
 

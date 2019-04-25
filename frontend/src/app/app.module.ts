@@ -9,8 +9,6 @@ import { ComponentsModule } from './components/components.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import {CaffeeworldModule} from './caffeeworld/caffeeworld.module';
-import {environment} from "../environments/environment";
-import SingletonSocketInstance from "./caffeeworld/infrastructure/socket/SingletonSocketInstance";
 
 @NgModule({
     declarations: [
@@ -25,15 +23,6 @@ import SingletonSocketInstance from "./caffeeworld/infrastructure/socket/Singlet
         AppRoutingModule,
         ComponentsModule,
         CaffeeworldModule
-    ],
-    providers: [
-        {
-            provide: SingletonSocketInstance,
-            useFactory: () => new SingletonSocketInstance(
-                environment.siteUrl + '/',
-                {path: '/socket', reconnectionAttempts: 5},
-            ),
-        },
     ],
     bootstrap: [AppComponent]
 })
