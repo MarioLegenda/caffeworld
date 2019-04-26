@@ -28,5 +28,6 @@ export default class SocketFrontController {
         const roomService: RoomService = this.containerWrapper.getDependency(Symbols.RoomService);
 
         roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]), roomService);
+        roomEvent.onMemberLeft(middlewareFactory([roomService.memberLeft]), roomService);
     }
 }

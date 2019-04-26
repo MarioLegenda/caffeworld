@@ -67,7 +67,8 @@ app.init()
             socket.on('disconnect', () => {
                 socket.disconnect();
 
-                console.log(socket.id);
+                socket.emit('app.server.room.member_left', socket.id);
+
                 console.log('Room namespace has disconnected');
             });
         });

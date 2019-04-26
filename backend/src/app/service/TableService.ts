@@ -45,8 +45,6 @@ export default class TableService {
             body: redisData
         };
 
-        console.log('ulazak');
-
         this.socket.emit(this.tableCreatedEvent, responseData);
     }
 }

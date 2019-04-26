@@ -12,6 +12,8 @@ export default class RoomService {
     private readonly maxSessions = 6;
     private readonly sessionUpdateEvent = 'app.client.room.session_updated';
     private readonly sessionUpdateError = 'app.server.room.error.session_updated';
+    private readonly internalRoomLinks: string = 'app.internal.roomLinks';
+    private readonly internalError: string = 'app.internal.error';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -39,6 +41,27 @@ export default class RoomService {
             const roomIdentifier = data.identifier;
             const memberIdentifier = data.memberIdentifier;
 
+            (function(socket, socketId: string, roomLinksName: string, errorName: string) {
+                Redis.client.get(roomLinksName, (err, reply) => {
+                    if (err) {
+                        return socket.emit(errorName);
+                    }
+
+                    let roomLinks = JSON.parse(reply);
+
+                    if (!roomLinks) {
+                        roomLinks = {};
+                    }
+
+                    console.log(roomLinks);
+                    if (socketId in roomLinks === false) {
+                        roomLinks[socketId] = roomIdentifier;
+
+                        Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
+                    }
+                });
+            })(this.socket.socket, this.socket.socket.id, this.internalRoomLinks, this.internalError);
+
             const sessionData = JSON.parse(sData);
 
             const responseData: IResponseData = {
@@ -61,10 +84,16 @@ export default class RoomService {
 
             Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
-            console.log(sessionData.room.members);
-
             this.socket.socket.join(roomIdentifier);
             this.socket.io.to(roomIdentifier).emit(this.sessionUpdateEvent, sessionData);
         });
+    }
+
+    memberLeft(socketMiddlewareResult: ISocketData | any) {
+        // in this case, data is the socket id of the connection that left
+        const {data} = socketMiddlewareResult;
+
+        console.log('ulazak');
+        console.log(data);
     }
 }
