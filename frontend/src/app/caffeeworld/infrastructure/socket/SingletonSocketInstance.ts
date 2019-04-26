@@ -1,4 +1,3 @@
-import * as SocketIO from "socket.io";
 import io from 'socket.io-client';
 import {Injectable} from "@angular/core";
 
@@ -6,7 +5,7 @@ import {Injectable} from "@angular/core";
     providedIn: 'root',
 })
 export default class SingletonSocketInstance {
-    private readonly socketIo: SocketIO.Server;
+    private readonly socketIo: any;
 
     constructor(
         url: string,

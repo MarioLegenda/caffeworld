@@ -1,4 +1,7 @@
 <div class="wrapper">
-    <app-interaction></app-interaction>
-    <app-interaction></app-interaction>
+    <div class="member-box" *ngFor="let member of members | keyvalue">
+        <app-member-box
+                [memberIdentifier]="member.key"
+        ></app-member-box>
+    </div>
 </div>

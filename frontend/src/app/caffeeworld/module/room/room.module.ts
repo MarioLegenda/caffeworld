@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
-import {InteractionComponent} from "./components/interaction.component";
+import {MemberBoxComponent} from "./components/member-box.component";
 import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
@@ -19,7 +19,7 @@ import RoomIdentifier from "../infrastructure/RoomIdentifier";
     ],
     declarations: [
         RoomComponent,
-        InteractionComponent
+        MemberBoxComponent
     ],
     bootstrap: [RoomComponent],
     providers: [

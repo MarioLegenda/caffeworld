@@ -1,12 +1,11 @@
 import {IRTCConfiguration} from "./contract/IRTCConfiguration";
 import {Injectable} from "@angular/core";
-const uuid = require('uuid/v4');
 
 @Injectable()
 export default class PeerConnection {
     private configuration: IRTCConfiguration | null;
 
-    private rtcPeerConnection: RTCPeerConnection;
+    public rtcPeerConnection: RTCPeerConnection;
 
     constructor(rtcPeerConnection: RTCPeerConnection) {
         this.rtcPeerConnection = new RTCPeerConnection();

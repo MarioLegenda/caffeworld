@@ -2,6 +2,10 @@ import 'reflect-metadata';
 
 require('dotenv').config();
 
+import extensions from './src/app/util/extensions';
+
+extensions();
+
 import {app} from './app';
 
 const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
@@ -39,7 +43,8 @@ app.init()
 
             socket.on('disconnect', () => {
                 socket.disconnect();
-                console.log('Server has disconnected');
+
+                console.log('Table namespace has disconnected');
             });
         });
 
@@ -61,7 +66,9 @@ app.init()
 
             socket.on('disconnect', () => {
                 socket.disconnect();
-                console.log('Server has disconnected');
+
+                console.log(socket.id);
+                console.log('Room namespace has disconnected');
             });
         });
 

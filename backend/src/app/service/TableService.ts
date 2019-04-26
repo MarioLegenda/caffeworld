@@ -30,6 +30,7 @@ export default class TableService {
             table: data,
             room: {
                 identifier: roomIdentifier,
+                members: {},
                 url: url,
                 path: `/table/${roomIdentifier}`
             },
