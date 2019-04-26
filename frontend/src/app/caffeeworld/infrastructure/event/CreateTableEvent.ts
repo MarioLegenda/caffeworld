@@ -9,8 +9,8 @@ export class CreateTableEvent {
         this.socket = socket.socket;
     }
 
-    private readonly createTableEvent = 'app.event.table.create';
-    private readonly tableCreatedEvent = 'app.event.table.created';
+    private readonly createTableEvent = 'app.server.table.create';
+    private readonly tableCreatedEvent = 'app.client.table.created';
 
     emitCreateTable(data: object) {
         this.socket.emit(this.createTableEvent, data);

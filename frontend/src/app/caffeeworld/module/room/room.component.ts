@@ -31,6 +31,7 @@ export class RoomComponent implements OnInit {
             });
 
             this.sessionUpdateEvent.onSessionUpdated((responseData: IResponseData) => {
+                console.log(responseData);
             });
         });
 

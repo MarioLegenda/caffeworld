@@ -10,8 +10,8 @@ const uuid = require('uuid/v4');
 
 @injectable()
 export default class TableService {
-
     private readonly socket;
+    private readonly tableCreatedEvent: string = 'app.client.table.created';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -45,6 +45,8 @@ export default class TableService {
             body: redisData
         };
 
-        this.socket.emit('app.event.table.created', responseData);
+        console.log('ulazak');
+
+        this.socket.emit(this.tableCreatedEvent, responseData);
     }
 }

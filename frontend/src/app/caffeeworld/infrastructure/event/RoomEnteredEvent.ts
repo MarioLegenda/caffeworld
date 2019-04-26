@@ -9,7 +9,7 @@ export default class RoomEnteredEvent {
         this.socket = socket.socket;
     }
 
-    private readonly roomEnteredEvent = 'app.events.room.entered';
+    private readonly roomEnteredEvent = 'app.server.room.entered';
 
     emitRoomEntered(data) {
         this.socket.emit(this.roomEnteredEvent, data);

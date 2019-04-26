@@ -6,7 +6,7 @@ import SingletonSocketInstance from "../web/SingletonSocketInstance";
 export default class TableEvent {
     private socket;
 
-    private readonly createTableEvent = 'app.event.table.create';
+    private readonly createTableEvent = 'app.server.table.create';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance

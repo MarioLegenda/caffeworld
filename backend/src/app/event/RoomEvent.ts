@@ -6,7 +6,7 @@ import SingletonSocketInstance from "../web/SingletonSocketInstance";
 export default class RoomEvent {
     private socket;
 
-    private readonly roomEnteredEvent = 'app.events.room.entered';
+    private readonly roomEnteredEvent = 'app.server.room.entered';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance

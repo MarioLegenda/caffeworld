@@ -6,7 +6,7 @@ import RoomIdentifier from "../../module/infrastructure/RoomIdentifier";
 export default class SessionUpdatedEvent {
     private socket;
 
-    private readonly sessionUpdatedEvent = 'app.events.room.session_updated';
+    private readonly sessionUpdatedEvent = 'app.client.room.session_updated';
     private readonly roomIdentifier: string;
 
     constructor(

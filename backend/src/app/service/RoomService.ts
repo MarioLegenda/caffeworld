@@ -10,8 +10,8 @@ import {TransportTypeEnum} from "../web/TrasportTypeEnum";
 export default class RoomService {
     private socket;
     private readonly maxSessions = 6;
-    private readonly sessionUpdateEvent = 'app.events.room.session_updated';
-    private readonly sessionUpdateError = 'app.events.room.error.session_updated';
+    private readonly sessionUpdateEvent = 'app.client.room.session_updated';
+    private readonly sessionUpdateError = 'app.server.room.error.session_updated';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -60,8 +60,6 @@ export default class RoomService {
             }
 
             Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
-
-            responseData.body = sessionData;
 
             console.log(sessionData.room.members);
 
