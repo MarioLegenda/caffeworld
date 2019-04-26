@@ -12,7 +12,7 @@ export default class RoomService {
     private readonly maxSessions = 6;
     private readonly sessionUpdateEvent = 'app.client.room.session_updated';
     private readonly sessionUpdateError = 'app.server.room.error.session_updated';
-    private readonly internalRoomLinks: string = 'app.internal.roomLinks';
+    private readonly internalRoomLinks: string = 'app.internal.room_links';
     private readonly internalError: string = 'app.internal.error';
 
     constructor(
@@ -24,6 +24,9 @@ export default class RoomService {
     roomEntered(socketMiddlewareResult: ISocketData | any) {
         // data variable is the room identifier in this case
         const {data} = socketMiddlewareResult;
+
+        const roomIdentifier = data.identifier;
+        const memberIdentifier = data.memberIdentifier;
 
         // see how many users are in this room
         // if there are none, create and add 1
@@ -38,10 +41,7 @@ export default class RoomService {
                 return;
             }
 
-            const roomIdentifier = data.identifier;
-            const memberIdentifier = data.memberIdentifier;
-
-            (function(socket, socketId: string, roomLinksName: string, errorName: string) {
+            (function(socket, socketId: string, roomIdentifier: string, roomLinksName: string, errorName: string) {
                 Redis.client.get(roomLinksName, (err, reply) => {
                     if (err) {
                         return socket.emit(errorName);
@@ -53,14 +53,19 @@ export default class RoomService {
                         roomLinks = {};
                     }
 
-                    console.log(roomLinks);
                     if (socketId in roomLinks === false) {
                         roomLinks[socketId] = roomIdentifier;
 
                         Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
                     }
                 });
-            })(this.socket.socket, this.socket.socket.id, this.internalRoomLinks, this.internalError);
+            })(
+                this.socket.socket,
+                this.socket.socket.id,
+                roomIdentifier,
+                this.internalRoomLinks,
+                this.internalError
+            );
 
             const sessionData = JSON.parse(sData);
 
@@ -78,22 +83,21 @@ export default class RoomService {
                 sessionData.room.members[memberIdentifier] = memberIdentifier;
             }
 
-            if (members.count === 6) {
+            if (members.count() >= this.maxSessions) {
                 return this.socket.io.to(data).emit(this.sessionUpdateError);
             }
 
             Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
+            responseData.body = sessionData;
+
             this.socket.socket.join(roomIdentifier);
-            this.socket.io.to(roomIdentifier).emit(this.sessionUpdateEvent, sessionData);
+            this.socket.io.to(roomIdentifier).emit(this.sessionUpdateEvent, responseData);
         });
     }
 
     memberLeft(socketMiddlewareResult: ISocketData | any) {
         // in this case, data is the socket id of the connection that left
         const {data} = socketMiddlewareResult;
-
-        console.log('ulazak');
-        console.log(data);
     }
 }

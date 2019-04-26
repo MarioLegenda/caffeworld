@@ -11,11 +11,13 @@ import {app} from './app';
 const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
 const tableNamespace = io.of('/table');
 const roomNamespace = io.of('/room');
+const {promisify} = require('util');
 
 import SocketFrontController from "./src/app/SocketFrontController";
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Container} from "inversify";
 import {BindingTypeEnum} from "./src/container/BindingTypeEnum";
+import Redis from "./src/dataSource/redis";
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -64,10 +66,29 @@ app.init()
                 socket.emit('pong');
             });
 
-            socket.on('disconnect', () => {
+            socket.on('disconnect', async () => {
                 socket.disconnect();
 
-                socket.emit('app.server.room.member_left', socket.id);
+                // ugly but better to keep this here and not complicate
+                const getAsync = promisify(Redis.client.get).bind(Redis.client);
+
+                const socketId = socket.id;
+
+                try {
+                    const links = JSON.parse(await getAsync('app.internal.room_links'));
+
+                    if (socketId in links) {
+                        const roomIdentifier = links[socketId];
+
+                        const tableData = JSON.parse(await getAsync(roomIdentifier));
+
+                        delete tableData.room.members[socketId];
+
+                        Redis.client.set(roomIdentifier, JSON.stringify(tableData));
+                    }
+                } catch (err) {
+                    throw new Error(`Error occurred on socket disconnect with message: ${err.message}`);
+                }
 
                 console.log('Room namespace has disconnected');
             });
