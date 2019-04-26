@@ -30,4 +30,10 @@ export default class GetUserMedia {
     private onError(err: any) {
         console.error(`An error occurred in GetUserMedia with message: ${err.message}`);
     }
+
+    destroy() {
+        this.stream.getTracks().forEach(track => track.stop());
+        
+        this.stream = null;
+    }
 }

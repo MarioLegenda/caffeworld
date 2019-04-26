@@ -50,4 +50,8 @@ export default class PeerConnection {
 
         return this.rtcPeerConnection[name];
     }
+
+    destroy() {
+        this.rtcPeerConnection.close();
+    }
 }

@@ -1,23 +1,22 @@
 import 'reflect-metadata';
-
-require('dotenv').config();
-
 import extensions from './src/app/util/extensions';
-
-extensions();
-
 import {app} from './app';
-
-const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
-const tableNamespace = io.of('/table');
-const roomNamespace = io.of('/room');
-const {promisify} = require('util');
-
 import SocketFrontController from "./src/app/SocketFrontController";
 import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Container} from "inversify";
 import {BindingTypeEnum} from "./src/container/BindingTypeEnum";
 import Redis from "./src/dataSource/redis";
+import IResponseData from "./src/app/web/IResponseData";
+import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
+
+require('dotenv').config();
+
+extensions();
+
+const io = require("socket.io")(app.http, { pingTimeout: 60000, path: '/socket' });
+const tableNamespace = io.of('/table');
+const roomNamespace = io.of('/room');
+const {promisify} = require('util');
 
 app.expressApp.use(app.express.static(app.path.join(__dirname, 'public')));
 
@@ -80,11 +79,20 @@ app.init()
                     if (socketId in links) {
                         const roomIdentifier = links[socketId];
 
-                        const tableData = JSON.parse(await getAsync(roomIdentifier));
+                        let tableData = JSON.parse(await getAsync(roomIdentifier));
 
                         delete tableData.room.members[socketId];
 
                         Redis.client.set(roomIdentifier, JSON.stringify(tableData));
+
+                        const responseData: IResponseData = {
+                            transportType: TransportTypeEnum.Socket,
+                            http: null,
+                            socket: null,
+                            body: tableData
+                        };
+
+                        roomNamespace.to(roomIdentifier).emit('app.client.room.session_updated', responseData);
                     }
                 } catch (err) {
                     throw new Error(`Error occurred on socket disconnect with message: ${err.message}`);
