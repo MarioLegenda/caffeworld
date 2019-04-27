@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,10 +11,12 @@ import {RouterModule} from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
-import {CreateTableEvent} from "./infrastructure/event/CreateTableEvent";
 import { ClipboardModule } from 'ngx-clipboard';
 import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
 import {environment} from "../../environments/environment";
+import Input from "./infrastructure/event/Input";
+import Output from "./infrastructure/event/Output";
+import {TableService} from "./infrastructure/service/TableService";
 
 @NgModule({
     imports: [
@@ -35,7 +37,9 @@ import {environment} from "../../environments/environment";
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        CreateTableEvent,
+        Output,
+        Input,
+        TableService,
         {
             provide: SingletonSocketInstance,
             useFactory: () => new SingletonSocketInstance(

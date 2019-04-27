@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import CreateTableModel from '../../infrastructure/model/CreateTableModel';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ClipboardService} from "ngx-clipboard";
-import {CreateTableEvent} from "../../infrastructure/event/CreateTableEvent";
 import IResponseData from "../../infrastructure/web/IResponseData";
+import {TableService} from "../../infrastructure/service/TableService";
 
 @Component({
     selector: 'app-create-room',
@@ -19,19 +19,19 @@ export class CreateComponent {
     copied = false;
 
     constructor(
-        private tableSocketService: CreateTableEvent,
+        private tableService: TableService,
         private modalService: NgbModal,
         private clipboardService: ClipboardService
     ) {}
 
     onSubmit(isValid: boolean, content) {
         if (isValid) {
-            this.tableSocketService.onTableCreated((data: IResponseData) => {
+            this.tableService.onTableCreated((data: IResponseData) => {
                 this.roomData = data.body;
                 this.modalService.open(content);
             });
 
-            this.tableSocketService.emitCreateTable(this.createTableModel);
+            this.tableService.createTable(this.createTableModel);
         }
     }
 
