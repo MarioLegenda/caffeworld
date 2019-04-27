@@ -3,24 +3,23 @@ import Redis from "../../dataSource/redis";
 import ISocketData from "../util/ISocketData";
 import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
-import {Symbols} from "../../container/Symbols";
-import SingletonSocketInstance from "../web/SingletonSocketInstance";
 import Socket from "../web/Socket";
+import {Symbols} from "../../container/Symbols";
+import Output from "../event/Output";
 
 const uuid = require('uuid/v4');
 
 @injectable()
 export default class TableService {
-    private readonly socket;
-    private readonly tableCreatedEvent: string = 'app.client.table.created';
+    private output: Output;
 
     constructor(
-        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
+        @inject(Symbols.Output) output: Output
     ) {
-        this.socket = socket.socket;
+        this.output = output;
     }
 
-    createTable(socketMiddlewareResult: ISocketData) {
+    createTable(socketMiddlewareResult: ISocketData): void {
         const {data} = socketMiddlewareResult;
 
         const roomIdentifier: string = uuid();
@@ -42,13 +41,6 @@ export default class TableService {
 
         Redis.client.set(roomIdentifier, JSON.stringify(redisData));
 
-        const responseData: IResponseData = {
-            transportType: TransportTypeEnum.Socket,
-            http: null,
-            socket: null,
-            body: redisData
-        };
-
-        Socket.socket.emit(this.tableCreatedEvent, responseData);
+        this.output.createTable(redisData);
     }
 }
