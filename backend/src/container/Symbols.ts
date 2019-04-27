@@ -7,4 +7,6 @@ export const Symbols = {
     SingletonSocketInstance: Symbol.for('SingletonSocketInstance'),
     IceService: Symbol.for('IceService'),
     IceEvent: Symbol.for('IceEvent'),
+    Input: Symbol.for('Input'),
+    Output: Symbol.for('Output'),
 };

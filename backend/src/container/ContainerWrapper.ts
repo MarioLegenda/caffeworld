@@ -8,6 +8,8 @@ import RoomService from "../app/service/RoomService";
 import {BindingTypeEnum} from "./BindingTypeEnum";
 import IceService from "../app/service/IceService";
 import IceEvent from "../app/event/IceEvent";
+import Input from '../app/event/Input';
+import Output from '../app/event/Output';
 
 export default class ContainerWrapper {
     private readonly inversify: Container;
@@ -22,6 +24,8 @@ export default class ContainerWrapper {
             init: (dependencies: Array<any>) => {
                 let [io, socket, namespaceType] = dependencies;
 
+                this.inversify.bind<Input>(Symbols.Input).to(Input);
+                this.inversify.bind<Output>(Symbols.Output).to(Output);
                 this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(io, socket, namespaceType));
             }
         };

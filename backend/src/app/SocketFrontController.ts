@@ -8,6 +8,8 @@ import {middlewareFactory} from "./util/middlewareFactory";
 import {validateTable} from "./util/middleware";
 import IceService from "./service/IceService";
 import IceEvent from "./event/IceEvent";
+import Input from "./event/Input";
+import Output from "./event/Output";
 
 export default class SocketFrontController {
     private containerWrapper: ContainerWrapper;
@@ -19,10 +21,12 @@ export default class SocketFrontController {
     }
 
     initTable() {
-        const tableEvent: TableEvent = this.containerWrapper.getDependency(Symbols.TableEvent);
         const tableService: TableService = this.containerWrapper.getDependency(Symbols.TableService);
 
-        tableEvent.onTableCreate(middlewareFactory([validateTable, tableService.createTable]), tableService);
+        const input: Input = this.containerWrapper.getDependency(Symbols.Input);
+        const output: Output = this.containerWrapper.getDependency(Symbols.Output);
+
+        input.onTableCreate(middlewareFactory([validateTable, tableService.createTable]), tableService);
     }
 
     initRoom() {
@@ -30,6 +34,9 @@ export default class SocketFrontController {
         const roomService: RoomService = this.containerWrapper.getDependency(Symbols.RoomService);
         const iceService: IceService = this.containerWrapper.getDependency(Symbols.IceService);
         const iceEvent: IceEvent = this.containerWrapper.getDependency(Symbols.IceEvent);
+
+        const input: Input = this.containerWrapper.getDependency(Symbols.Input);
+        const output: Output = this.containerWrapper.getDependency(Symbols.Output);
 
         roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]), roomService);
         iceEvent.onOfferCreated(middlewareFactory([iceService.onOffer]), iceService);
