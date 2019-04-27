@@ -11,7 +11,7 @@ export default class Input {
         this.socket = socket.socket;
     }
 
-    onTableCreated(subscriber, context?: object) {
+    onTableCreated(subscriber, context?: object): void {
         this.socket.on(this.tableCreatedEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 }

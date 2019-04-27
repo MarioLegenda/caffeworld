@@ -11,7 +11,7 @@ export default class Input {
         this.socket = socket.socket;
     }
 
-    sendCreateTable(data: object) {
+    sendCreateTable(data: object): void {
         this.socket.emit(this.createTableEvent, data);
     }
 }

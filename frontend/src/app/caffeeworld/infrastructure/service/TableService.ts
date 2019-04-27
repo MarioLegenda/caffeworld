@@ -9,11 +9,11 @@ export class TableService {
         private output: Output,
     ) {}
 
-    createTable(data: object) {
+    createTable(data: object): void {
         this.output.sendCreateTable(data);
     }
 
-    onTableCreated(subscriber, context?: object) {
+    onTableCreated(subscriber, context?: object): void {
         this.input.onTableCreated(subscriber, context);
     }
 }
