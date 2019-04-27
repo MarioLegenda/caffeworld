@@ -6,6 +6,7 @@ import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent"
 import IResponseData from "../../infrastructure/web/IResponseData";
 import {ReplaySubject, Subject} from "rxjs";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
+import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
 
 @Component({
     selector: 'app-room',
@@ -15,14 +16,16 @@ import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
 export class RoomComponent implements OnInit, OnDestroy {
     members = {};
 
+    private readonly sessionUpdated: ReplaySubject<any> = new ReplaySubject();
     private readonly iceAnswer: ReplaySubject<any> = new ReplaySubject();
+    private readonly iceCandidate: ReplaySubject<any> = new ReplaySubject();
 
     constructor(
         private roomEnteredEvent: RoomEnteredEvent,
         private iceAnswerEvent: IceAnswerEvent,
         private roomIdentifier: RoomIdentifier,
         private socketInstance: SingletonSocketInstance,
-        private sessionUpdateEvent: SessionUpdatedEvent
+        private sessionUpdateEvent: SessionUpdatedEvent,
     ) {}
 
     fnTrackBy(index, item) {
@@ -34,12 +37,19 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.handleConnection();
         this.handleDisconnection();
         this.handleAnswer();
+        this.handleIceCandidate();
     }
 
     onCreateOffer(offer: any) {
         offer.roomIdentifier = this.roomIdentifier.roomIdentifier;
 
         this.socketInstance.socket.emit('app.server.ice.offer_created', offer);
+    }
+
+    onIceCandidate(event) {
+        event.roomIdentifier = this.roomIdentifier.roomIdentifier;
+
+        this.socketInstance.socket.emit('app.server.ice.candidate', event);
     }
 
     ngOnDestroy(): void {
@@ -55,7 +65,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
             this.sessionUpdateEvent.onSessionUpdated((responseData: IResponseData) => {
                 if (Object.keys(this.members).length >= 1) {
-                    this.iceAnswer.next();
+                    this.sessionUpdated.next();
                 }
 
                 // @ts-ignore
@@ -89,9 +99,14 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     private handleAnswer() {
         this.iceAnswerEvent.onIceAnswer((data) => {
-            console.log('onIceAnswer');
-            console.log(data);
+            this.iceAnswer.next(data);
         });
+    }
+
+    private handleIceCandidate() {
+        this.socketInstance.socket.on('app.client.ice.candidate', (data) => {
+            this.iceCandidate.next(data);
+        })
     }
 
     private keepConnAlive() {

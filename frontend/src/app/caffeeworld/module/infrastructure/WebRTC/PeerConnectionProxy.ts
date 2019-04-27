@@ -28,12 +28,24 @@ export default class PeerConnectionProxy {
         this.rtcPeerConnection.onicecandidate = subscriber;
     }
 
+    addIceCandidate(candidate) {
+        this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    }
+
     onNegotiationNeeded(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
         this.rtcPeerConnection.onnegotiationneeded = subscriber;
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
         this.rtcPeerConnection.ontrack = subscriber;
+    }
+
+    setLocalDescription(desc: RTCSessionDescription) {
+        this.rtcPeerConnection.setLocalDescription(desc);
+    }
+
+    setRemoteDescription(desc: RTCSessionDescription) {
+        this.rtcPeerConnection.setRemoteDescription(desc);
     }
 
     getProp(name: string): any {

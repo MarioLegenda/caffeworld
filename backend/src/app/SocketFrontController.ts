@@ -33,5 +33,6 @@ export default class SocketFrontController {
 
         roomEvent.onRoomEntered(middlewareFactory([roomService.roomEntered]), roomService);
         iceEvent.onOfferCreated(middlewareFactory([iceService.onOffer]), iceService);
+        iceEvent.onIceCandidate(middlewareFactory([iceService.onIceCandidate]), iceService);
     }
 }

@@ -9,6 +9,7 @@ export default class IceService {
     private readonly socketInstance: SingletonSocketInstance;
 
     private readonly iceAnswerEvent: string = 'app.client.ice.answer';
+    private readonly iceCandidateClientEvent: string = 'app.client.ice.candidate';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -18,5 +19,9 @@ export default class IceService {
 
     onOffer(socketData: ISocketData) {
         Socket.namespace.to(socketData.data.roomIdentifier).emit(this.iceAnswerEvent, socketData.data);
+    }
+
+    onIceCandidate(socketData: ISocketData) {
+        Socket.namespace.to(socketData.data.roomIdentifier).emit(this.iceCandidateClientEvent, socketData.data);
     }
 }

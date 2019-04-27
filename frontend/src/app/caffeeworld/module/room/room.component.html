@@ -3,7 +3,10 @@
         <app-member-box
                 [memberIdentifier]="member.key"
                 (onCreateOffer)="onCreateOffer($event)"
-                [iceAnswer]="iceAnswer.asObservable()">
+                (onIceCandidate)="onIceCandidate($event)"
+                [sessionUpdated]="sessionUpdated.asObservable()"
+                [iceAnswer]="iceAnswer.asObservable()"
+                [iceCandidate]="iceCandidate.asObservable()">
         </app-member-box>
     </div>
 </div>

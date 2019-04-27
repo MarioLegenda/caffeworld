@@ -2,6 +2,7 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild
 import PeerConnectionProxy from "../../infrastructure/WebRTC/PeerConnectionProxy";
 import GetUserMedia from "../../infrastructure/WebRTC/GetUserMedia";
 import {Observable} from "rxjs";
+import IceCandidateEvent from "../../../infrastructure/event/IceCandidateEvent";
 
 @Component({
     selector: 'app-member-box',
@@ -12,9 +13,13 @@ export class MemberBoxComponent implements OnDestroy {
     @ViewChild('video') video: ElementRef;
 
     @Input('memberIdentifier') memberIdentifier: string;
+
     @Input('iceAnswer') iceAnswer: Observable<void>;
+    @Input('sessionUpdated') sessionUpdated: Observable<void>;
+    @Input('iceCandidate') iceCandidate: Observable<void>;
 
     @Output() onCreateOffer = new EventEmitter<object>();
+    @Output() onIceCandidate = new EventEmitter<object>();
 
     private getUserMedia: GetUserMedia;
     private peerConnection: PeerConnectionProxy;
@@ -33,6 +38,8 @@ export class MemberBoxComponent implements OnDestroy {
     ngOnInit() {
         this.handleGetUserMedia();
         this.handlePeerConnection();
+        this.handleIceAnswer();
+        this.handleIceCandidate();
     }
 
     ngOnDestroy(): void {
@@ -56,7 +63,7 @@ export class MemberBoxComponent implements OnDestroy {
 
     private handlePeerConnection() {
         this.peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
-            console.log('onIceCandidate')
+            this.onIceCandidate.emit({candidate: event.candidate});
         });
 
         this.peerConnection.onTrack((event: RTCTrackEvent) => {
@@ -64,19 +71,51 @@ export class MemberBoxComponent implements OnDestroy {
             console.log(event);
         });
 
-        this.iceAnswer.subscribe(() => {
+        // chrome workaround because chrome calles negotiation twice, once for every track added
+        // in the handleUserMedia method
+        let offerCreated = false;
+        this.sessionUpdated.subscribe(() => {
             this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
-                this.peerConnection.createOffer().then((event: RTCSessionDescription) => {
-                    this.onCreateOffer.emit({
-                        type: event.type,
-                        memberIdentifier: this.memberIdentifier,
-                    });
-                }).catch((err) => console.log(err.message));
+                if (!offerCreated) {
+                    offerCreated = true;
+                    this.peerConnection.createOffer()
+                        .then((offer: any) => {
+                            this.peerConnection.setLocalDescription(offer);
+                            this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+
+                            this.onCreateOffer.emit({
+                                desc: offer,
+                                memberIdentifier: this.memberIdentifier,
+                            });
+                        })
+                        .catch((err) => console.log(err.message));
+                }
             });
         });
 
         this.peerConnection.onTrack((event: RTCTrackEvent) => {
             console.log('onTrack');
+        });
+    }
+
+    handleIceAnswer() {
+        let isAlreadySet = false;
+        this.iceAnswer.subscribe((data: any) => {
+            if (!isAlreadySet) {
+                isAlreadySet = true;
+
+                if (data.type === 'offer') {
+                }
+            }
+        })
+    }
+
+    handleIceCandidate() {
+        this.iceCandidate.subscribe((data: any) => {
+            if (data.candidate) {
+                console.log(data);
+                this.peerConnection.addIceCandidate(data.candidate);
+            }
         });
     }
 }
