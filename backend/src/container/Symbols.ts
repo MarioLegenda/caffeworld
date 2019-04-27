@@ -5,4 +5,6 @@ export const Symbols = {
     ObservableFactory: Symbol.for('ObservableFactory'),
     RoomService: Symbol.for('RoomService'),
     SingletonSocketInstance: Symbol.for('SingletonSocketInstance'),
+    IceService: Symbol.for('IceService'),
+    IceEvent: Symbol.for('IceEvent'),
 };

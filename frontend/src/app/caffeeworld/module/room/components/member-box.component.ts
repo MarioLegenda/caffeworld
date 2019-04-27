@@ -1,6 +1,7 @@
-import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
-import PeerConnection from "../../infrastructure/PeerConnection";
-import GetUserMedia from "../../infrastructure/GetUserMedia";
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
+import PeerConnectionProxy from "../../infrastructure/WebRTC/PeerConnectionProxy";
+import GetUserMedia from "../../infrastructure/WebRTC/GetUserMedia";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-member-box',
@@ -11,46 +12,27 @@ export class MemberBoxComponent implements OnDestroy {
     @ViewChild('video') video: ElementRef;
 
     @Input('memberIdentifier') memberIdentifier: string;
-    @Input('onDestroy') onDestroy;
-    @Input('onGetUserMediaCreated') onGetUserMediaCreated;
+    @Input('iceAnswer') iceAnswer: Observable<void>;
+
+    @Output() onCreateOffer = new EventEmitter<object>();
 
     private getUserMedia: GetUserMedia;
-    private peerConnection: PeerConnection;
+    private peerConnection: PeerConnectionProxy;
 
-    ngOnInit() {
+    constructor() {
         const configuration = {
             iceServers: [{
-                urls: 'stun:stun.voiparound.com'
-            }]
+                urls: 'stun:numb.viagenie.ca'
+            }],
         };
 
-        const peerConnection: PeerConnection = new PeerConnection(new RTCPeerConnection(configuration));
-        const getUserMedia: GetUserMedia = new GetUserMedia({idealLow: true});
+        this.peerConnection = PeerConnectionProxy.create(configuration);
+        this.getUserMedia = GetUserMedia.create();
+    }
 
-        peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
-            console.log('onIceCandidate')
-        });
-
-        peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
-            console.log('onNegotiationNeeded');
-        });
-
-        peerConnection.onTrack((event: RTCTrackEvent) => {
-            console.log('onTrack');
-        });
-
-        getUserMedia.onConnect((stream) => {
-            this.video.nativeElement.volume = 0;
-            this.video.nativeElement.muted = 0;
-
-            this.video.nativeElement.srcObject = stream;
-
-            stream.getTracks().forEach(track => peerConnection.rtcPeerConnection.addTrack(track, stream));
-
-        }, this);
-
-        this.getUserMedia = getUserMedia;
-        this.peerConnection = peerConnection;
+    ngOnInit() {
+        this.handleGetUserMedia();
+        this.handlePeerConnection();
     }
 
     ngOnDestroy(): void {
@@ -58,5 +40,43 @@ export class MemberBoxComponent implements OnDestroy {
         this.peerConnection.destroy();
         this.video.nativeElement.srcObject = null;
         this.video.nativeElement = null;
+    }
+
+    private handleGetUserMedia() {
+        this.getUserMedia.onConnect((stream) => {
+            this.video.nativeElement.volume = 0;
+            this.video.nativeElement.muted = 0;
+
+            this.video.nativeElement.srcObject = stream;
+
+            stream.getTracks().forEach(track => this.peerConnection.rtcPeerConnection.addTrack(track, stream));
+
+        }, this);
+    }
+
+    private handlePeerConnection() {
+        this.peerConnection.onIceCandidate((event: RTCPeerConnectionIceEvent) => {
+            console.log('onIceCandidate')
+        });
+
+        this.peerConnection.onTrack((event: RTCTrackEvent) => {
+            console.log('onTrackEvent');
+            console.log(event);
+        });
+
+        this.iceAnswer.subscribe(() => {
+            this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
+                this.peerConnection.createOffer().then((event: RTCSessionDescription) => {
+                    this.onCreateOffer.emit({
+                        type: event.type,
+                        memberIdentifier: this.memberIdentifier,
+                    });
+                }).catch((err) => console.log(err.message));
+            });
+        });
+
+        this.peerConnection.onTrack((event: RTCTrackEvent) => {
+            console.log('onTrack');
+        });
     }
 }

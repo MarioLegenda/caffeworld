@@ -1,13 +1,12 @@
 import {inject, injectable} from "inversify";
 import {Symbols} from "../../container/Symbols";
 import SingletonSocketInstance from "../web/SingletonSocketInstance";
-import Socket from "../web/Socket";
 
 @injectable()
-export default class TableEvent {
+export default class IceEvent {
     private socket;
 
-    private readonly createTableEvent = 'app.server.table.create';
+    private readonly iceOfferCreatedEvent = 'app.server.ice.offer_created';
 
     constructor(
         @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
@@ -15,7 +14,7 @@ export default class TableEvent {
         this.socket = socket.socket;
     }
 
-    onTableCreate(middlewareImpl?: Function | null, context?: object): void {
-        Socket.socket.on(this.createTableEvent, (data) => middlewareImpl(data, (context) ? context : this));
+    onOfferCreated(middlewareImpl?: Function | null, context?: object) {
+        this.socket.on(this.iceOfferCreatedEvent, (data) => middlewareImpl(data, (context) ? context : this));
     }
 }

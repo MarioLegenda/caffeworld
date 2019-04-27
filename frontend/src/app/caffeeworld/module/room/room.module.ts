@@ -10,6 +10,7 @@ import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent"
 import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
 import {environment} from "../../../../environments/environment";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
+import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import RoomIdentifier from "../infrastructure/RoomIdentifier";
     providers: [
         RoomEnteredEvent,
         SessionUpdatedEvent,
+        IceAnswerEvent,
         RoomIdentifier,
         {
             provide: SingletonSocketInstance,

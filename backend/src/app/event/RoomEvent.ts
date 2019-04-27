@@ -1,6 +1,7 @@
 import {inject, injectable} from "inversify";
 import {Symbols} from "../../container/Symbols";
 import SingletonSocketInstance from "../web/SingletonSocketInstance";
+import Socket from "../web/Socket";
 
 @injectable()
 export default class RoomEvent {
@@ -16,10 +17,6 @@ export default class RoomEvent {
     }
 
     onRoomEntered(middlewareImpl?: Function | null, context?: object) {
-        this.socket.on(this.roomEnteredEvent, (data) => middlewareImpl(data, (context) ? context : this));
-    }
-
-    onMemberLeft(middlewareImpl?: Function | null, context?: object) {
-        this.socket.on(this.memberLeftEvent, (data) => middlewareImpl(data, (context) ? context : this));
+        Socket.socket.on(this.roomEnteredEvent, (data) => middlewareImpl(data, (context) ? context : this));
     }
 }

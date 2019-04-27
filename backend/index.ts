@@ -8,6 +8,7 @@ import {BindingTypeEnum} from "./src/container/BindingTypeEnum";
 import Redis from "./src/dataSource/redis";
 import IResponseData from "./src/app/web/IResponseData";
 import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
+import Socket from "./src/app/web/Socket";
 
 require('dotenv').config();
 
@@ -33,9 +34,11 @@ app.init()
         tableNamespace.on('connection', (socket) => {
             console.log('Table namespace is connected');
 
+            Socket.refresh(tableNamespace, socket);
+
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind(BindingTypeEnum.DEFAULT, [socket, tableNamespace]);
+            cw.bind(BindingTypeEnum.DEFAULT, [tableNamespace, socket, 'tableNamespace']);
             cw.bind(BindingTypeEnum.TABLE);
 
             const fc = new SocketFrontController(cw);
@@ -52,9 +55,11 @@ app.init()
         roomNamespace.on('connection', (socket) => {
             console.log('Room namespace is connected');
 
+            Socket.refresh(roomNamespace, socket);
+
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind(BindingTypeEnum.DEFAULT, [socket, roomNamespace]);
+            cw.bind(BindingTypeEnum.DEFAULT, [roomNamespace, socket, 'roomNamespace']);
             cw.bind(BindingTypeEnum.ROOM);
 
             const fc = new SocketFrontController(cw);
@@ -65,10 +70,8 @@ app.init()
                 socket.emit('pong');
             });
 
+            // ugly but better to keep this here and not complicate
             socket.on('disconnect', async () => {
-                socket.disconnect();
-
-                // ugly but better to keep this here and not complicate
                 const getAsync = promisify(Redis.client.get).bind(Redis.client);
 
                 const socketId = socket.id;
@@ -81,7 +84,12 @@ app.init()
 
                         let tableData = JSON.parse(await getAsync(roomIdentifier));
 
-                        delete tableData.room.members[socketId];
+                        const members = tableData.room.members;
+
+                        members.list.splice(members.list.indexOf(socketId), 1);
+                        members.count = members.list.count();
+
+                        tableData.room.members = members;
 
                         Redis.client.set(roomIdentifier, JSON.stringify(tableData));
 
@@ -92,11 +100,13 @@ app.init()
                             body: tableData
                         };
 
-                        roomNamespace.to(roomIdentifier).emit('app.client.room.session_updated', responseData);
+                        roomNamespace.to(roomIdentifier).emit('app.client.room.session_disconnect', responseData);
                     }
                 } catch (err) {
                     throw new Error(`Error occurred on socket disconnect with message: ${err.message}`);
                 }
+
+                socket.disconnect();
 
                 console.log('Room namespace has disconnected');
             });

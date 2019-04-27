@@ -1,11 +1,11 @@
-import * as SocketIO from "socket.io";
-
 export default class SingletonSocketInstance {
-    public readonly socket: SocketIO.Server;
+    public readonly socket: any;
     public readonly io;
+    public readonly namespaceType;
 
-    constructor(io, socket) {
+    constructor(io, socket, namespaceType: string) {
         this.socket = socket;
         this.io = io;
+        this.namespaceType = namespaceType;
     }
 }

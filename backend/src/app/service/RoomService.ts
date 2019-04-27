@@ -5,6 +5,7 @@ import {Symbols} from "../../container/Symbols";
 import SingletonSocketInstance from "../web/SingletonSocketInstance";
 import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
+import Socket from "../web/Socket";
 
 @injectable()
 export default class RoomService {
@@ -26,7 +27,6 @@ export default class RoomService {
         const {data} = socketMiddlewareResult;
 
         const roomIdentifier = data.identifier;
-        const memberIdentifier = data.memberIdentifier;
 
         // see how many users are in this room
         // if there are none, create and add 1
@@ -60,8 +60,8 @@ export default class RoomService {
                     }
                 });
             })(
-                this.socket.socket,
-                this.socket.socket.id,
+                Socket.socket,
+                Socket.socket.id,
                 roomIdentifier,
                 this.internalRoomLinks,
                 this.internalError
@@ -78,26 +78,22 @@ export default class RoomService {
 
             const members = sessionData.room.members;
 
-            // a new member has joined this room
-            if (memberIdentifier in members === false) {
-                sessionData.room.members[memberIdentifier] = memberIdentifier;
-            }
+            members.list = Object.keys(Socket.namespace.sockets);
+            members.count = Object.keys(Socket.namespace.sockets).length;
 
-            if (members.count() >= this.maxSessions) {
-                return this.socket.io.to(data).emit(this.sessionUpdateError);
+            sessionData.room.members = members;
+
+            if (members.count >= this.maxSessions) {
+                return Socket.namespace.to(data).emit(this.sessionUpdateError);
             }
 
             Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
             responseData.body = sessionData;
 
-            this.socket.socket.join(roomIdentifier);
-            this.socket.io.to(roomIdentifier).emit(this.sessionUpdateEvent, responseData);
-        });
-    }
+            Socket.socket.join(roomIdentifier);
 
-    memberLeft(socketMiddlewareResult: ISocketData | any) {
-        // in this case, data is the socket id of the connection that left
-        const {data} = socketMiddlewareResult;
+            Socket.namespace.to(roomIdentifier).emit(this.sessionUpdateEvent, responseData);
+        });
     }
 }

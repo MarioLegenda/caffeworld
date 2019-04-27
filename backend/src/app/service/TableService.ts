@@ -5,6 +5,7 @@ import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
 import {Symbols} from "../../container/Symbols";
 import SingletonSocketInstance from "../web/SingletonSocketInstance";
+import Socket from "../web/Socket";
 
 const uuid = require('uuid/v4');
 
@@ -30,7 +31,10 @@ export default class TableService {
             table: data,
             room: {
                 identifier: roomIdentifier,
-                members: {},
+                members: {
+                    list: [],
+                    count: 0,
+                },
                 url: url,
                 path: `/table/${roomIdentifier}`
             },
@@ -45,6 +49,6 @@ export default class TableService {
             body: redisData
         };
 
-        this.socket.emit(this.tableCreatedEvent, responseData);
+        Socket.socket.emit(this.tableCreatedEvent, responseData);
     }
 }

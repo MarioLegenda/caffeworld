@@ -1,8 +1,9 @@
-import {IRTCConfiguration} from "./contract/IRTCConfiguration";
+import {IRTCConfiguration} from "./dictionary/IRTCConfiguration";
 import {Injectable} from "@angular/core";
+import IRTCOfferOptions from "./dictionary/IRTCOfferOptions";
 
 @Injectable()
-export default class PeerConnection {
+export default class PeerConnectionProxy {
     private configuration: IRTCConfiguration | null;
 
     public rtcPeerConnection: RTCPeerConnection;
@@ -11,10 +12,16 @@ export default class PeerConnection {
         this.rtcPeerConnection = new RTCPeerConnection();
     }
 
-    setConfiguration(configuration?: IRTCConfiguration | null): PeerConnection {
+    setConfiguration(configuration?: IRTCConfiguration | null): PeerConnectionProxy {
         this.configuration = configuration;
 
         return this;
+    }
+
+    createOffer(options?: IRTCOfferOptions) {
+        options = (options) ? options : undefined;
+
+        return this.rtcPeerConnection.createOffer(options);
     }
 
     onIceCandidate(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
@@ -27,16 +34,6 @@ export default class PeerConnection {
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
         this.rtcPeerConnection.ontrack = subscriber;
-    }
-
-    create(): RTCPeerConnection {
-        if (this.rtcPeerConnection) {
-            throw new Error(`Invalid usage of PeerConnection. RTCPeerConnection already created`);
-        }
-
-        this.rtcPeerConnection = new RTCPeerConnection(this.configuration);
-
-        return this.rtcPeerConnection;
     }
 
     getProp(name: string): any {
@@ -53,5 +50,11 @@ export default class PeerConnection {
 
     destroy() {
         this.rtcPeerConnection.close();
+    }
+
+    static create(config?: IRTCConfiguration) {
+        config = (config) ? config : {};
+
+        return new PeerConnectionProxy(new RTCPeerConnection(config));
     }
 }

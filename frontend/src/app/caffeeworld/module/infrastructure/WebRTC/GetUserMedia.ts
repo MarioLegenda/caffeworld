@@ -36,4 +36,10 @@ export default class GetUserMedia {
         
         this.stream = null;
     }
+
+    static create(constraints?: object) {
+        constraints = (constraints) ? constraints : {idealLow: true};
+
+        return new GetUserMedia(constraints);
+    }
 }

@@ -1,7 +1,9 @@
 <div class="wrapper">
-    <div class="member-box" *ngFor="let member of members | keyvalue">
+    <div class="member-box" *ngFor="let member of members | keyvalue; trackBy: fnTrackBy">
         <app-member-box
                 [memberIdentifier]="member.key"
-        ></app-member-box>
+                (onCreateOffer)="onCreateOffer($event)"
+                [iceAnswer]="iceAnswer.asObservable()">
+        </app-member-box>
     </div>
 </div>

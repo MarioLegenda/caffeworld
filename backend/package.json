@@ -34,6 +34,7 @@
     "faker": "^4.1.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.18.9",
+    "ping": "^0.2.2",
     "requirejs": "^2.3.6",
     "typescript": "^3.3.1"
   }
