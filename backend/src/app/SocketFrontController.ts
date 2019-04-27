@@ -1,5 +1,4 @@
 import ContainerWrapper from "../container/ContainerWrapper";
-import TableEvent from "./event/TableEvent";
 import {Symbols} from "../container/Symbols";
 import RoomEvent from "./event/RoomEvent";
 import TableService from "./service/TableService";

@@ -1,6 +1,5 @@
 import {Container} from "inversify";
 import {Symbols} from "./Symbols";
-import TableEvent from "../app/event/TableEvent";
 import TableService from "../app/service/TableService";
 import RoomEvent from "../app/event/RoomEvent";
 import SingletonSocketInstance from "../app/web/SingletonSocketInstance";
@@ -34,7 +33,6 @@ export default class ContainerWrapper {
             bound: false,
             init: () => {
 
-                this.inversify.bind<TableEvent>(Symbols.TableEvent).to(TableEvent);
                 this.inversify.bind<TableService>(Symbols.TableService).to(TableService);
             }
         };
