@@ -35,7 +35,7 @@ export class MemberBoxComponent implements OnDestroy {
     }
 
     ngOnInit() {
-        //this.handleGetUserMedia();
+        this.handleGetUserMedia();
         this.handlePeerConnection();
         this.handleIceAnswer();
         this.handleIceCandidate();

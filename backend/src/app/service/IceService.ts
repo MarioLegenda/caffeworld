@@ -1,27 +1,23 @@
 import {inject, injectable} from "inversify";
 import {Symbols} from "../../container/Symbols";
-import SingletonSocketInstance from "../web/SingletonSocketInstance";
 import ISocketData from "../util/ISocketData";
-import Socket from "../web/Socket";
+import Output from "../event/Output";
 
 @injectable()
 export default class IceService {
-    private readonly socketInstance: SingletonSocketInstance;
-
-    private readonly iceAnswerEvent: string = 'app.client.ice.answer';
-    private readonly iceCandidateClientEvent: string = 'app.client.ice.candidate';
+    private output: Output;
 
     constructor(
-        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
+        @inject(Symbols.Output) output: Output
     ) {
-        this.socketInstance = socket;
+        this.output = output;
     }
 
     onOffer(socketData: ISocketData) {
-        Socket.namespace.to(socketData.data.roomIdentifier).emit(this.iceAnswerEvent, socketData.data);
+        this.output.sendOffer(socketData.data.roomIdentifier, socketData.data);
     }
 
     onIceCandidate(socketData: ISocketData) {
-        Socket.namespace.to(socketData.data.roomIdentifier).emit(this.iceCandidateClientEvent, socketData.data);
+        this.output.sendIceCandidate(socketData.data.roomIdentifier, socketData.data);
     }
 }

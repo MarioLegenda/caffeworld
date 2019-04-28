@@ -40,7 +40,7 @@ app.init()
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind(BindingTypeEnum.DEFAULT, [tableNamespace, socket, 'tableNamespace']);
+            cw.bind(BindingTypeEnum.DEFAULT);
             cw.bind(BindingTypeEnum.TABLE);
 
             const fc = new SocketFrontController(cw);
@@ -61,7 +61,7 @@ app.init()
 
             const cw = new ContainerWrapper(new Container());
 
-            cw.bind(BindingTypeEnum.DEFAULT, [roomNamespace, socket, 'roomNamespace']);
+            cw.bind(BindingTypeEnum.DEFAULT);
             cw.bind(BindingTypeEnum.ROOM);
 
             const fc = new SocketFrontController(cw);

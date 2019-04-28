@@ -1,12 +1,9 @@
 import {Container} from "inversify";
 import {Symbols} from "./Symbols";
 import TableService from "../app/service/TableService";
-import RoomEvent from "../app/event/RoomEvent";
-import SingletonSocketInstance from "../app/web/SingletonSocketInstance";
 import RoomService from "../app/service/RoomService";
 import {BindingTypeEnum} from "./BindingTypeEnum";
 import IceService from "../app/service/IceService";
-import IceEvent from "../app/event/IceEvent";
 import Input from '../app/event/Input';
 import Output from '../app/event/Output';
 
@@ -20,12 +17,9 @@ export default class ContainerWrapper {
 
         this.containers[BindingTypeEnum.DEFAULT] = {
             bound: false,
-            init: (dependencies: Array<any>) => {
-                let [io, socket, namespaceType] = dependencies;
-
+            init: () => {
                 this.inversify.bind<Input>(Symbols.Input).to(Input);
                 this.inversify.bind<Output>(Symbols.Output).to(Output);
-                this.inversify.bind<SingletonSocketInstance>(Symbols.SingletonSocketInstance).toDynamicValue(() => new SingletonSocketInstance(io, socket, namespaceType));
             }
         };
 
@@ -41,18 +35,16 @@ export default class ContainerWrapper {
             bound: false,
             init: () => {
                 this.inversify.bind<RoomService>(Symbols.RoomService).to(RoomService);
-                this.inversify.bind<RoomEvent>(Symbols.RoomEvent).to(RoomEvent);
                 this.inversify.bind<IceService>(Symbols.IceService).to(IceService);
-                this.inversify.bind<IceEvent>(Symbols.IceEvent).to(IceEvent);
             }
         };
     }
 
-    bind(name: string, dependencies?: Array<any>): void {
+    bind(name: string): void {
         const c = this.containers[name];
 
         if (!c.bound) {
-            c.init(dependencies);
+            c.init();
             c.bound = true;
 
             return;

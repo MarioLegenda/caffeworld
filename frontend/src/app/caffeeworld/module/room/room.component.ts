@@ -64,8 +64,6 @@ export class RoomComponent implements OnInit, OnDestroy {
                 // @ts-ignore
                 const members = responseData.body.room.members;
 
-                console.log(members);
-
                 // @ts-ignore
                 for (const member of members.list) {
                     if (member in this.members === false) this.members[member] = member;
