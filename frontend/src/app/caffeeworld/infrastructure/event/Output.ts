@@ -1,17 +1,16 @@
 import {Injectable} from "@angular/core";
-import SingletonSocketInstance from "../socket/SingletonSocketInstance";
+import Socket from "../socket/Socket";
 
 @Injectable()
 export default class Input {
-    private socket;
-
     private readonly createTableEvent = 'app.server.table.create';
-
-    constructor(socket: SingletonSocketInstance) {
-        this.socket = socket.socket;
-    }
+    private readonly roomEnteredEvent = 'app.server.room.entered';
 
     sendCreateTable(data: object): void {
-        this.socket.emit(this.createTableEvent, data);
+        Socket.table.emit(this.createTableEvent, data);
+    }
+
+    sendRoomEntered(data) {
+        Socket.room.emit(this.roomEnteredEvent, data);
     }
 }

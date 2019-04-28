@@ -7,6 +7,8 @@ import IResponseData from "../../infrastructure/web/IResponseData";
 import {ReplaySubject, Subject} from "rxjs";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
 import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
+import RoomService from "../../infrastructure/service/RoomService";
+import Socket from "../../infrastructure/socket/Socket";
 
 @Component({
     selector: 'app-room',
@@ -26,6 +28,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         private roomIdentifier: RoomIdentifier,
         private socketInstance: SingletonSocketInstance,
         private sessionUpdateEvent: SessionUpdatedEvent,
+        private roomService: RoomService,
     ) {}
 
     fnTrackBy(index, item) {
@@ -57,11 +60,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     private handleConnection() {
-        this.socketInstance.socket.on('connect', () => {
-            this.roomEnteredEvent.emitRoomEntered({
-                identifier: this.roomIdentifier.roomIdentifier,
-                memberIdentifier: this.socketInstance.socket.id,
-            });
+        Socket.room.on('connect', () => {
+            this.roomService.handleEnteringRoom();
 
             this.sessionUpdateEvent.onSessionUpdated((responseData: IResponseData) => {
                 if (Object.keys(this.members).length >= 1) {

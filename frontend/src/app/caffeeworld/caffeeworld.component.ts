@@ -10,6 +10,7 @@ export class CaffeeworldComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

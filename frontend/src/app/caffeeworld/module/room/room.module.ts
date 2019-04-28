@@ -12,6 +12,7 @@ import {environment} from "../../../../environments/environment";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
 import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
+import RoomService from "../../infrastructure/service/RoomService";
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
     ],
     bootstrap: [RoomComponent],
     providers: [
+        RoomService,
         RoomEnteredEvent,
         SessionUpdatedEvent,
         IceAnswerEvent,

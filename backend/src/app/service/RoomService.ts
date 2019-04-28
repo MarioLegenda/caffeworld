@@ -9,32 +9,19 @@ import Socket from "../web/Socket";
 
 @injectable()
 export default class RoomService {
-    private socket;
     private readonly maxSessions = 6;
     private readonly sessionUpdateEvent = 'app.client.room.session_updated';
     private readonly sessionUpdateError = 'app.server.room.error.session_updated';
     private readonly internalRoomLinks: string = 'app.internal.room_links';
     private readonly internalError: string = 'app.internal.error';
 
-    constructor(
-        @inject(Symbols.SingletonSocketInstance) socket: SingletonSocketInstance
-    ) {
-        this.socket = socket;
-    }
-
     roomEntered(socketMiddlewareResult: ISocketData | any) {
         // data variable is the room identifier in this case
         const {data} = socketMiddlewareResult;
 
-        const roomIdentifier = data.identifier;
+        const roomIdentifier = data.roomIdentifier;
 
-        // see how many users are in this room
-        // if there are none, create and add 1
-        // if there are some, check if the number of users is lower than 6
-        // if it is equal of higher than 6, do nothing
-        // if it is lower than 6, add the current user (socket) to the room
-        // then, send the app.event.room.user_added event to the client
-        Redis.client.get(data.identifier, (err, sData: string) => {
+        Redis.client.get(roomIdentifier, (err, sData: string) => {
             if (err) {
                 console.error(`A Redis error occurred with message: ${err.message}`);
 

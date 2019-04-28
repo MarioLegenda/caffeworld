@@ -4,6 +4,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ClipboardService} from "ngx-clipboard";
 import IResponseData from "../../infrastructure/web/IResponseData";
 import {TableService} from "../../infrastructure/service/TableService";
+import Socket from "../../infrastructure/socket/Socket";
 
 @Component({
     selector: 'app-create-room',
@@ -26,12 +27,14 @@ export class CreateComponent {
 
     onSubmit(isValid: boolean, content) {
         if (isValid) {
-            this.tableService.onTableCreated((data: IResponseData) => {
-                this.roomData = data.body;
-                this.modalService.open(content);
-            });
+            Socket.table.on('connect', () => {
+                this.tableService.onTableCreated((data: IResponseData) => {
+                    this.roomData = data.body;
+                    this.modalService.open(content);
+                });
 
-            this.tableService.createTable(this.createTableModel);
+                this.tableService.createTable(this.createTableModel);
+            });
         }
     }
 
