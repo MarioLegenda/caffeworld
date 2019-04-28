@@ -12,8 +12,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import { ClipboardModule } from 'ngx-clipboard';
-import SingletonSocketInstance from "./infrastructure/socket/SingletonSocketInstance";
-import {environment} from "../../environments/environment";
 import Input from "./infrastructure/event/Input";
 import Output from "./infrastructure/event/Output";
 import {TableService} from "./infrastructure/service/TableService";
@@ -40,13 +38,6 @@ import {TableService} from "./infrastructure/service/TableService";
         Output,
         Input,
         TableService,
-        {
-            provide: SingletonSocketInstance,
-            useFactory: () => new SingletonSocketInstance(
-                environment.siteUrl + '/table',
-                {path: '/socket', reconnectionAttempts: 5},
-            ),
-        },
     ]
 })
 export class CaffeeworldModule { }

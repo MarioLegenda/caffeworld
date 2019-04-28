@@ -1,12 +1,10 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
-import SingletonSocketInstance from "../../infrastructure/socket/SingletonSocketInstance";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import IResponseData from "../../infrastructure/web/IResponseData";
-import {ReplaySubject, Subject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
-import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
 import RoomService from "../../infrastructure/service/RoomService";
 import Socket from "../../infrastructure/socket/Socket";
 
@@ -26,7 +24,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         private roomEnteredEvent: RoomEnteredEvent,
         private iceAnswerEvent: IceAnswerEvent,
         private roomIdentifier: RoomIdentifier,
-        private socketInstance: SingletonSocketInstance,
         private sessionUpdateEvent: SessionUpdatedEvent,
         private roomService: RoomService,
     ) {}
@@ -46,13 +43,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     onCreateOffer(offer: any) {
         offer.roomIdentifier = this.roomIdentifier.roomIdentifier;
 
-        this.socketInstance.socket.emit('app.server.ice.offer_created', offer);
+        Socket.room.emit('app.server.ice.offer_created', offer);
     }
 
     onIceCandidate(event) {
         event.roomIdentifier = this.roomIdentifier.roomIdentifier;
 
-        this.socketInstance.socket.emit('app.server.ice.candidate', event);
+        Socket.room.socket.emit('app.server.ice.candidate', event);
     }
 
     ngOnDestroy(): void {
@@ -70,6 +67,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
                 // @ts-ignore
                 const members = responseData.body.room.members;
+
+                console.log(members);
 
                 // @ts-ignore
                 for (const member of members.list) {
@@ -92,8 +91,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     private handleDisconnection() {
-        this.socketInstance.socket.on('disconnect', () => {
-            this.socketInstance.socket.open();
+        Socket.room.on('disconnect', () => {
+            Socket.room.open();
         });
     }
 
@@ -104,16 +103,16 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     private handleIceCandidate() {
-        this.socketInstance.socket.on('app.client.ice.candidate', (data) => {
+        Socket.room.on('app.client.ice.candidate', (data) => {
             this.iceCandidate.next(data);
         })
     }
 
     private keepConnAlive() {
         setInterval(() => {
-            this.socketInstance.socket.emit('ping');
+            Socket.room.emit('ping');
         }, 10000);
 
-        this.socketInstance.socket.on('pong', () => {});
+        Socket.room.on('pong', () => {});
     }
 }

@@ -20,8 +20,8 @@ export class MemberBoxComponent implements OnDestroy {
     @Output() onCreateOffer = new EventEmitter<object>();
     @Output() onIceCandidate = new EventEmitter<object>();
 
-    private getUserMedia: GetUserMediaProxy;
-    private peerConnection: PeerConnectionProxy;
+    private readonly getUserMedia: GetUserMediaProxy;
+    private readonly peerConnection: PeerConnectionProxy;
 
     constructor() {
         const configuration = {
