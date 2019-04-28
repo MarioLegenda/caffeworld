@@ -39,8 +39,6 @@ export default class TableService {
             },
         };
 
-        console.log(redisData);
-
         Redis.client.set(roomIdentifier, JSON.stringify(redisData));
 
         this.output.createTable(redisData);

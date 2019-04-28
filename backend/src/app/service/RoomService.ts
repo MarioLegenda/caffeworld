@@ -1,19 +1,22 @@
 import {inject, injectable} from "inversify";
 import ISocketData from "../util/ISocketData";
 import Redis from "../../dataSource/redis";
-import {Symbols} from "../../container/Symbols";
-import SingletonSocketInstance from "../web/SingletonSocketInstance";
-import IResponseData from "../web/IResponseData";
-import {TransportTypeEnum} from "../web/TrasportTypeEnum";
 import Socket from "../web/Socket";
+import Output from "../event/Output";
+import {Symbols} from "../../container/Symbols";
 
 @injectable()
 export default class RoomService {
     private readonly maxSessions = 6;
-    private readonly sessionUpdateEvent = 'app.client.room.session_updated';
     private readonly sessionUpdateError = 'app.server.room.error.session_updated';
     private readonly internalRoomLinks: string = 'app.internal.room_links';
     private readonly internalError: string = 'app.internal.error';
+
+    private output: Output;
+
+    constructor(@inject(Symbols.Output) output: Output) {
+        this.output = output;
+    }
 
     roomEntered(socketMiddlewareResult: ISocketData | any) {
         // data variable is the room identifier in this case
@@ -56,13 +59,6 @@ export default class RoomService {
 
             const sessionData = JSON.parse(sData);
 
-            const responseData: IResponseData = {
-                transportType: TransportTypeEnum.Socket,
-                http: null,
-                socket: null,
-                body: null,
-            };
-
             const members = sessionData.room.members;
 
             members.list = Object.keys(Socket.namespace.sockets);
@@ -76,11 +72,9 @@ export default class RoomService {
 
             Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
-            responseData.body = sessionData;
-
             Socket.socket.join(roomIdentifier);
 
-            Socket.namespace.to(roomIdentifier).emit(this.sessionUpdateEvent, responseData);
+            this.output.sendUpdateRoom(roomIdentifier, sessionData);
         });
     }
 }
