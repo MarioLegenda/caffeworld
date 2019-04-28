@@ -1,9 +1,6 @@
 import {inject, injectable} from "inversify";
 import Redis from "../../dataSource/redis";
-import ISocketData from "../util/ISocketData";
-import IResponseData from "../web/IResponseData";
-import {TransportTypeEnum} from "../web/TrasportTypeEnum";
-import Socket from "../web/Socket";
+import IData from "../util/IData";
 import {Symbols} from "../../container/Symbols";
 import Output from "../event/Output";
 
@@ -19,8 +16,8 @@ export default class TableService {
         this.output = output;
     }
 
-    createTable(socketMiddlewareResult: ISocketData): void {
-        const {data} = socketMiddlewareResult;
+    createTable(d: IData): void {
+        const {data} = d;
 
         const roomIdentifier: string = uuid();
 

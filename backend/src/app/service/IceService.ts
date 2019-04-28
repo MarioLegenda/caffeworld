@@ -1,6 +1,6 @@
 import {inject, injectable} from "inversify";
 import {Symbols} from "../../container/Symbols";
-import ISocketData from "../util/ISocketData";
+import IData from "../util/IData";
 import Output from "../event/Output";
 
 @injectable()
@@ -13,11 +13,11 @@ export default class IceService {
         this.output = output;
     }
 
-    onOffer(socketData: ISocketData) {
-        this.output.sendOffer(socketData.data.roomIdentifier, socketData.data);
+    onOffer(data: IData) {
+        this.output.sendOffer(data.data.roomIdentifier, data.data);
     }
 
-    onIceCandidate(socketData: ISocketData) {
-        this.output.sendIceCandidate(socketData.data.roomIdentifier, socketData.data);
+    onIceCandidate(data: IData) {
+        this.output.sendIceCandidate(data.data.roomIdentifier, data.data);
     }
 }

@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import ISocketData from "../util/ISocketData";
+import IData from "../util/IData";
 import Redis from "../../dataSource/redis";
 import Socket from "../web/Socket";
 import Output from "../event/Output";
@@ -18,9 +18,9 @@ export default class RoomService {
         this.output = output;
     }
 
-    roomEntered(socketMiddlewareResult: ISocketData | any) {
+    roomEntered(d: IData | any) {
         // data variable is the room identifier in this case
-        const {data} = socketMiddlewareResult;
+        const {data} = d;
 
         const roomIdentifier = data.roomIdentifier;
 

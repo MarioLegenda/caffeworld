@@ -2,7 +2,6 @@ import {injectable} from "inversify";
 import Socket from "../web/Socket";
 import IResponseData from "../web/IResponseData";
 import {TransportTypeEnum} from "../web/TrasportTypeEnum";
-import ISocketData from "../util/ISocketData";
 
 @injectable()
 export default class Output {
