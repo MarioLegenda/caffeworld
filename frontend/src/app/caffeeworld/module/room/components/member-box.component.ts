@@ -1,8 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import PeerConnectionProxy from "../../infrastructure/WebRTC/PeerConnectionProxy";
-import GetUserMedia from "../../infrastructure/WebRTC/GetUserMedia";
+import GetUserMediaProxy from "../../infrastructure/WebRTC/GetUserMediaProxy";
 import {Observable} from "rxjs";
-import IceCandidateEvent from "../../../infrastructure/event/IceCandidateEvent";
 
 @Component({
     selector: 'app-member-box',
@@ -21,7 +20,7 @@ export class MemberBoxComponent implements OnDestroy {
     @Output() onCreateOffer = new EventEmitter<object>();
     @Output() onIceCandidate = new EventEmitter<object>();
 
-    private getUserMedia: GetUserMedia;
+    private getUserMedia: GetUserMediaProxy;
     private peerConnection: PeerConnectionProxy;
 
     constructor() {
@@ -32,7 +31,7 @@ export class MemberBoxComponent implements OnDestroy {
         };
 
         this.peerConnection = PeerConnectionProxy.create(configuration);
-        this.getUserMedia = GetUserMedia.create();
+        this.getUserMedia = GetUserMediaProxy.create();
     }
 
     ngOnInit() {
@@ -50,14 +49,7 @@ export class MemberBoxComponent implements OnDestroy {
     }
 
     private handleGetUserMedia() {
-        this.getUserMedia.onConnect((stream) => {
-            this.video.nativeElement.volume = 0;
-            this.video.nativeElement.muted = 0;
-
-            this.video.nativeElement.srcObject = stream;
-
-            this.peerConnection.addTracks(stream);
-        }, this);
+        this.getUserMedia.connect(this.peerConnection, this.video.nativeElement);
     }
 
     private handlePeerConnection() {

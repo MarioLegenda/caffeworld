@@ -1,4 +1,6 @@
-export default class GetUserMedia {
+import PeerConnectionProxy from "./PeerConnectionProxy";
+
+export default class GetUserMediaProxy {
     private stream;
     private constraints;
 
@@ -19,7 +21,21 @@ export default class GetUserMedia {
         this.constraints = constraints;
     }
 
-    onConnect(subscriber, context: object | null = null) {
+    connect(
+        peerConnection: PeerConnectionProxy,
+        nativeElement,
+        subscriber?,
+        context?: object | null) {
+
+        subscriber = (subscriber) ? subscriber : (stream) => {
+            nativeElement.volume = 0;
+            nativeElement.muted = 0;
+
+            nativeElement.srcObject = stream;
+
+            peerConnection.addTracks(stream);
+        };
+
         navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
             this.stream = stream;
 
@@ -40,6 +56,6 @@ export default class GetUserMedia {
     static create(constraints?: object) {
         constraints = (constraints) ? constraints : {idealLow: true};
 
-        return new GetUserMedia(constraints);
+        return new GetUserMediaProxy(constraints);
     }
 }
