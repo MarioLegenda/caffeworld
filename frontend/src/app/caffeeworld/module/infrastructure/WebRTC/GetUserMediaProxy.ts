@@ -36,7 +36,7 @@ export default class GetUserMediaProxy {
             peerConnection.addTracks(stream);
         };
 
-        navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
+        return navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
             this.stream = stream;
 
             subscriber.call((context) ? context : null, ...[stream]);

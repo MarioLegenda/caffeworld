@@ -35,7 +35,7 @@ export class MemberBoxComponent implements OnDestroy {
     }
 
     ngOnInit() {
-        this.handleGetUserMedia();
+        //this.handleGetUserMedia();
         this.handlePeerConnection();
         this.handleIceAnswer();
         this.handleIceCandidate();
@@ -62,25 +62,12 @@ export class MemberBoxComponent implements OnDestroy {
             console.log(event);
         });
 
-        // chrome workaround because chrome calles negotiation twice, once for every track added
-        // in the handleUserMedia method
-        let offerCreated = false;
         this.sessionUpdated.subscribe(() => {
-            this.peerConnection.onNegotiationNeeded((event: RTCPeerConnectionIceEvent) => {
-                if (!offerCreated) {
-                    offerCreated = true;
-                    this.peerConnection.createOffer()
-                        .then((offer: any) => {
-                            this.peerConnection.setLocalDescription(offer);
-                            this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-                            this.onCreateOffer.emit({
-                                desc: offer,
-                                memberIdentifier: this.memberIdentifier,
-                            });
-                        })
-                        .catch((err) => console.log(err.message));
-                }
+            this.peerConnection.onNegotiationNeeded((offer: any) => {
+                this.onCreateOffer.emit({
+                    desc: offer,
+                    memberIdentifier: this.memberIdentifier,
+                });
             });
         });
 
@@ -96,6 +83,7 @@ export class MemberBoxComponent implements OnDestroy {
                 isAlreadySet = true;
 
                 if (data.type === 'offer') {
+                    this.peerConnection.setRemoteDescription(data.desc);
                 }
             }
         })
@@ -103,8 +91,8 @@ export class MemberBoxComponent implements OnDestroy {
 
     handleIceCandidate() {
         this.iceCandidate.subscribe((data: any) => {
+            console.log(data);
             if (data.candidate) {
-                console.log(data);
                 this.peerConnection.addIceCandidate(data.candidate);
             }
         });

@@ -6,6 +6,10 @@ import IRTCOfferOptions from "./dictionary/IRTCOfferOptions";
 export default class PeerConnectionProxy {
     private configuration: IRTCConfiguration | null;
 
+    // needed workaround a chrome bug that send
+    // onnegotiationneeded twice, others don't have that bug
+    private offerCreated: boolean = false;
+
     public rtcPeerConnection: RTCPeerConnection;
 
     constructor(rtcPeerConnection: RTCPeerConnection) {
@@ -22,12 +26,6 @@ export default class PeerConnectionProxy {
         stream.getTracks().forEach(track => this.rtcPeerConnection.addTrack(track, stream));
     }
 
-    createOffer(options?: IRTCOfferOptions) {
-        options = (options) ? options : undefined;
-
-        return this.rtcPeerConnection.createOffer(options);
-    }
-
     onIceCandidate(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
         this.rtcPeerConnection.onicecandidate = subscriber;
     }
@@ -37,7 +35,30 @@ export default class PeerConnectionProxy {
     }
 
     onNegotiationNeeded(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
+        if (this.offerCreated) {
+            return;
+        }
+
+        this.offerCreated = true;
+
         this.rtcPeerConnection.onnegotiationneeded = subscriber;
+
+        const internalSubscriber = (offer: any) => {
+            this.rtcPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
+
+            return offer;
+        };
+
+        this.offerCreated = true;
+
+        const offerPromise = this.rtcPeerConnection.createOffer();
+
+        this.rtcPeerConnection.createOffer()
+            .then(internalSubscriber)
+            .then(subscriber)
+            .catch((err) => console.log(err.message));
+
+        return offerPromise;
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
@@ -49,7 +70,7 @@ export default class PeerConnectionProxy {
     }
 
     setRemoteDescription(desc: RTCSessionDescription) {
-        this.rtcPeerConnection.setRemoteDescription(desc);
+        return this.rtcPeerConnection.setRemoteDescription(desc);
     }
 
     getProp(name: string): any {
