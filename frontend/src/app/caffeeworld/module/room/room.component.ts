@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
-import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import IResponseData from "../../infrastructure/web/IResponseData";
 import {ReplaySubject} from "rxjs";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
@@ -22,7 +21,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     constructor(
         private iceAnswerEvent: IceAnswerEvent,
         private roomIdentifier: RoomIdentifier,
-        private sessionUpdateEvent: SessionUpdatedEvent,
         private roomService: RoomService,
     ) {}
 
@@ -74,11 +72,10 @@ export class RoomComponent implements OnInit, OnDestroy {
                 }
             });
 
-            this.sessionUpdateEvent.onSessionDisconnect((responseData: IResponseData) => {
+            this.roomService.roomLeave((responseData: IResponseData) => {
                 // @ts-ignore
                 const members = responseData.body.room.members;
 
-                console.log(members);
                 // if one of members are not present in this.member, remove it from this.member
                 // @ts-ignore
                 for (const member of Object.values(this.members)) {

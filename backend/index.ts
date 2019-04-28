@@ -9,6 +9,8 @@ import Redis from "./src/dataSource/redis";
 import IResponseData from "./src/app/web/IResponseData";
 import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
 import Socket from "./src/app/web/Socket";
+import {Symbols} from "./src/container/Symbols";
+import Output from "./src/app/event/Output";
 
 require('dotenv').config();
 
@@ -93,14 +95,9 @@ app.init()
 
                         Redis.client.set(roomIdentifier, JSON.stringify(tableData));
 
-                        const responseData: IResponseData = {
-                            transportType: TransportTypeEnum.Socket,
-                            http: null,
-                            socket: null,
-                            body: tableData
-                        };
+                        const output: Output = cw.getDependency(Symbols.Output);
 
-                        roomNamespace.to(roomIdentifier).emit('app.client.room.session_disconnect', responseData);
+                        output.sendRoomLeave(roomIdentifier, tableData);
                     }
                 } catch (err) {
                     throw new Error(`Error occurred on socket disconnect with message: ${err.message}`);

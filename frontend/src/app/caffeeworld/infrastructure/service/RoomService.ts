@@ -22,4 +22,8 @@ export default class RoomService {
     roomUpdated(subscriber, context?: object): void {
         this.input.onRoomUpdated(subscriber, context);
     }
+
+    roomLeave(subscriber, context?: object): void {
+        this.input.onRoomLeave(subscriber, context);
+    }
 }

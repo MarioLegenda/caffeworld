@@ -64,8 +64,6 @@ export default class RoomService {
             members.list = Object.keys(Socket.namespace.sockets);
             members.count = Object.keys(Socket.namespace.sockets).length;
 
-            console.log(members);
-
             sessionData.room.members = members;
 
             if (members.count >= this.maxSessions) {
