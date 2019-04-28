@@ -2,16 +2,16 @@ import {inject, injectable} from "inversify";
 import Redis from "../../dataSource/redis";
 import IData from "../util/IData";
 import {Symbols} from "../../container/Symbols";
-import Output from "../event/Output";
+import IOutput from "../event/IOutput";
 
 const uuid = require('uuid/v4');
 
 @injectable()
 export default class TableService {
-    private output: Output;
+    private output: IOutput;
 
     constructor(
-        @inject(Symbols.Output) output: Output
+        @inject(Symbols.Output) output: IOutput
     ) {
         this.output = output;
     }

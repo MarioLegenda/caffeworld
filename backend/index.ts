@@ -6,11 +6,9 @@ import ContainerWrapper from "./src/container/ContainerWrapper";
 import {Container} from "inversify";
 import {BindingTypeEnum} from "./src/container/BindingTypeEnum";
 import Redis from "./src/dataSource/redis";
-import IResponseData from "./src/app/web/IResponseData";
-import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
 import Socket from "./src/app/web/Socket";
 import {Symbols} from "./src/container/Symbols";
-import Output from "./src/app/event/Output";
+import IOutput from "./src/app/event/IOutput";
 
 require('dotenv').config();
 
@@ -95,7 +93,7 @@ app.init()
 
                         Redis.client.set(roomIdentifier, JSON.stringify(tableData));
 
-                        const output: Output = cw.getDependency(Symbols.Output);
+                        const output: IOutput = cw.getDependency(Symbols.Output);
 
                         output.sendRoomLeave(roomIdentifier, tableData);
                     }

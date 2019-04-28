@@ -2,8 +2,8 @@ import {inject, injectable} from "inversify";
 import IData from "../util/IData";
 import Redis from "../../dataSource/redis";
 import Socket from "../web/Socket";
-import Output from "../event/Output";
 import {Symbols} from "../../container/Symbols";
+import IOutput from "../event/IOutput";
 
 @injectable()
 export default class RoomService {
@@ -12,9 +12,9 @@ export default class RoomService {
     private readonly internalRoomLinks: string = 'app.internal.room_links';
     private readonly internalError: string = 'app.internal.error';
 
-    private output: Output;
+    private output: IOutput;
 
-    constructor(@inject(Symbols.Output) output: Output) {
+    constructor(@inject(Symbols.Output) output: IOutput) {
         this.output = output;
     }
 

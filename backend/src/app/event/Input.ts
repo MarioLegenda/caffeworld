@@ -1,8 +1,9 @@
 import Socket from "../web/Socket";
 import {injectable} from "inversify";
+import IInput from "./IInput";
 
 @injectable()
-export default class Output {
+export default class Output implements IInput{
     private readonly createTableEvent: string = 'app.server.table.create';
     private readonly iceOfferCreatedEvent = 'app.server.ice.offer_created';
     private readonly iceCandidateServerEvent = 'app.server.ice.candidate';

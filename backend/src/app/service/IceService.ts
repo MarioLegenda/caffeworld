@@ -1,14 +1,14 @@
 import {inject, injectable} from "inversify";
 import {Symbols} from "../../container/Symbols";
 import IData from "../util/IData";
-import Output from "../event/Output";
+import IOutput from "../event/IOutput";
 
 @injectable()
 export default class IceService {
-    private output: Output;
+    private output: IOutput;
 
     constructor(
-        @inject(Symbols.Output) output: Output
+        @inject(Symbols.Output) output: IOutput
     ) {
         this.output = output;
     }
