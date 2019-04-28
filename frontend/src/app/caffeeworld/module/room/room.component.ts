@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import IResponseData from "../../infrastructure/web/IResponseData";
@@ -21,7 +20,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly iceCandidate: ReplaySubject<any> = new ReplaySubject();
 
     constructor(
-        private roomEnteredEvent: RoomEnteredEvent,
         private iceAnswerEvent: IceAnswerEvent,
         private roomIdentifier: RoomIdentifier,
         private sessionUpdateEvent: SessionUpdatedEvent,
@@ -49,7 +47,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     onIceCandidate(event) {
         event.roomIdentifier = this.roomIdentifier.roomIdentifier;
 
-        Socket.room.socket.emit('app.server.ice.candidate', event);
+        Socket.room.emit('app.server.ice.candidate', event);
     }
 
     ngOnDestroy(): void {

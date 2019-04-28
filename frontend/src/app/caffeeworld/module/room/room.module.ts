@@ -5,7 +5,6 @@ import {RouterModule} from '@angular/router';
 import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
 import {MemberBoxComponent} from "./components/member-box.component";
-import RoomEnteredEvent from "../../infrastructure/event/RoomEnteredEvent";
 import SessionUpdatedEvent from "../../infrastructure/event/SessionUpdatedEvent";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
@@ -25,7 +24,6 @@ import RoomService from "../../infrastructure/service/RoomService";
     bootstrap: [RoomComponent],
     providers: [
         RoomService,
-        RoomEnteredEvent,
         SessionUpdatedEvent,
         IceAnswerEvent,
         RoomIdentifier,
