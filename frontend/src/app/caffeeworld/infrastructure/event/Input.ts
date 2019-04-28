@@ -7,7 +7,7 @@ export default class Input implements IInput {
     private readonly tableCreatedEvent = 'app.client.table.created';
     private readonly roomUpdatedEvent = 'app.client.room.room_updated';
     private readonly roomLeaveEvent = 'app.client.room.room_leave';
-    private readonly iceAnswerEvent = 'app.client.ice.answer';
+    private readonly iceOfferEvent = 'app.client.ice.answer';
     private readonly iceCandidateEvent = 'app.client.ice.candidate';
 
     onTableCreated(subscriber, context?: object): void {
@@ -22,8 +22,8 @@ export default class Input implements IInput {
         Socket.room.on(this.roomLeaveEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 
-    onIceAnswer(subscriber, context?: object): void {
-        Socket.room.on(this.iceAnswerEvent, (context) ? subscriber.bind(this) : subscriber);
+    onIceOffer(subscriber, context?: object): void {
+        Socket.room.on(this.iceOfferEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 
     onAddIceCandidate(subscriber, context?: object): void {

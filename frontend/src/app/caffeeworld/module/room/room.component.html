@@ -5,7 +5,7 @@
                 (onCreateOffer)="onCreateOffer($event)"
                 (onIceCandidate)="onIceCandidate($event)"
                 [sessionUpdated]="sessionUpdated.asObservable()"
-                [iceAnswer]="iceAnswer.asObservable()"
+                [iceOfferSubscriber]="iceOffer.asObservable()"
                 [iceCandidate]="iceCandidate.asObservable()">
         </app-member-box>
     </div>

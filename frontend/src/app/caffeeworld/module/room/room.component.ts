@@ -18,7 +18,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     private readonly input: IInput;
 
     private readonly sessionUpdated: ReplaySubject<any> = new ReplaySubject();
-    private readonly iceAnswer: ReplaySubject<any> = new ReplaySubject();
+    private readonly iceOffer: ReplaySubject<any> = new ReplaySubject();
     private readonly iceCandidate: ReplaySubject<any> = new ReplaySubject();
 
     constructor(
@@ -37,7 +37,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         this.keepConnAlive();
         this.handleConnection();
         this.handleDisconnection();
-        this.handleAnswer();
+        this.handleIceOffer();
         this.handleIceCandidate();
     }
 
@@ -94,9 +94,9 @@ export class RoomComponent implements OnInit, OnDestroy {
         });
     }
 
-    private handleAnswer() {
-        this.input.onIceAnswer((data) => {
-            this.iceAnswer.next(data);
+    private handleIceOffer() {
+        this.input.onIceOffer((data) => {
+            this.iceOffer.next(data);
         });
     }
 

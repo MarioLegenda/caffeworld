@@ -13,7 +13,7 @@ export class MemberBoxComponent implements OnDestroy {
 
     @Input('memberIdentifier') memberIdentifier: string;
 
-    @Input('iceAnswer') iceAnswer: Observable<void>;
+    @Input('iceOfferSubscriber') iceOfferSubscriber: Observable<void>;
     @Input('sessionUpdated') sessionUpdated: Observable<void>;
     @Input('iceCandidate') iceCandidate: Observable<void>;
 
@@ -37,7 +37,7 @@ export class MemberBoxComponent implements OnDestroy {
     ngOnInit() {
         this.handleGetUserMedia();
         this.handlePeerConnection();
-        this.handleIceAnswer();
+        this.handleIceOffer();
         this.handleIceCandidate();
     }
 
@@ -76,17 +76,17 @@ export class MemberBoxComponent implements OnDestroy {
         });
     }
 
-    handleIceAnswer() {
+    handleIceOffer() {
         let isAlreadySet = false;
-        this.iceAnswer.subscribe((data: any) => {
+        this.iceOfferSubscriber.subscribe((data: any) => {
             if (!isAlreadySet) {
                 isAlreadySet = true;
-
+                // data.desc is actually sdp under desc
                 if (data.type === 'offer') {
                     this.peerConnection.setRemoteDescription(data.desc);
                 }
             }
-        })
+        });
     }
 
     handleIceCandidate() {

@@ -9,7 +9,7 @@ export default class Output implements IOutput {
     private readonly tableCreatedEvent: string = 'app.client.table.created';
     private readonly roomUpdatedEvent = 'app.client.room.room_updated';
     private readonly roomLeaveEvent = 'app.client.room.room_leave';
-    private readonly iceAnswerEvent: string = 'app.client.ice.answer';
+    private readonly iceOfferEvent: string = 'app.client.ice.offer';
     private readonly iceCandidateClientEvent: string = 'app.client.ice.candidate';
 
     createTable(data: any): void {
@@ -25,7 +25,7 @@ export default class Output implements IOutput {
     }
 
     sendOffer(roomIdentifier: string, data: any) {
-        Socket.namespace.to(roomIdentifier).emit(this.iceAnswerEvent, data);
+        Socket.namespace.to(roomIdentifier).emit(this.iceOfferEvent, data);
     }
 
     sendIceCandidate(roomIdentifier: string, data: any) {
