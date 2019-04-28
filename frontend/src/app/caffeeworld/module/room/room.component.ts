@@ -63,7 +63,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         Socket.room.on('connect', () => {
             this.roomService.handleEnteringRoom();
 
-            this.sessionUpdateEvent.onSessionUpdated((responseData: IResponseData) => {
+            this.roomService.roomUpdated((responseData: IResponseData) => {
                 if (Object.keys(this.members).length >= 1) {
                     this.sessionUpdated.next();
                 }

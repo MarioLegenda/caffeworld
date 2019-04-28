@@ -7,7 +7,6 @@ import Socket from "../socket/Socket";
 export default class SessionUpdatedEvent {
     private socket;
 
-    private readonly sessionUpdatedEvent = 'app.client.room.room_updated';
     private readonly sessionDisconnectedEvent = 'app.client.room.session_disconnect';
     private readonly roomIdentifier: string;
 
@@ -17,10 +16,6 @@ export default class SessionUpdatedEvent {
     ) {
         this.socket = socket.socket;
         this.roomIdentifier = roomIdentifier.roomIdentifier;
-    }
-
-    onSessionUpdated(subscriber, context?: object) {
-        Socket.room.on(this.sessionUpdatedEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 
     onSessionDisconnect(subscriber, context?: object) {
