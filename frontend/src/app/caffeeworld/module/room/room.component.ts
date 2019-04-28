@@ -2,9 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import IResponseData from "../../infrastructure/web/IResponseData";
 import {ReplaySubject} from "rxjs";
-import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
 import RoomService from "../../infrastructure/service/RoomService";
 import Socket from "../../infrastructure/socket/Socket";
+import IInput from "../../infrastructure/event/IInput";
+import Input from "../../infrastructure/event/Input";
 
 @Component({
     selector: 'app-room',
@@ -14,15 +15,19 @@ import Socket from "../../infrastructure/socket/Socket";
 export class RoomComponent implements OnInit, OnDestroy {
     members = {};
 
+    private readonly input: IInput;
+
     private readonly sessionUpdated: ReplaySubject<any> = new ReplaySubject();
     private readonly iceAnswer: ReplaySubject<any> = new ReplaySubject();
     private readonly iceCandidate: ReplaySubject<any> = new ReplaySubject();
 
     constructor(
-        private iceAnswerEvent: IceAnswerEvent,
+        input: Input,
         private roomIdentifier: RoomIdentifier,
         private roomService: RoomService,
-    ) {}
+    ) {
+        this.input = input as IInput;
+    }
 
     fnTrackBy(index, item) {
         return item.value;
@@ -90,15 +95,15 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
 
     private handleAnswer() {
-        this.iceAnswerEvent.onIceAnswer((data) => {
+        this.input.onIceAnswer((data) => {
             this.iceAnswer.next(data);
         });
     }
 
     private handleIceCandidate() {
-        Socket.room.on('app.client.ice.candidate', (data) => {
+        this.input.onAddIceCandidate((data) => {
             this.iceCandidate.next(data);
-        })
+        });
     }
 
     private keepConnAlive() {

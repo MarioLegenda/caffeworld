@@ -6,8 +6,6 @@ import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
 import {MemberBoxComponent} from "./components/member-box.component";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
-import IceAnswerEvent from "../../infrastructure/event/IceAnswerEvent";
-import IceCandidateEvent from "../../infrastructure/event/IceCandidateEvent";
 import RoomService from "../../infrastructure/service/RoomService";
 
 @NgModule({
@@ -23,9 +21,7 @@ import RoomService from "../../infrastructure/service/RoomService";
     bootstrap: [RoomComponent],
     providers: [
         RoomService,
-        IceAnswerEvent,
         RoomIdentifier,
-        IceCandidateEvent,
     ]
 })
 export class RoomModule { }
