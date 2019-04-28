@@ -18,6 +18,10 @@ export default class PeerConnectionProxy {
         return this;
     }
 
+    addTracks(stream): void {
+        stream.getTracks().forEach(track => this.rtcPeerConnection.addTrack(track, stream));
+    }
+
     createOffer(options?: IRTCOfferOptions) {
         options = (options) ? options : undefined;
 

@@ -56,8 +56,7 @@ export class MemberBoxComponent implements OnDestroy {
 
             this.video.nativeElement.srcObject = stream;
 
-            stream.getTracks().forEach(track => this.peerConnection.rtcPeerConnection.addTrack(track, stream));
-
+            this.peerConnection.addTracks(stream);
         }, this);
     }
 

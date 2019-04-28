@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
 import SingletonSocketInstance from "./../socket/SingletonSocketInstance";
 import RoomIdentifier from "../../module/infrastructure/RoomIdentifier";
-import Socket from "../socket/Socket";
 
 @Injectable()
 export default class SessionUpdatedEvent {
