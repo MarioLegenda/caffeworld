@@ -4,64 +4,55 @@ import IResponseData from "./web/IResponseData";
 import { promisify } from "util";
 const uuid = require('uuid/v4');
 
-export function onRoomEntered(socket, roomNamespace, data) {
+const getAsync = promisify(Redis.client.get).bind(Redis.client);
+
+export async function onRoomEntered(socket, roomNamespace, data) {
     const roomIdentifier = data.identifier;
 
-    Redis.client.get(roomIdentifier, (err, sData: string) => {
-        if (err) {
-            console.error(`A Redis error occurred with message: ${err.message}`);
+    const sData = await getAsync(roomIdentifier);
 
-            return;
+    (async function (socket, socketId: string, roomIdentifier: string, roomLinksName: string) {
+        const reply = await getAsync(roomLinksName);
+        
+        let roomLinks = JSON.parse(reply);
+
+        if (!roomLinks) {
+            roomLinks = {};
         }
 
-        (function (socket, socketId: string, roomIdentifier: string, roomLinksName: string, errorName: string) {
-            Redis.client.get(roomLinksName, (err, reply) => {
-                if (err) {
-                    return socket.emit(errorName);
-                }
+        if (socketId in roomLinks === false) {
+            roomLinks[socketId] = roomIdentifier;
 
-                let roomLinks = JSON.parse(reply);
-
-                if (!roomLinks) {
-                    roomLinks = {};
-                }
-
-                if (socketId in roomLinks === false) {
-                    roomLinks[socketId] = roomIdentifier;
-
-                    Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
-                }
-            });
-        })(
-            socket,
-            socket.id,
-            roomIdentifier,
-            'app.internal.room_links',
-            'app.internal.error',
-        );
-
-        const sessionData = JSON.parse(sData);
-
-        const members = sessionData.room.members;
-
-        members.list = Object.keys(roomNamespace.sockets);
-        members.count = Object.keys(roomNamespace.sockets).length;
-
-        if (members.count > 1) {
-            members.new_member = socket.id;
+            Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
         }
+    })(
+        socket,
+        socket.id,
+        roomIdentifier,
+        'app.internal.room_links'
+    );
 
-        sessionData.room.members = members;
+    const sessionData = JSON.parse(sData);
 
-        if (members.count >= this.maxSessions) {
-            return roomNamespace.to(data).emit(this.sessionUpdateError);
-        }
+    const members = sessionData.room.members;
 
-        Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
+    members.list = Object.keys(roomNamespace.sockets);
+    members.count = Object.keys(roomNamespace.sockets).length;
 
-        socket.join(roomIdentifier, () => {
-            roomNamespace.to(roomIdentifier).emit('app.client.room.room_updated', createResponseData(sessionData, TransportTypeEnum.Socket));
-        });
+    if (members.count > 1) {
+        members.new_member = socket.id;
+    }
+
+    sessionData.room.members = members;
+
+    if (members.count >= this.maxSessions) {
+        return roomNamespace.to(data).emit(this.sessionUpdateError);
+    }
+
+    Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
+
+    socket.join(roomIdentifier, () => {
+        roomNamespace.to(roomIdentifier).emit('app.client.room.room_updated', createResponseData(sessionData, TransportTypeEnum.Socket));
     });
 }
 
@@ -103,8 +94,6 @@ export function createTable(socket, data) {
 }
 
 export async function onDisconnect(socket) {
-    const getAsync = promisify(Redis.client.get).bind(Redis.client);
-
     const socketId = socket.id;
 
     try {

@@ -6,10 +6,6 @@ import IRTCOfferOptions from "./dictionary/IRTCOfferOptions";
 export default class PeerConnectionProxy {
     private configuration: IRTCConfiguration | null;
 
-    // needed workaround a chrome bug that send
-    // onnegotiationneeded twice, others don't have that bug
-    private offerCreated: boolean = false;
-
     public rtcPeerConnection: RTCPeerConnection;
 
     constructor(rtcPeerConnection: RTCPeerConnection) {
@@ -35,28 +31,7 @@ export default class PeerConnectionProxy {
     }
 
     onNegotiationNeeded(subscriber: any) {
-        if (this.offerCreated) {
-            return;
-        }
-
-        this.offerCreated = true;
-
-        const internalSubscriber = () => {
-            const offerPromise = this.rtcPeerConnection.createOffer();
-
-            offerPromise
-                .then((offer) => {
-                    this.rtcPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
-
-                    return offer;
-                })
-                .then(subscriber)
-                .catch((err) => console.log(err.message));
-        };
-
-        this.rtcPeerConnection.onnegotiationneeded = internalSubscriber;
-
-        this.offerCreated = true;
+        this.rtcPeerConnection.onnegotiationneeded = subscriber;
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
