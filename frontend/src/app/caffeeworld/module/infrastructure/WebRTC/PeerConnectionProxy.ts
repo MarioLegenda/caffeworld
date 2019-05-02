@@ -26,12 +26,34 @@ export default class PeerConnectionProxy {
         return this.rtcPeerConnection.onicecandidate = subscriber;
     }
 
-    addIceCandidate(candidate) {
-        this.rtcPeerConnection.addIceCandidate(candidate);
-    }
-
     onNegotiationNeeded(subscriber: any) {
         this.rtcPeerConnection.onnegotiationneeded = subscriber;
+    }
+
+    onAddStream(subscriber: any) {
+        // @ts-ignore
+        this.rtcPeerConnection.onaddstream = subscriber;
+    }
+
+    onIceCandidateStateChange(subscriber: any) {
+        this.rtcPeerConnection.oniceconnectionstatechange = subscriber;
+    }
+
+    onIceGatheringStateChange(subscriber: any) {
+        this.rtcPeerConnection.onicegatheringstatechange = subscriber;
+    }
+
+    onRemoveStream(subscriber: any) {
+        // @ts-ignore
+        this.rtcPeerConnection.onremovestream = subscriber;
+    }
+
+    onSignalingStateChange(subscriber: any) {
+        this.rtcPeerConnection.onsignalingstatechange = subscriber;
+    }
+
+    addIceCandidate(candidate) {
+        this.rtcPeerConnection.addIceCandidate(candidate);
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {

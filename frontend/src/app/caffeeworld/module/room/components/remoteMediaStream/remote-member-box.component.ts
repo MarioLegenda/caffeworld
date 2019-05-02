@@ -104,6 +104,22 @@ export class RemoteMemberBoxComponent implements OnDestroy {
             }
         });
 
+        this.remotePeerConnection.onAddStream((e) => {
+            console.log(`onaddstream event called`, e);
+        });
+
+        this.remotePeerConnection.onIceCandidateStateChange((e) => {
+            console.log(`onicecandidatestatechange event called`, e);
+        });
+
+        this.remotePeerConnection.onIceGatheringStateChange((e) => {
+            console.log(`onicegatheringstatechange event called`, e);
+        });
+
+        this.remotePeerConnection.onRemoveStream((e) => {
+            console.log(`onremovestream event called`, e);
+        });
+
         this.remotePeerConnection.rtcPeerConnection.onicecandidateerror = (e) => {
             console.log('An error occurred when adding ice candidate ' + e);
         };
