@@ -3,7 +3,7 @@ import RoomIdentifier from "../../module/infrastructure/RoomIdentifier";
 import {Injectable} from "@angular/core";
 import Socket from "../socket/Socket";
 import IInput from "../event/IInput";
-import Input from "../event/Input";
+import {Input} from "../event/Input";
 import IOutput from "../event/IOutput";
 
 @Injectable()
@@ -25,7 +25,7 @@ export default class RoomService {
     handleEnteringRoom(): void {
         this.output.sendRoomEntered({
             roomIdentifier: this.roomIdentifier.roomIdentifier,
-            memberIdentifier: Socket.room.id,
+            memberIdentifier: Socket.roomId,
         });
     }
 
@@ -36,4 +36,6 @@ export default class RoomService {
     roomLeave(subscriber, context?: object): void {
         this.input.onRoomLeave(subscriber, context);
     }
+
+
 }

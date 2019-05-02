@@ -12,7 +12,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import { ClipboardModule } from 'ngx-clipboard';
-import Input from "./infrastructure/event/Input";
+import {Input} from "./infrastructure/event/Input";
 import Output from "./infrastructure/event/Output";
 import {TableService} from "./infrastructure/service/TableService";
 

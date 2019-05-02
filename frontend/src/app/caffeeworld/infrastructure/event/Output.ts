@@ -6,6 +6,7 @@ import IOutput from "./IOutput";
 export default class Input implements IOutput {
     private readonly createTableEvent = 'app.server.table.create';
     private readonly roomEnteredEvent = 'app.server.room.entered';
+    private readonly dataExchangeEvent = 'app.server.room.data_exchange';
 
     sendCreateTable(data: any): void {
         Socket.table.emit(this.createTableEvent, data);
@@ -13,5 +14,9 @@ export default class Input implements IOutput {
 
     sendRoomEntered(data: any): void {
         Socket.room.emit(this.roomEnteredEvent, data);
+    }
+
+    sendDataExchange(data: any): void {
+        Socket.room.emit(this.dataExchangeEvent, data);
     }
 }

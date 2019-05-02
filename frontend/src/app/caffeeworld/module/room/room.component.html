@@ -1,12 +1,9 @@
-<div class="wrapper">
-    <div class="member-box" *ngFor="let member of members | keyvalue; trackBy: fnTrackBy">
-        <app-member-box
-                [memberIdentifier]="member.key"
-                (onCreateOffer)="onCreateOffer($event)"
-                (onIceCandidate)="onIceCandidate($event)"
-                [sessionUpdated]="sessionUpdated.asObservable()"
-                [iceOfferSubscriber]="iceOffer.asObservable()"
-                [iceCandidate]="iceCandidate.asObservable()">
-        </app-member-box>
+<div class="wrapper" *ngIf="initRoomDom">
+    <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
+        <app-remote-member-box
+                [isLocal]="isLocal"
+                [newMember]="newMember"
+                [memberIdentifier]="member.key">
+        </app-remote-member-box>
     </div>
 </div>

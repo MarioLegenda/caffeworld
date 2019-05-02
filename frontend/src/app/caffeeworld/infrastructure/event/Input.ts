@@ -3,12 +3,11 @@ import Socket from "../socket/Socket";
 import IInput from "./IInput";
 
 @Injectable()
-export default class Input implements IInput {
+export class Input implements IInput {
     private readonly tableCreatedEvent = 'app.client.table.created';
     private readonly roomUpdatedEvent = 'app.client.room.room_updated';
     private readonly roomLeaveEvent = 'app.client.room.room_leave';
-    private readonly iceOfferEvent = 'app.client.ice.answer';
-    private readonly iceCandidateEvent = 'app.client.ice.candidate';
+    private readonly dataExchangeEvent = 'app.client.room.data_exchange';
 
     onTableCreated(subscriber, context?: object): void {
         Socket.table.on(this.tableCreatedEvent, (context) ? subscriber.bind(this) : subscriber);
@@ -22,11 +21,7 @@ export default class Input implements IInput {
         Socket.room.on(this.roomLeaveEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 
-    onIceOffer(subscriber, context?: object): void {
-        Socket.room.on(this.iceOfferEvent, (context) ? subscriber.bind(this) : subscriber);
-    }
-
-    onAddIceCandidate(subscriber, context?: object): void {
-        Socket.room.on(this.iceCandidateEvent, (context) ? subscriber.bind(this): subscriber);
+    onDataExchange(subscriber, context?: object): void {
+        Socket.room.on(this.dataExchangeEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 }

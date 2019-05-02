@@ -18,7 +18,7 @@ let main = {
 
             main.http.listen(3000, () => {
                 // @ts-ignore
-                app.globalEvent.emit('app.event.server.ready');
+                main.globalEvent.emit('app.event.server.ready');
             });
         });
 

@@ -27,46 +27,52 @@ export default class PeerConnectionProxy {
     }
 
     onIceCandidate(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
-        this.rtcPeerConnection.onicecandidate = subscriber;
+        return this.rtcPeerConnection.onicecandidate = subscriber;
     }
 
     addIceCandidate(candidate) {
-        this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        this.rtcPeerConnection.addIceCandidate(candidate);
     }
 
-    onNegotiationNeeded(subscriber: (event: RTCPeerConnectionIceEvent) => any) {
+    onNegotiationNeeded(subscriber: any) {
         if (this.offerCreated) {
             return;
         }
 
         this.offerCreated = true;
 
-        this.rtcPeerConnection.onnegotiationneeded = subscriber;
+        const internalSubscriber = () => {
+            const offerPromise = this.rtcPeerConnection.createOffer();
 
-        const internalSubscriber = (offer: any) => {
-            this.rtcPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
+            offerPromise
+                .then((offer) => {
+                    this.rtcPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
 
-            return offer;
+                    return offer;
+                })
+                .then(subscriber)
+                .catch((err) => console.log(err.message));
         };
 
+        this.rtcPeerConnection.onnegotiationneeded = internalSubscriber;
+
         this.offerCreated = true;
-
-        const offerPromise = this.rtcPeerConnection.createOffer();
-
-        this.rtcPeerConnection.createOffer()
-            .then(internalSubscriber)
-            .then(subscriber)
-            .catch((err) => console.log(err.message));
-
-        return offerPromise;
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
         this.rtcPeerConnection.ontrack = subscriber;
     }
 
+    createAnswer() {
+        return this.rtcPeerConnection.createAnswer();
+    }
+
+    createOffer() {
+        return this.rtcPeerConnection.createOffer();
+    }
+
     setLocalDescription(desc: RTCSessionDescription) {
-        this.rtcPeerConnection.setLocalDescription(desc);
+        return this.rtcPeerConnection.setLocalDescription(desc);
     }
 
     setRemoteDescription(desc: RTCSessionDescription) {
@@ -90,7 +96,7 @@ export default class PeerConnectionProxy {
     }
 
     static create(config?: IRTCConfiguration) {
-        config = (config) ? config : {};
+        config = (config) ? config : null;
 
         return new PeerConnectionProxy(new RTCPeerConnection(config));
     }

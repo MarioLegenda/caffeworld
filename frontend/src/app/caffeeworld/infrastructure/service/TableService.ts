@@ -1,7 +1,7 @@
 import Output from '../event/Output';
 import {Injectable} from "@angular/core";
 import IInput from "../event/IInput";
-import Input from "../event/Input";
+import {Input} from "../event/Input";
 import IOutput from "../event/IOutput";
 
 @Injectable()

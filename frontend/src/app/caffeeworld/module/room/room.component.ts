@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
-import IResponseData from "../../infrastructure/web/IResponseData";
-import {ReplaySubject} from "rxjs";
-import RoomService from "../../infrastructure/service/RoomService";
 import Socket from "../../infrastructure/socket/Socket";
 import IInput from "../../infrastructure/event/IInput";
-import Input from "../../infrastructure/event/Input";
+import {Input} from "../../infrastructure/event/Input";
+import Output from "../../infrastructure/event/Output";
+import IOutput from "../../infrastructure/event/IOutput";
 
 @Component({
     selector: 'app-room',
@@ -16,17 +15,19 @@ export class RoomComponent implements OnInit, OnDestroy {
     members = {};
 
     private readonly input: IInput;
+    private readonly output: IOutput;
 
-    private readonly sessionUpdated: ReplaySubject<any> = new ReplaySubject();
-    private readonly iceOffer: ReplaySubject<any> = new ReplaySubject();
-    private readonly iceCandidate: ReplaySubject<any> = new ReplaySubject();
+    private newMember: string;
+    private initRoomDom = false;
+    private isLocal: boolean = false;
 
     constructor(
         input: Input,
+        output: Output,
         private roomIdentifier: RoomIdentifier,
-        private roomService: RoomService,
     ) {
         this.input = input as IInput;
+        this.output = output as IOutput;
     }
 
     fnTrackBy(index, item) {
@@ -35,82 +36,61 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.keepConnAlive();
-        this.handleConnection();
         this.handleDisconnection();
-        this.handleIceOffer();
-        this.handleIceCandidate();
-    }
 
-    onCreateOffer(offer: any) {
-        offer.roomIdentifier = this.roomIdentifier.roomIdentifier;
+        Socket.room.on('connect', () => {
+            console.log(`Current socket id is: ${Socket.roomId}`);
 
-        Socket.room.emit('app.server.ice.offer_created', offer);
-    }
+            this.initRoomDom = true;
+            this.output.sendRoomEntered(this.roomIdentifier);
 
-    onIceCandidate(event) {
-        event.roomIdentifier = this.roomIdentifier.roomIdentifier;
+            this.input.onRoomUpdated((event) => {
+                const room = event.body.room;
 
-        Socket.room.emit('app.server.ice.candidate', event);
+                console.log(`room_updated event entered.`)
+
+                if (room.members.count === 1) {
+                    this.isLocal = true;
+
+                    console.log(`This is the only member in the room`);
+                }
+
+                const members = room.members.list;
+
+                if (room.members.count > 0) {
+                    console.log(`Multiple members found. Number of members is ${room.members.count}`);
+                    for (const member of members) {
+                        if (Socket.roomId !== member) this.members[member] = member;
+                    }
+                }
+
+                if (room.members.count === 0) {
+                    console.log(`There are no members in the room. Clearing the DOM`);
+
+                    this.members = {};
+                }
+
+                this.newMember = room.members.new_member;
+
+                if (this.newMember) {
+                    console.log(`New member found with identifier ${this.newMember}`);
+                }
+            });
+        });
     }
 
     ngOnDestroy(): void {
         this.members = {};
     }
 
-    private handleConnection() {
-        Socket.room.on('connect', () => {
-            this.roomService.handleEnteringRoom();
-
-            this.roomService.roomUpdated((responseData: IResponseData) => {
-                if (Object.keys(this.members).length >= 1) {
-                    this.sessionUpdated.next();
-                }
-
-                // @ts-ignore
-                const members = responseData.body.room.members;
-
-                // @ts-ignore
-                for (const member of members.list) {
-                    if (member in this.members === false) this.members[member] = member;
-                }
-            });
-
-            this.roomService.roomLeave((responseData: IResponseData) => {
-                // @ts-ignore
-                const members = responseData.body.room.members;
-
-                // if one of members are not present in this.member, remove it from this.member
-                // @ts-ignore
-                for (const member of Object.values(this.members)) {
-                    if (!members.list.includes(member)) delete this.members[member];
-                }
-            })
-        });
-    }
-
     private handleDisconnection() {
-        Socket.room.on('disconnect', () => {
-            Socket.room.open();
-        });
-    }
-
-    private handleIceOffer() {
-        this.input.onIceOffer((data) => {
-            this.iceOffer.next(data);
-        });
-    }
-
-    private handleIceCandidate() {
-        this.input.onAddIceCandidate((data) => {
-            this.iceCandidate.next(data);
-        });
     }
 
     private keepConnAlive() {
         setInterval(() => {
-            Socket.room.emit('ping');
+            Socket.room.emit('peng');
         }, 10000);
 
-        Socket.room.on('pong', () => {});
+        Socket.room.on('pung', () => {});
     }
 }

@@ -21,36 +21,24 @@ export default class GetUserMediaProxy {
         this.constraints = constraints;
     }
 
-    connect(
-        peerConnection: PeerConnectionProxy,
-        nativeElement,
-        subscriber?,
-        context?: object | null) {
-
-        subscriber = (subscriber) ? subscriber : (stream) => {
-            nativeElement.volume = 0;
-            nativeElement.muted = 0;
-
-            nativeElement.srcObject = stream;
-
-            peerConnection.addTracks(stream);
-        };
-
-        return navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
-            this.stream = stream;
-
-            subscriber.call((context) ? context : null, ...[stream]);
-        }).catch(this.onError);
+    get mediaStream() {
+        return this.stream;
     }
 
-    private onError(err: any) {
-        console.error(`An error occurred in GetUserMedia with message: ${err.message}`);
+    connect() {
+        return navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
+            this.stream = stream;
+        }).catch(this.onError);
     }
 
     destroy() {
         this.stream.getTracks().forEach(track => track.stop());
-        
+
         this.stream = null;
+    }
+
+    private onError(err: any) {
+        console.error(`An error occurred in GetUserMedia with message: ${err.message}`);
     }
 
     static create(constraints?: object) {

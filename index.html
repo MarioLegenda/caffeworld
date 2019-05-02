@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+
+</head>
+
+<body>
+
+<video id="local" autoplay></video>
+<video id="remote" autoplay></video>
+
+<script>
+
+    const local = document.getElementById('local');
+    const remote = document.getElementById('remote');
+
+    const pcLocal = new RTCPeerConnection(null);
+    const pcRemote = new RTCPeerConnection(null);
+
+    pcRemote.ontrack = (e) => {
+        console.log('pcRemote on track');
+        if (remote.srcObject !== e.streams[0]) {
+            remote.srcObject = e.streams[0];
+        }
+    };
+
+    pcRemote.onicecandidate = (e) => {
+        if (e.candidate) {
+            pcLocal.addIceCandidate(e.candidate);
+        }
+    };
+
+    pcLocal.onicecandidate = (e) => {
+        if (e.candidate) {
+            pcRemote.addIceCandidate(e.candidate);
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true}, video: true}).then((stream) => {
+        local.muted = 0;
+        stream.getTracks().forEach((t) => pcLocal.addTrack(t, stream));
+        pcLocal.createOffer().then((offer) => {
+            pcLocal.setLocalDescription(offer);
+            pcRemote.setRemoteDescription(offer);
+
+            pcRemote.createAnswer().then((answer) => {
+                pcLocal.setRemoteDescription(answer);
+                pcRemote.setLocalDescription(answer);
+            });
+        });
+    }).catch((err) => console.log(err.message));
+</script>
+</body>
+</html>
