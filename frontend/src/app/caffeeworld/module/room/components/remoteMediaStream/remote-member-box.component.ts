@@ -63,10 +63,10 @@ export class RemoteMemberBoxComponent implements OnDestroy {
     }
 
     async handleUserMedia() {
+        console.log(`Created local getUserMedia objects and added tracks for it`);
+
         await this.remoteUserMedia.connect();
         this.remotePeerConnection.addTracks(this.remoteUserMedia.mediaStream);
-
-        console.log(`Created local getUserMedia objects and added tracks for it`);
 
         this.media.nativeElement.muted = true;
     }
@@ -99,8 +99,11 @@ export class RemoteMemberBoxComponent implements OnDestroy {
 
         this.remotePeerConnection.onIceCandidate((e) => {
             if (e.candidate) {
-                console.log('Added ice candidate');
-                this.remotePeerConnection.addIceCandidate(e.candidate);
+                console.log(`${this.memberIdentifier} is sending and ice candidate`);
+                this.output.sendIceExchangeEvent({
+                    roomIdentifier: this.roomIdentifier.roomIdentifier,
+                    candidate: e.candidate
+                });
             }
         });
 
@@ -124,7 +127,12 @@ export class RemoteMemberBoxComponent implements OnDestroy {
             console.log('An error occurred when adding ice candidate ' + e);
         };
 
-        this.input.onDataExchange((data: IResponseData) => {
+        this.input.onIceCandidateExchange((data: IResponseData) => {
+            console.log(`Ice candidate received and added`);
+            this.remotePeerConnection.addIceCandidate(data.body.candidate);
+        });
+
+        this.input.onDataExchange(async (data: IResponseData) => {
             const body = data.body;
 
             console.log(`${this.memberIdentifier} data_exchange event has been received with type ${body.type}`);
@@ -134,6 +142,12 @@ export class RemoteMemberBoxComponent implements OnDestroy {
 
                 console.log(`${this.memberIdentifier} received an offer`);
                 this.remotePeerConnection.createAnswer().then((answer: RTCSessionDescription) => {
+                    if (/a=setup:passive/.test(answer.sdp)) {
+                        console.log('Answer is invalid. Should be a=setup:active but is a=setup:passive. Changing to a=setup:active');
+                        // @ts-ignore
+                        answer.sdp = answer.sdp.replace("a=setup:active", "a=setup:passive");
+                    }
+
                     this.remotePeerConnection.setLocalDescription(answer);
 
                     console.log(`${this.memberIdentifier} sends an answer`);

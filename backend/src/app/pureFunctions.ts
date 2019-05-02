@@ -60,6 +60,10 @@ export function onDataExchange(socket, data) {
     socket.broadcast.to(data.roomIdentifier).emit('app.client.room.data_exchange', createResponseData(data, TransportTypeEnum.Socket));
 }
 
+export function onIceCandidateExchange(socket, data) {
+    socket.broadcast.to(data.roomIdentifier).emit('app.client.room.ice_candidate_exchange', createResponseData(data, TransportTypeEnum.Socket));
+}
+
 export function createResponseData(data: any, transportType: TransportTypeEnum): IResponseData {
     return {
         transportType: transportType,

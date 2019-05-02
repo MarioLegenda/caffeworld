@@ -3,10 +3,11 @@ import Socket from "../socket/Socket";
 import IOutput from "./IOutput";
 
 @Injectable()
-export default class Input implements IOutput {
+export default class Output implements IOutput {
     private readonly createTableEvent = 'app.server.table.create';
     private readonly roomEnteredEvent = 'app.server.room.entered';
     private readonly dataExchangeEvent = 'app.server.room.data_exchange';
+    private readonly iceExchangeEvent = 'app.server.room.ice_candidate_exchange';
 
     sendCreateTable(data: any): void {
         Socket.table.emit(this.createTableEvent, data);
@@ -18,5 +19,9 @@ export default class Input implements IOutput {
 
     sendDataExchange(data: any): void {
         Socket.room.emit(this.dataExchangeEvent, data);
+    }
+
+    sendIceExchangeEvent(data: any): void {
+        Socket.room.emit(this.iceExchangeEvent, data);
     }
 }

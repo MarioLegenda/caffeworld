@@ -36,7 +36,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.keepConnAlive();
-        this.handleDisconnection();
 
         Socket.room.on('connect', () => {
             console.log(`Current socket id is: ${Socket.roomId}`);
@@ -47,7 +46,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             this.input.onRoomUpdated((event) => {
                 const room = event.body.room;
 
-                console.log(`room_updated event entered.`)
+                console.log(`room_updated event entered.`, event);
 
                 if (room.members.count === 1) {
                     this.isLocal = true;
@@ -60,7 +59,11 @@ export class RoomComponent implements OnInit, OnDestroy {
                 if (room.members.count > 0) {
                     console.log(`Multiple members found. Number of members is ${room.members.count}`);
                     for (const member of members) {
-                        if (Socket.roomId !== member) this.members[member] = member;
+                        if (Socket.roomId !== member && !this.members.hasOwnProperty(member)) {
+                            this.members[member] = member;
+
+                            console.log(`Added member-box with id ${member}`);
+                        }
                     }
                 }
 
@@ -81,9 +84,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.members = {};
-    }
-
-    private handleDisconnection() {
     }
 
     private keepConnAlive() {

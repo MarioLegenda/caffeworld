@@ -3,7 +3,7 @@ import extensions from './src/app/util/extensions';
 import {app} from './app';
 import Redis from "./src/dataSource/redis";
 import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
-import { createTable, onRoomEntered, onDataExchange, onDisconnect } from './src/app/pureFunctions';
+import { createTable, onRoomEntered, onDataExchange, onDisconnect, onIceCandidateExchange } from './src/app/pureFunctions';
 
 require('dotenv').config();
 
@@ -46,6 +46,10 @@ app.init()
 
             socket.on('app.server.room.data_exchange', (data) => {
                 onDataExchange(socket, data);
+            });
+
+            socket.on('app.server.room.ice_candidate_exchange', (data) => {
+                onIceCandidateExchange(socket, data);
             });
 
             socket.on('peng', () => {

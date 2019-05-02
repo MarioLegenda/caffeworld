@@ -8,6 +8,7 @@ export class Input implements IInput {
     private readonly roomUpdatedEvent = 'app.client.room.room_updated';
     private readonly roomLeaveEvent = 'app.client.room.room_leave';
     private readonly dataExchangeEvent = 'app.client.room.data_exchange';
+    private readonly iceExchangeEvent = 'app.client.room.ice_candidate_exchange';
 
     onTableCreated(subscriber, context?: object): void {
         Socket.table.on(this.tableCreatedEvent, (context) ? subscriber.bind(this) : subscriber);
@@ -23,5 +24,9 @@ export class Input implements IInput {
 
     onDataExchange(subscriber, context?: object): void {
         Socket.room.on(this.dataExchangeEvent, (context) ? subscriber.bind(this) : subscriber);
+    }
+
+    onIceCandidateExchange(subscriber, context?: object): void {
+        Socket.room.on(this.iceExchangeEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 }
