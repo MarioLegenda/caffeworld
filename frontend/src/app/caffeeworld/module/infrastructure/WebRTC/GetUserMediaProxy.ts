@@ -25,7 +25,6 @@ export default class GetUserMediaProxy {
 
     connect(elem?) {
         return navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
-            console.log(elem);
             if (elem) elem.srcObject = stream;
 
             this.stream = stream;
@@ -34,7 +33,7 @@ export default class GetUserMediaProxy {
 
     destroy() {
         this.stream.getTracks().forEach(track => track.stop());
-
+        this.constraints = null;
         this.stream = null;
     }
 

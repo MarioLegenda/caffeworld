@@ -1,8 +1,6 @@
 import 'reflect-metadata';
 import extensions from './src/app/util/extensions';
 import {app} from './app';
-import Redis from "./src/dataSource/redis";
-import {TransportTypeEnum} from "./src/app/web/TrasportTypeEnum";
 import { createTable, onRoomEntered, onDataExchange, onDisconnect, onIceCandidateExchange } from './src/app/pureFunctions';
 
 require('dotenv').config();
@@ -58,7 +56,7 @@ app.init()
 
             // ugly but better to keep this here and not complicate
             socket.on('disconnect', async () => {
-                await onDisconnect(socket);
+                await onDisconnect(socket, roomNamespace);
             });
         });
 

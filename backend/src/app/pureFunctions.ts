@@ -1,7 +1,8 @@
 import Redis from "../dataSource/redis";
-import { TransportTypeEnum } from "./web/TrasportTypeEnum";
+import {TransportTypeEnum} from "./web/TrasportTypeEnum";
 import IResponseData from "./web/IResponseData";
-import { promisify } from "util";
+import {promisify} from "util";
+
 const uuid = require('uuid/v4');
 
 const getAsync = promisify(Redis.client.get).bind(Redis.client);
@@ -97,7 +98,7 @@ export function createTable(socket, data) {
     socket.emit('app.client.table.created', createResponseData(redisData, TransportTypeEnum.Socket));
 }
 
-export async function onDisconnect(socket) {
+export async function onDisconnect(socket, roomNamespace) {
     const socketId = socket.id;
 
     try {
@@ -118,7 +119,9 @@ export async function onDisconnect(socket) {
 
             Redis.client.set(roomIdentifier, JSON.stringify(tableData));
 
-            socket.emit('app.client.room.room_updated', tableData);
+            socket.leave(roomIdentifier);
+
+            roomNamespace.to(roomIdentifier).emit('app.client.room.room_updated', createResponseData(tableData, TransportTypeEnum.Socket));
         }
     } catch (err) {
         throw new Error(`Error occurred on socket disconnect with message: ${err.message}`);

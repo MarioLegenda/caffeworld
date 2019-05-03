@@ -21,11 +21,9 @@ export class MediaBoxComponent implements OnDestroy {
     @Input('newMember') newMember: string;
     @Input('isLocal') isLocal: boolean;
 
-    private readonly getUserMedia: GetUserMediaProxy;
     private readonly remotePeerConnection: PeerConnectionProxy;
     private readonly localUserMedia: GetUserMediaProxy;
-
-    private remoteUserMedia;
+    private readonly remoteUserMedia: GetUserMediaProxy;
 
     private readonly input: IInput;
     private readonly output: IOutput;
@@ -61,7 +59,9 @@ export class MediaBoxComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.getUserMedia.destroy();
+        this.remotePeerConnection.destroy();
+        this.remoteUserMedia.destroy();
+        this.localUserMedia.destroy();
     }
 
     async handleUserMedia() {

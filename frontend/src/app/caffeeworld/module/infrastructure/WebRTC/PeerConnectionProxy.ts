@@ -53,7 +53,9 @@ export default class PeerConnectionProxy {
     }
 
     addIceCandidate(candidate) {
-        this.rtcPeerConnection.addIceCandidate(candidate);
+        if (this.rtcPeerConnection.signalingState !== 'closed') {
+            return this.rtcPeerConnection.addIceCandidate(candidate).catch((err) => console.error('An error occurred on addind ice candidate with message: ' + err.message));
+        }
     }
 
     onTrack(subscriber: (event: RTCTrackEvent) => any) {
@@ -73,7 +75,9 @@ export default class PeerConnectionProxy {
     }
 
     setRemoteDescription(desc: RTCSessionDescription) {
-        return this.rtcPeerConnection.setRemoteDescription(desc);
+        if (this.rtcPeerConnection.signalingState !== 'closed') {
+            return this.rtcPeerConnection.setRemoteDescription(desc).catch((err) => console.error(`setRemoteDescription error with message: ${err.message}`));
+        }
     }
 
     getProp(name: string): any {
@@ -89,6 +93,18 @@ export default class PeerConnectionProxy {
     }
 
     destroy() {
+        this.rtcPeerConnection.onconnectionstatechange = null;
+        this.rtcPeerConnection.onicecandidate = null;
+        this.rtcPeerConnection.onnegotiationneeded = null;
+        // @ts-ignore
+        this.rtcPeerConnection.onaddstream = null;
+        this.rtcPeerConnection.oniceconnectionstatechange = null;
+        this.rtcPeerConnection.onicegatheringstatechange = null;
+        // @ts-ignore
+        this.rtcPeerConnection.onremovestream = null;
+        this.rtcPeerConnection.onsignalingstatechange = null;
+        this.rtcPeerConnection.ontrack = null;
+
         this.rtcPeerConnection.close();
     }
 

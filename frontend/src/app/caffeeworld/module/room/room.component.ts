@@ -44,19 +44,25 @@ export class RoomComponent implements OnInit, OnDestroy {
             this.output.sendRoomEntered(this.roomIdentifier);
 
             this.input.onRoomUpdated((event) => {
-                const room = event.body.room;
-
                 console.log(`room_updated event entered.`, event);
+
+                const room = event.body.room;
 
                 if (room.members.count === 1) {
                     this.isLocal = true;
+
+                    // if there is only one member left after the previous member has left,
+                    // delete the DOM and wait for the next call
+                    if (Object.keys(this.members).length === 1) {
+                        this.members = {};
+                    }
 
                     console.log(`This is the only member in the room`);
                 }
 
                 const members = room.members.list;
 
-                if (room.members.count > 0) {
+                if (room.members.count > 1) {
                     console.log(`Multiple members found. Number of members is ${room.members.count}`);
                     for (const member of members) {
                         if (Socket.roomId !== member && !this.members.hasOwnProperty(member)) {
