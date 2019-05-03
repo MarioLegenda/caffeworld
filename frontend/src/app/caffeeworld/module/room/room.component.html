@@ -1,9 +1,11 @@
-<div class="wrapper" *ngIf="initRoomDom">
-    <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
-        <app-media-box
-                [isLocal]="isLocal"
-                [newMember]="newMember"
-                [memberIdentifier]="member.key">
-        </app-media-box>
+<div class="media-wrapper">
+    <div class="media-box-wrapper" *ngIf="initRoomDom">
+        <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
+            <app-media-box
+                    [isLocal]="isLocal"
+                    [newMember]="newMember"
+                    [memberIdentifier]="member.key">
+            </app-media-box>
+        </div>
     </div>
 </div>

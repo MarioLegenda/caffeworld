@@ -1,6 +1,19 @@
 @import "../../../../styles/variables.scss";
 
-#temp {
-  width: 300px;
-  height: 300px;
+.media-wrapper {
+  width: 320px;
+  height: 600px;
+
+  max-width: 320px;
+  max-height: 600px;
+
+  overflow: hidden;
+
+  position: absolute;
+
+  top: 0; right: 0;
+}
+
+.media-box-wrapper {
+
 }

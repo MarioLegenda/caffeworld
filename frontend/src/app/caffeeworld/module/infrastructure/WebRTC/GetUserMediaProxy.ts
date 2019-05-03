@@ -8,8 +8,8 @@ export default class GetUserMediaProxy {
                 constraints = {
                     audio: {echoCancellation: true},
                     video: {
-                        width: 160,
-                        height: 160,
+                        width: 240,
+                        height: 240,
                         frameRate: 8
                     }
                 }
