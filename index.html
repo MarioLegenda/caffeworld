@@ -16,7 +16,13 @@
 <script>
 
     const local = document.getElementById('local');
-    const remote = document.getElementById('remote');
+
+    navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream) => {
+        local.muted = 0;
+
+        local.srcObject = stream;
+    });
+/*    const remote = document.getElementById('remote');
 
     const pcLocal = new RTCPeerConnection(null);
     const pcRemote = new RTCPeerConnection(null);
@@ -52,7 +58,7 @@
                 pcRemote.setLocalDescription(answer);
             });
         });
-    }).catch((err) => console.log(err.message));
+    }).catch((err) => console.log(err.message));*/
 </script>
 </body>
 </html>

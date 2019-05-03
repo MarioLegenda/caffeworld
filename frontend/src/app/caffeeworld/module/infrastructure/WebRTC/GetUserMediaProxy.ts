@@ -1,5 +1,3 @@
-import PeerConnectionProxy from "./PeerConnectionProxy";
-
 export default class GetUserMediaProxy {
     private stream;
     private constraints;
@@ -8,7 +6,7 @@ export default class GetUserMediaProxy {
         if (constraints) {
             if (constraints.hasOwnProperty('idealLow') && constraints.idealLow === true) {
                 constraints = {
-                    audio: true,
+                    audio: {echoCancellation: true},
                     video: {
                         width: 160,
                         height: 160,
@@ -25,8 +23,11 @@ export default class GetUserMediaProxy {
         return this.stream;
     }
 
-    connect() {
+    connect(elem?) {
         return navigator.mediaDevices.getUserMedia(this.constraints).then((stream) => {
+            console.log(elem);
+            if (elem) elem.srcObject = stream;
+
             this.stream = stream;
         }).catch(this.onError);
     }

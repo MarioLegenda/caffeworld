@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import PeerConnectionProxy from "../../../infrastructure/WebRTC/PeerConnectionProxy";
 import GetUserMediaProxy from "../../../infrastructure/WebRTC/GetUserMediaProxy";
 import Output from "../../../../infrastructure/event/Output";
@@ -7,7 +7,6 @@ import IInput from "../../../../infrastructure/event/IInput";
 import IOutput from "../../../../infrastructure/event/IOutput";
 import IResponseData from "../../../../infrastructure/web/IResponseData";
 import RoomIdentifier from "../../../infrastructure/RoomIdentifier";
-import Socket from "../../../../infrastructure/socket/Socket";
 
 @Component({
     selector: 'app-media-box',
@@ -15,7 +14,8 @@ import Socket from "../../../../infrastructure/socket/Socket";
     styleUrls: ['./media-box.component.scss'],
 })
 export class MediaBoxComponent implements OnDestroy {
-    @ViewChild('media') media: ElementRef;
+    @ViewChild('remote') remote: ElementRef;
+    @ViewChild('local') local: ElementRef;
 
     @Input('memberIdentifier') memberIdentifier: string;
     @Input('newMember') newMember: string;
@@ -23,6 +23,7 @@ export class MediaBoxComponent implements OnDestroy {
 
     private readonly getUserMedia: GetUserMediaProxy;
     private readonly remotePeerConnection: PeerConnectionProxy;
+    private readonly localUserMedia: GetUserMediaProxy;
 
     private remoteUserMedia;
 
@@ -49,6 +50,7 @@ export class MediaBoxComponent implements OnDestroy {
 
         this.remotePeerConnection = PeerConnectionProxy.create(configuration);
         this.remoteUserMedia = GetUserMediaProxy.create();
+        this.localUserMedia = GetUserMediaProxy.create();
     }
 
     async ngOnInit() {
@@ -65,10 +67,12 @@ export class MediaBoxComponent implements OnDestroy {
     async handleUserMedia() {
         console.log(`Created local getUserMedia objects and added tracks for it`);
 
+        await this.localUserMedia.connect(this.local.nativeElement);
         await this.remoteUserMedia.connect();
         this.remotePeerConnection.addTracks(this.remoteUserMedia.mediaStream);
 
-        this.media.nativeElement.muted = true;
+        this.local.nativeElement.muted = 0;
+        this.local.nativeElement.volume = 0;
     }
 
     private handlePeerConnectionEvents() {
@@ -91,9 +95,9 @@ export class MediaBoxComponent implements OnDestroy {
         }
 
         this.remotePeerConnection.onTrack((e) => {
-            if (this.media.nativeElement.srcObject !== e.streams[0]) {
+            if (this.remote.nativeElement.srcObject !== e.streams[0]) {
                 console.log(`${this.memberIdentifier} added remote peer tracks to the media HTML element`);
-                this.media.nativeElement.srcObject = e.streams[0];
+                this.remote.nativeElement.srcObject = e.streams[0];
             }
         });
 
