@@ -6,8 +6,7 @@ import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
 import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import RoomService from "../../infrastructure/service/RoomService";
-import {LocalMemberBoxComponent} from "./components/localMediaStream/local-member-box.component";
-import {RemoteMemberBoxComponent} from "./components/remoteMediaStream/remote-member-box.component";
+import {MediaBoxComponent} from "./components/media-box/media-box.component";
 
 @NgModule({
     imports: [
@@ -17,8 +16,7 @@ import {RemoteMemberBoxComponent} from "./components/remoteMediaStream/remote-me
     ],
     declarations: [
         RoomComponent,
-        LocalMemberBoxComponent,
-        RemoteMemberBoxComponent,
+        MediaBoxComponent,
     ],
     bootstrap: [RoomComponent],
     providers: [

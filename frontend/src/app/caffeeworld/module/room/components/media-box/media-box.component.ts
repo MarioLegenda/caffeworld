@@ -10,16 +10,16 @@ import RoomIdentifier from "../../../infrastructure/RoomIdentifier";
 import Socket from "../../../../infrastructure/socket/Socket";
 
 @Component({
-    selector: 'app-remote-member-box',
-    templateUrl: './member-box.component.html',
-    styleUrls: ['./member-box.component.scss'],
+    selector: 'app-media-box',
+    templateUrl: './media-box.component.html',
+    styleUrls: ['./media-box.component.scss'],
 })
-export class RemoteMemberBoxComponent implements OnDestroy {
+export class MediaBoxComponent implements OnDestroy {
     @ViewChild('media') media: ElementRef;
 
     @Input('memberIdentifier') memberIdentifier: string;
     @Input('newMember') newMember: string;
-    @Input('isLocal') isLocal: string;
+    @Input('isLocal') isLocal: boolean;
 
     private readonly getUserMedia: GetUserMediaProxy;
     private readonly remotePeerConnection: PeerConnectionProxy;
@@ -142,12 +142,6 @@ export class RemoteMemberBoxComponent implements OnDestroy {
 
                 console.log(`${this.memberIdentifier} received an offer`);
                 this.remotePeerConnection.createAnswer().then((answer: RTCSessionDescription) => {
-                    if (/a=setup:passive/.test(answer.sdp)) {
-                        console.log('Answer is invalid. Should be a=setup:active but is a=setup:passive. Changing to a=setup:active');
-                        // @ts-ignore
-                        answer.sdp = answer.sdp.replace("a=setup:active", "a=setup:passive");
-                    }
-
                     this.remotePeerConnection.setLocalDescription(answer);
 
                     console.log(`${this.memberIdentifier} sends an answer`);

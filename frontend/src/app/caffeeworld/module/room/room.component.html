@@ -1,9 +1,9 @@
 <div class="wrapper" *ngIf="initRoomDom">
     <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
-        <app-remote-member-box
+        <app-media-box
                 [isLocal]="isLocal"
                 [newMember]="newMember"
                 [memberIdentifier]="member.key">
-        </app-remote-member-box>
+        </app-media-box>
     </div>
 </div>
