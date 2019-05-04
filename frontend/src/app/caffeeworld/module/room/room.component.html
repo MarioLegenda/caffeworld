@@ -1,4 +1,4 @@
-<div class="media-wrapper">
+<div class="media-wrapper col-md-4 col-lg-4 col-xs-4">
     <div class="media-box-wrapper" *ngIf="initRoomDom">
         <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
             <app-media-box
@@ -9,3 +9,25 @@
         </div>
     </div>
 </div>
+
+<div class="jokes-wrapper col-md-9 col-lg-9 col-xs-9">
+    <h1>Joke of the day</h1>
+    <h4 class="col-xs-8 col-md-12">This is the joke of the daysdfsadf sdfsd f sdfas dfsdfsd fsdf sadf sdf sdfsadfsa dfsadf sdfsadfsad fsdfsadfsdafsa fdsdfsadfsad fsadfsadfsadf sdfsadfsadf sdfasdf</h4>
+</div>
+
+<div class="activity-wrapper col-md-9 col-lg-9 col-xs-9">
+
+    <div class="content">
+        <div class="inner-content">
+            <div class="message incoming-message">Incoming message</div>
+        </div>
+
+        <div class="chat-wrapper">
+            <textarea class="message-input" placeholder="type your message"></textarea>
+            <button class="btn btn-primary">Send</button>
+        </div>
+    </div>
+
+</div>
+
+
