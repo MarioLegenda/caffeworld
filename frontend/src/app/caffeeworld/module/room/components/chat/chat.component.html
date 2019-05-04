@@ -1,9 +1,8 @@
 
 <div class="activity-wrapper col-md-9 col-lg-9 col-xs-9">
-
-    <div class="content">
+    <div class="content" #contentElem>
         <div class="inner-content">
-            <div class="message incoming-message">Incoming message</div>
+            <div *ngFor="let message of messages" [ngClass]="['message', message.class]">{{message.msg}}</div>
         </div>
 
         <div class="chat-wrapper">

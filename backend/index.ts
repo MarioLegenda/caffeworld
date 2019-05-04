@@ -1,7 +1,14 @@
 import 'reflect-metadata';
 import extensions from './src/app/util/extensions';
 import {app} from './app';
-import { createTable, onRoomEntered, onDataExchange, onDisconnect, onIceCandidateExchange } from './src/app/pureFunctions';
+import {
+    createTable,
+    onRoomEntered,
+    onDataExchange,
+    onDisconnect,
+    onIceCandidateExchange,
+    onChatMessage
+} from './src/app/pureFunctions';
 
 require('dotenv').config();
 
@@ -48,6 +55,10 @@ app.init()
 
             socket.on('app.server.room.ice_candidate_exchange', (data) => {
                 onIceCandidateExchange(socket, data);
+            });
+
+            socket.on('app.server.room.chat_message', (data) => {
+                onChatMessage(socket, data);
             });
 
             socket.on('peng', () => {

@@ -57,6 +57,10 @@ export async function onRoomEntered(socket, roomNamespace, data) {
     });
 }
 
+export function onChatMessage(socket, data) {
+    socket.broadcast.to(data.roomIdentifier).emit('app.client.room.chat_message', createResponseData(data, TransportTypeEnum.Socket));
+}
+
 export function onDataExchange(socket, data) {
     socket.broadcast.to(data.roomIdentifier).emit('app.client.room.data_exchange', createResponseData(data, TransportTypeEnum.Socket));
 }
