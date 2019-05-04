@@ -8,6 +8,7 @@ export default class Output implements IOutput {
     private readonly roomEnteredEvent = 'app.server.room.entered';
     private readonly dataExchangeEvent = 'app.server.room.data_exchange';
     private readonly iceExchangeEvent = 'app.server.room.ice_candidate_exchange';
+    private readonly chatMessageEvent = 'app.server.room.chat_message';
 
     sendCreateTable(data: any): void {
         Socket.table.emit(this.createTableEvent, data);
@@ -23,5 +24,9 @@ export default class Output implements IOutput {
 
     sendIceExchangeEvent(data: any): void {
         Socket.room.emit(this.iceExchangeEvent, data);
+    }
+
+    sendChatMessage(data: any): void {
+        Socket.room.emit(this.chatMessageEvent, data);
     }
 }

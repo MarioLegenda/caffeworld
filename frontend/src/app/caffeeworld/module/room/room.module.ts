@@ -8,12 +8,15 @@ import RoomIdentifier from "../infrastructure/RoomIdentifier";
 import RoomService from "../../infrastructure/service/RoomService";
 import {MediaBoxComponent} from "./components/media-box/media-box.component";
 import {ChatComponent} from "./components/chat/chat.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         RoomRoutingModule,
+        CommonModule,
+        FormsModule,
     ],
     declarations: [
         RoomComponent,

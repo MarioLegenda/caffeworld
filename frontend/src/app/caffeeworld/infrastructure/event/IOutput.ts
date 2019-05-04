@@ -3,4 +3,5 @@ export default interface IOutput {
     sendRoomEntered(data: any): void;
     sendDataExchange(data: any): void;
     sendIceExchangeEvent(data: any): void;
+    sendChatMessage(data:any): void;
 }
