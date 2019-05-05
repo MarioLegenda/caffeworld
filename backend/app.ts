@@ -6,6 +6,9 @@ const expressApp: Express = express();
 const path = require('path');
 const http = require('http').Server(expressApp);
 
+/**
+ * Made every async action an EventEmitter for better readability and ease of use
+ */
 let main = {
     express: express,
     expressApp: expressApp,
@@ -31,6 +34,10 @@ let main = {
     }
 };
 
+/**
+ * Just making sure that I don't override this by mistake. Also, no need to maximise the number
+ * of listeners since I only need 3
+ */
 Object.defineProperty(main, 'globalEvent', {
     writable: false,
     value: new EventEmitter()
