@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import extensions from './src/app/util/extensions';
 import {app} from './app';
 import {
