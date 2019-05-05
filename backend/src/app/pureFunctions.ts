@@ -12,6 +12,10 @@ export async function onRoomEntered(socket, roomNamespace, data) {
 
     const sData = await getAsync(roomIdentifier);
 
+    // saves the references of socket ids connected to this room.
+    // Since I'm setting and getting values from Redis here, it is an
+    // anonymous function (I don't like private functions created by typescript, there
+    // is a closure smell that I don't like).
     (async function (socket, socketId: string, roomIdentifier: string, roomLinksName: string) {
         const reply = await getAsync(roomLinksName);
         
@@ -52,6 +56,8 @@ export async function onRoomEntered(socket, roomNamespace, data) {
 
     Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
+    // join() is asyncronous, the docs don't even say that. If this wasn't like this,
+    // the next like after join() would not be working with a socket.io room.
     socket.join(roomIdentifier, () => {
         roomNamespace.to(roomIdentifier).emit('app.client.room.room_updated', createResponseData(sessionData, TransportTypeEnum.Socket));
     });
@@ -106,6 +112,10 @@ export async function onDisconnect(socket, roomNamespace) {
     const socketId = socket.id;
 
     try {
+        // 'app.internal.room_links' contains the socket ids connected to this room.
+        // this is neccessary since I don't have any user data (no login, nothing) so I have
+        // to keep track of them trough roomIdentifier -> [...socket.id] think
+        // roomIdentifier contains all the socket ids connected to this room
         const links = JSON.parse(await getAsync('app.internal.room_links'));
 
         if (socketId in links) {

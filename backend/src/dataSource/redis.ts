@@ -1,6 +1,9 @@
 import {createClient} from "redis";
 import {RedisClient} from "redis";
 
+/**
+ * No complications. Redis is a singleton
+ */
 export default class Redis {
     private static redisClient: RedisClient;
 

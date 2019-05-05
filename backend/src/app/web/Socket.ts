@@ -1,3 +1,6 @@
+/**
+ * No complications, Socket is a singleton
+ */
 export default class Socket {
     public static socket;
     public static namespace;

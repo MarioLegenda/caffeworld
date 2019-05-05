@@ -2,7 +2,12 @@ export default class GetUserMediaProxy {
     private stream;
     private constraints;
 
-    constructor(constraints?) {
+    /**
+     * 'ideaLow' is simply an easier way to make the video the lowest quality possible to
+     * save on CPU usage. Can only be used trough the static create() method
+     * @param constraints
+     */
+    private constructor(constraints?) {
         if (constraints) {
             if (constraints.hasOwnProperty('idealLow') && constraints.idealLow === true) {
                 constraints = {

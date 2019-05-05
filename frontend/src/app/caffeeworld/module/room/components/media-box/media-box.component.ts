@@ -13,6 +13,14 @@ import RoomIdentifier from "../../../infrastructure/RoomIdentifier";
     templateUrl: './media-box.component.html',
     styleUrls: ['./media-box.component.scss'],
 })
+
+/**
+ * MediaBoxComponent is the caller and the callee, depending on the context.
+ * If called with newMember !== null && newMember === socket.id, then it
+ * is the caller, otherwise, it is the callee.
+ *
+ * This component is NOT created if there is only one member in the room, i.e. the callee
+ */
 export class MediaBoxComponent implements OnDestroy {
     @ViewChild('remote') remote: ElementRef;
     @ViewChild('local') local: ElementRef;
@@ -22,13 +30,18 @@ export class MediaBoxComponent implements OnDestroy {
     @Input('isLocal') isLocal: boolean;
 
     private readonly remotePeerConnection: PeerConnectionProxy;
+    // local user media, this is the local person looking at itself
     private readonly localUserMedia: GetUserMediaProxy;
+    // this is the remote person
     private readonly remoteUserMedia: GetUserMediaProxy;
 
     private readonly input: IInput;
     private readonly output: IOutput;
     private readonly roomIdentifier: RoomIdentifier;
 
+    // have to save the offer here because, for some reason,
+    // RTCPeerConnection complains that it already has a local description
+    // if I try to set it on offer create, so it is set on answer
     private savedOffer;
 
     constructor(
@@ -76,11 +89,14 @@ export class MediaBoxComponent implements OnDestroy {
     }
 
     private handlePeerConnectionEvents() {
+        // if the person is the caller, start the offer process
         if (!this.isLocal) {
             console.log(`${this.memberIdentifier} sending an offer`);
             this.remotePeerConnection.createOffer().then( (offer: RTCSessionDescription) => {
             console.log(`${this.memberIdentifier} created an offer and sent it`);
 
+                // saving the offer here, calling setLocalDescription in the answer but
+                // all the tutorials say it should be here. Here, it throws an error
                 this.savedOffer = offer;
 
                 console.log(`${this.memberIdentifier} sending data_exchange event to the signaling server with the offer`);
@@ -94,6 +110,8 @@ export class MediaBoxComponent implements OnDestroy {
             });
         }
 
+        // called when the remote track is received,
+        // on setRemoteDescription
         this.remotePeerConnection.onTrack((e) => {
             if (this.remote.nativeElement.srcObject !== e.streams[0]) {
                 console.log(`${this.memberIdentifier} added remote peer tracks to the media HTML element`);
@@ -141,6 +159,7 @@ export class MediaBoxComponent implements OnDestroy {
 
             console.log(`${this.memberIdentifier} data_exchange event has been received with type ${body.type}`);
 
+            // if this piece of code is entered, this media box is the callee
             if (body.type === 'offer') {
                 this.remotePeerConnection.setRemoteDescription(body.data);
 
