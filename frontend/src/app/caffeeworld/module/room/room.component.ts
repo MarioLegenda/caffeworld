@@ -5,6 +5,7 @@ import IInput from "../../infrastructure/event/IInput";
 import {Input} from "../../infrastructure/event/Input";
 import Output from "../../infrastructure/event/Output";
 import IOutput from "../../infrastructure/event/IOutput";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-room',
@@ -21,10 +22,13 @@ export class RoomComponent implements OnInit, OnDestroy {
     private initRoomDom = false;
     private isLocal: boolean = false;
 
+    private roomData: any;
+
     constructor(
         input: Input,
         output: Output,
         private roomIdentifier: RoomIdentifier,
+        private modalService: NgbModal,
     ) {
         this.input = input as IInput;
         this.output = output as IOutput;
@@ -45,6 +49,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
             this.input.onRoomUpdated((event) => {
                 console.log(`room_updated event entered.`, event);
+
+                this.roomData = this.assignDefault(event.body.table);
 
                 const room = event.body.room;
 
@@ -90,6 +96,20 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.members = {};
+    }
+
+    showAboutModal(aboutContent) {
+        this.modalService.open(aboutContent);
+    }
+
+    private assignDefault(roomData) {
+        for (const d of Object.keys(roomData)) {
+            if (!roomData[d]) {
+                roomData[d] = '-';
+            }
+        }
+
+        return roomData;
     }
 
     private keepConnAlive() {

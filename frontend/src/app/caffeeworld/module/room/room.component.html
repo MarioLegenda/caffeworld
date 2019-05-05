@@ -1,4 +1,32 @@
 <div class="media-wrapper col-md-4 col-lg-4 col-xs-4">
+    <ng-template #aboutThisRoomContent class="modal" role="dialog" tabindex="-1" let-c="close">
+        <h3 class="modal-header justify-content-center">
+            About this room
+        </h3>
+        <div class="modal-body">
+            <h6>Subject:</h6>
+            <p class="modal-info">
+                {{roomData.subject}}
+            </p>
+
+            <h6>Description:</h6>
+            <p class="modal-info">
+                {{roomData.subjectDescription}}
+            </p>
+
+            <h6>Brief message:</h6>
+            <p class="modal-info">
+                {{roomData.briefMessage}}
+            </p>
+        </div>
+
+        <div class="col-xs-2 row">
+            <button class="btn btn-default" (click)="c('Close click')">Close</button>
+        </div>
+    </ng-template>
+
+    <button class="btn btn-default" (click)="showAboutModal(aboutThisRoomContent)">About this room</button>
+
     <div class="media-box-wrapper" *ngIf="initRoomDom">
         <div class="member-box" *ngFor="let member  of members | keyvalue; trackBy: fnTrackBy">
             <app-media-box

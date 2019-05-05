@@ -16,6 +16,17 @@
   z-index: 1000;
 }
 
+.modal-body {
+  .close-btn-wrapper {
+    button {
+      display: block;
+      float: right;
+
+      border: 1px solid red;
+    }
+  }
+}
+
 .jokes-wrapper {
   border-bottom: 1px solid $light-gray;
 
