@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import RoomIdentifier from "../infrastructure/RoomIdentifier";
+import {RoomIdentifier} from "../infrastructure/RoomIdentifier";
 import Socket from "../../infrastructure/socket/Socket";
 import IInput from "../../infrastructure/event/IInput";
 import {Input} from "../../infrastructure/event/Input";
-import Output from "../../infrastructure/event/Output";
+import {Output} from "../../infrastructure/event/Output";
 import IOutput from "../../infrastructure/event/IOutput";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
@@ -20,24 +20,18 @@ export class RoomComponent implements OnInit, OnDestroy {
      */
     members = {};
 
-    private readonly input: IInput;
-    private readonly output: IOutput;
-
     private newMember: string;
-    private initRoomDom = false;
+    initRoomDom = false;
     private isLocal: boolean = false;
 
     private roomData: any;
 
     constructor(
-        input: Input,
-        output: Output,
+        private input: Input,
+        private output: Output,
         private roomIdentifier: RoomIdentifier,
         private modalService: NgbModal,
-    ) {
-        this.input = input as IInput;
-        this.output = output as IOutput;
-    }
+    ) {}
 
     fnTrackBy(index, item) {
         return item.value;

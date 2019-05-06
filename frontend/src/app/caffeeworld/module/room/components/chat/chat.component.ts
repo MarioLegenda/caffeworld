@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import Output from "../../../../infrastructure/event/Output";
+import {Output} from "../../../../infrastructure/event/Output";
 import {Input} from "../../../../infrastructure/event/Input";
-import RoomIdentifier from "../../../infrastructure/RoomIdentifier";
+import {RoomIdentifier} from "../../../infrastructure/RoomIdentifier";
 
 @Component({
     selector: 'app-chat-box',

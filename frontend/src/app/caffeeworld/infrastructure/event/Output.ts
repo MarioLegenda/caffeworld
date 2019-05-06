@@ -3,7 +3,7 @@ import Socket from "../socket/Socket";
 import IOutput from "./IOutput";
 
 @Injectable()
-export default class Output implements IOutput {
+export class Output implements IOutput {
     private readonly createTableEvent = 'app.server.table.create';
     private readonly roomEnteredEvent = 'app.server.room.entered';
     private readonly dataExchangeEvent = 'app.server.room.data_exchange';

@@ -13,7 +13,7 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AboutComponent} from './about/about.component';
 import { ClipboardModule } from 'ngx-clipboard';
 import {Input} from "./infrastructure/event/Input";
-import Output from "./infrastructure/event/Output";
+import {Output} from "./infrastructure/event/Output";
 import {TableService} from "./infrastructure/service/TableService";
 
 @NgModule({
@@ -35,9 +35,9 @@ import {TableService} from "./infrastructure/service/TableService";
     ],
     exports: [CaffeeworldComponent],
     providers: [
-        Output,
-        Input,
-        TableService,
+        {provide: Output, useClass: Output },
+        {provide: Input, useClass: Input },
+        {provide: TableService, useClass: TableService },
     ]
 })
 export class CaffeeworldModule { }

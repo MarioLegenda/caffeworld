@@ -1,4 +1,4 @@
-import Output from '../event/Output';
+import {Output} from '../event/Output';
 import {Injectable} from "@angular/core";
 import IInput from "../event/IInput";
 import {Input} from "../event/Input";

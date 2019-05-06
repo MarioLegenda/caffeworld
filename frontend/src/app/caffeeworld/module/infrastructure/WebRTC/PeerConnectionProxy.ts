@@ -1,8 +1,5 @@
 import {IRTCConfiguration} from "./dictionary/IRTCConfiguration";
-import {Injectable} from "@angular/core";
-import IRTCOfferOptions from "./dictionary/IRTCOfferOptions";
 
-@Injectable()
 export default class PeerConnectionProxy {
     private configuration: IRTCConfiguration | null;
 

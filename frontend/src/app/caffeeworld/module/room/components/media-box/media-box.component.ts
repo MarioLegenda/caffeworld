@@ -1,12 +1,12 @@
 import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import PeerConnectionProxy from "../../../infrastructure/WebRTC/PeerConnectionProxy";
 import GetUserMediaProxy from "../../../infrastructure/WebRTC/GetUserMediaProxy";
-import Output from "../../../../infrastructure/event/Output";
+import {Output} from "../../../../infrastructure/event/Output";
 import {Input as DataInput} from "../../../../infrastructure/event/Input";
 import IInput from "../../../../infrastructure/event/IInput";
 import IOutput from "../../../../infrastructure/event/IOutput";
 import IResponseData from "../../../../infrastructure/web/IResponseData";
-import RoomIdentifier from "../../../infrastructure/RoomIdentifier";
+import {RoomIdentifier} from "../../../infrastructure/RoomIdentifier";
 
 @Component({
     selector: 'app-media-box',

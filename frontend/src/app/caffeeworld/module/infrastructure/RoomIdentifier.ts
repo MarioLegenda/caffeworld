@@ -2,7 +2,7 @@ import {Router} from "@angular/router";
 import {Injectable} from "@angular/core";
 
 @Injectable()
-export default class RoomIdentifier {
+export class RoomIdentifier {
     private readonly identifier: string;
 
     constructor(router: Router) {

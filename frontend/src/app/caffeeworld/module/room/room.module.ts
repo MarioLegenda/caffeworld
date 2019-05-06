@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {RoomComponent} from "./room.component";
 import {RoomRoutingModule} from "./room-routing.module";
-import RoomIdentifier from "../infrastructure/RoomIdentifier";
-import RoomService from "../../infrastructure/service/RoomService";
+import {RoomIdentifier} from "../infrastructure/RoomIdentifier";
+import {RoomService} from "../../infrastructure/service/RoomService";
 import {MediaBoxComponent} from "./components/media-box/media-box.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {FormsModule} from "@angular/forms";
@@ -25,8 +25,8 @@ import {FormsModule} from "@angular/forms";
     ],
     bootstrap: [RoomComponent],
     providers: [
-        RoomService,
-        RoomIdentifier,
+        {provide: RoomService, useClass: RoomService},
+        {provide: RoomIdentifier, useClass: RoomIdentifier},
     ]
 })
 export class RoomModule { }
