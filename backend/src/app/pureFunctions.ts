@@ -9,8 +9,29 @@ const getAsync = promisify(Redis.client.get).bind(Redis.client);
 
 export async function onRoomEntered(socket, roomNamespace, data) {
     const roomIdentifier = data.identifier;
+    const maxSessions: number = 2;
+    const maxSessionsEvent = 'app.client.max_sessions';
 
     const sData = await getAsync(roomIdentifier);
+
+    const sessionData = JSON.parse(sData);
+
+    const members = sessionData.room.members;
+
+    members.list = Object.keys(roomNamespace.sockets);
+    members.count = Object.keys(roomNamespace.sockets).length;
+
+    if (members.count > 1) {
+        members.new_member = socket.id;
+    }
+
+    if (members.count > maxSessions) {
+        socket.emit(maxSessionsEvent);
+
+        return;
+    }
+
+    sessionData.room.members = members;
 
     // saves the references of socket ids connected to this room.
     // Since I'm setting and getting values from Redis here, it is an
@@ -37,23 +58,6 @@ export async function onRoomEntered(socket, roomNamespace, data) {
         roomIdentifier,
         'app.internal.room_links'
     );
-
-    const sessionData = JSON.parse(sData);
-
-    const members = sessionData.room.members;
-
-    members.list = Object.keys(roomNamespace.sockets);
-    members.count = Object.keys(roomNamespace.sockets).length;
-
-    if (members.count > 1) {
-        members.new_member = socket.id;
-    }
-
-    sessionData.room.members = members;
-
-    if (members.count >= this.maxSessions) {
-        return roomNamespace.to(data).emit(this.sessionUpdateError);
-    }
 
     Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
 
@@ -122,6 +126,10 @@ export async function onDisconnect(socket, roomNamespace) {
 
         if (socketId in links) {
             const roomIdentifier = links[socketId];
+
+            if (!roomIdentifier) {
+                return;
+            }
 
             let tableData = JSON.parse(await getAsync(roomIdentifier));
 

@@ -140,6 +140,10 @@ export class RoomComponent implements OnInit, OnDestroy {
                     console.log(`New member found with identifier ${this.newMember}`);
                 }
             });
+
+            this.input.onMaxSessions(() => {
+                console.log('max sessions');
+            })
         });
     }
 

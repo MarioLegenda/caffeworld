@@ -5,4 +5,5 @@ export default interface IInput {
     onDataExchange(subscriber, context?: object): void;
     onIceCandidateExchange(subscriber, context?: object): void;
     onChatMessage(subscriber, context?: object): void;
+    onMaxSessions(subscriber, context?: object): void;
 }

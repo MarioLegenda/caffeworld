@@ -10,6 +10,7 @@ export class Input implements IInput {
     private readonly dataExchangeEvent = 'app.client.room.data_exchange';
     private readonly iceExchangeEvent = 'app.client.room.ice_candidate_exchange';
     private readonly chatMessageEvent = 'app.client.room.chat_message';
+    private readonly maxSessionsEvent =  'app.client.max_sessions';
 
     onTableCreated(subscriber, context?: object): void {
         Socket.table.on(this.tableCreatedEvent, (context) ? subscriber.bind(this) : subscriber);
@@ -33,5 +34,9 @@ export class Input implements IInput {
 
     onChatMessage(subscriber, context?: object): void {
         Socket.room.on(this.chatMessageEvent, (context) ? subscriber.bind(this) : subscriber);
+    }
+
+    onMaxSessions(subscriber, context?: object): void {
+        Socket.room.on(this.maxSessionsEvent, (context) ? subscriber.bind(this) : subscriber);
     }
 }
