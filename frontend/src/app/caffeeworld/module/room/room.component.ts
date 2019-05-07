@@ -119,6 +119,7 @@ export class RoomComponent implements OnInit, OnDestroy {
                 // if the number of members is more than one, create a new member
                 // only if it is not the current member and the member is not already created
                 if (room.members.count > 1) {
+                    this.modalService.dismissAll();
                     console.log(`Multiple members found. Number of members is ${room.members.count}`);
                     for (const member of members) {
                         if (Socket.roomId !== member && !this.members.hasOwnProperty(member)) {

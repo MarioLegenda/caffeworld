@@ -8,3 +8,11 @@
   -moz-box-shadow: 3px 4px 21px -1px rgba(0,0,0,0.75);
   box-shadow: 3px 4px 21px -1px rgba(0,0,0,0.75);
 }
+
+@media (max-width: 780px) {
+  .media {
+    float: left;
+
+    margin-right: 30px;
+  }
+}
