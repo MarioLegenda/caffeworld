@@ -29,6 +29,7 @@ export async function onRoomEntered(socket, roomNamespace, data) {
             roomLinks[socketId] = roomIdentifier;
 
             Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
+            Redis.client.expire(roomIdentifier, 86400);
         }
     })(
         socket,
@@ -104,6 +105,7 @@ export function createTable(socket, data) {
     };
 
     Redis.client.set(roomIdentifier, JSON.stringify(redisData));
+    Redis.client.expire(roomIdentifier, 86400);
 
     socket.emit('app.client.table.created', createResponseData(redisData, TransportTypeEnum.Socket));
 }
