@@ -12,58 +12,58 @@ export async function onRoomEntered(socket, roomNamespace, data) {
     const maxSessions: number = 2;
     const maxSessionsEvent = 'app.client.max_sessions';
 
-    const sData = await getAsync(roomIdentifier);
-
-    const sessionData = JSON.parse(sData);
-
-    const members = sessionData.room.members;
-
-    members.list = Object.keys(roomNamespace.sockets);
-    members.count = Object.keys(roomNamespace.sockets).length;
-
-    if (members.count > 1) {
-        members.new_member = socket.id;
-    }
-
-    if (members.count > maxSessions) {
-        socket.emit(maxSessionsEvent);
-
-        return;
-    }
-
-    sessionData.room.members = members;
-
-    // saves the references of socket ids connected to this room.
-    // Since I'm setting and getting values from Redis here, it is an
-    // anonymous function (I don't like private functions created by typescript, there
-    // is a closure smell that I don't like).
-    (async function (socket, socketId: string, roomIdentifier: string, roomLinksName: string) {
-        const reply = await getAsync(roomLinksName);
-        
-        let roomLinks = JSON.parse(reply);
-
-        if (!roomLinks) {
-            roomLinks = {};
-        }
-
-        if (socketId in roomLinks === false) {
-            roomLinks[socketId] = roomIdentifier;
-
-            Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
-            Redis.client.expire(roomIdentifier, 86400);
-        }
-    })(
-        socket,
-        socket.id,
-        roomIdentifier,
-        'app.internal.room_links'
-    );
-
-    Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
-
     // join() is asyncronous, the docs don't even say that. If this wasn't like this,
     // the next like after join() would not be working with a socket.io room.
-    socket.join(roomIdentifier, () => {
+    socket.join(roomIdentifier, async () => {
+        const sData = await getAsync(roomIdentifier);
+
+        const sessionData = JSON.parse(sData);
+
+        const members = sessionData.room.members;
+
+        members.list = Object.keys(roomNamespace.adapter.rooms[roomIdentifier].sockets);
+        members.count = roomNamespace.adapter.rooms[roomIdentifier].length;
+
+        if (members.count > 1) {
+            members.new_member = socket.id;
+        }
+
+        if (members.count > maxSessions) {
+            socket.emit(maxSessionsEvent);
+
+            return;
+        }
+
+        sessionData.room.members = members;
+
+        // saves the references of socket ids connected to this room.
+        // Since I'm setting and getting values from Redis here, it is an
+        // anonymous function (I don't like private functions created by typescript, there
+        // is a closure smell that I don't like).
+        (async function (socket, socketId: string, roomIdentifier: string, roomLinksName: string) {
+            const reply = await getAsync(roomLinksName);
+
+            let roomLinks = JSON.parse(reply);
+
+            if (!roomLinks) {
+                roomLinks = {};
+            }
+
+            if (socketId in roomLinks === false) {
+                roomLinks[socketId] = roomIdentifier;
+
+                Redis.client.set(roomLinksName, JSON.stringify(roomLinks));
+                Redis.client.expire(roomIdentifier, 86400);
+            }
+        })(
+            socket,
+            socket.id,
+            roomIdentifier,
+            'app.internal.room_links'
+        );
+
+        Redis.client.set(roomIdentifier, JSON.stringify(sessionData));
+
         roomNamespace.to(roomIdentifier).emit('app.client.room.room_updated', createResponseData(sessionData, TransportTypeEnum.Socket));
     });
 }
