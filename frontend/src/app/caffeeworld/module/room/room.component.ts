@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {RoomIdentifier} from "../infrastructure/RoomIdentifier";
 import Socket from "../../infrastructure/socket/Socket";
 import IInput from "../../infrastructure/event/IInput";
@@ -19,6 +19,8 @@ export class RoomComponent implements OnInit, OnDestroy {
      * is required so that the DOM is not recreated on every change
      */
     members = {};
+
+    @ViewChild('emptyRoomContent') emptyRoomContent;
 
     private newMember: string;
     initRoomDom = false;
@@ -101,6 +103,7 @@ export class RoomComponent implements OnInit, OnDestroy {
                 // if the number of members is 1, this is the callee
                 if (room.members.count === 1) {
                     this.isLocal = true;
+                    this.modalService.open(this.emptyRoomContent);
 
                     // if there is only one member left after the previous member has left,
                     // delete the DOM and wait for the next call

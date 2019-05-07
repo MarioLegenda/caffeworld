@@ -25,6 +25,8 @@
         </div>
     </ng-template>
 
+
+
     <button class="btn btn-default" (click)="showAboutModal(aboutThisRoomContent)">About this room</button>
 
     <div class="media-box-wrapper" *ngIf="initRoomDom">
@@ -37,6 +39,17 @@
         </div>
     </div>
 </div>
+
+<ng-template #emptyRoomContent class="modal" role="dialog" tabindex="-1" let-c="close">
+    <h3 class="modal-header justify-content-center">
+        Empty room
+    </h3>
+
+    <div class="modal-body">
+        <p class="empty-room">This room is empty. Share this url with someone to start a conversation</p>
+        <p class="empty-room-url">{{roomIdentifier.fullUrl}}</p>
+    </div>
+</ng-template>
 
 <app-chat-box></app-chat-box>
 

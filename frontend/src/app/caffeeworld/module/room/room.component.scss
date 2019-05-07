@@ -25,30 +25,16 @@
       border: 1px solid red;
     }
   }
-}
 
-.jokes-wrapper {
-  border-bottom: 1px solid $light-gray;
-
-  padding: 28px;
-
-  h1 {
+  .empty-room {
     font-size: 1.2em;
-    padding: 0;
-    margin: 0;
+  }
 
-    font-style: italic;
-    margin-bottom: 17px;
+  .empty-room-url {
+    width: 100%;
+    float: left;
 
     color: $orangeBold;
   }
-
-  h4 {
-    color: gray;
-    font-size: 1.3em;
-    padding: 0;
-    margin: 0;
-
-    line-height: 1.5em;
-  }
 }
+
