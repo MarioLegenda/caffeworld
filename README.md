@@ -17,7 +17,8 @@ I will also not go into generalities like exploring WebRTC APIs in depth,the Web
 (although I did read trough it. You can find it [here](https://www.w3.org/TR/webrtc/)) or the different ways
 how to create a video call between two peers. There is a lot of noise online about WebRTC and I will
 try not to contribute to it. What I will do is present what I did and what worked for me and I will not
-go beyond that. But I will share some resources that I read and that helped me to build this.
+go beyond that. But I will share some resources that I read and that helped me to build this. I hope you 
+will find it useful and helpful.
 
 So lets start.
 
