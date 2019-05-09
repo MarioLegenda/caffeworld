@@ -58,8 +58,10 @@ displayed in the `video` element.
 ## Tip #1
 
 ````
-WebRTC has a high CPU cost. While I was developing, I also monitored my CPU heat. I own a Macbook Pro early 2016 and the CPU temperature raised up to 90 degrees even when I had only a local stream of my own
-camera. If you have a weak CPU, I found that setting the lowest possible quality is the best thing while
+WebRTC has a high CPU cost. While I was developing, I also monitored my CPU heat. 
+I own a Macbook Pro early 2016 and the CPU temperature raised up to 90 degrees even 
+when I had only a local stream of my own camera. 
+If you have a weak CPU, I found that setting the lowest possible quality is the best thing while
 developing and especially if you have a super cool camera. If you just leave the stream opened, it will
 slow down your computer.
 
