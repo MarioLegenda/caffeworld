@@ -17,8 +17,10 @@ Starting out, I also did a lot of mistakes from the beginning so I will outline 
 I will also not go into generalities like exploring WebRTC APIs in depth,the WebRTC specification
 (although I did read trough it. You can find it [here](https://www.w3.org/TR/webrtc/)) or the different ways how to create a video call between two peers. There is a lot of noise online about WebRTC and I will
 try not to contribute to it. What I will do is present what I did and what worked for me and I will not
-go beyond that. But I will share some resources that I read and that helped me to build this. I hope you 
-will find it useful and helpful.
+go beyond that. But I will share some resources that I read and that helped me to build this.
+
+I order to develop apps with WebRTC you have to have SSL enabled for your application since `getUserMedia`,outside of a secure context so before you start anything, setup SSL. I use Linux 18.04 and Apache and this
+guide will have examples for Apache.
 
 So lets start.
 
@@ -32,17 +34,28 @@ const htmlElement = document.getElementById('media');
 
 return navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream) => {
     htmlElement.srcObject = stream;
-    }).catch(this.onError);
+    }).catch((e) => console.error(e.message)));
 ````
 
 This is a basic example on how to stream video and audio from your camera into the `video` html element.
 The `stream` object is of type `MediaStream`. When you call the method `getUserMedia`, you will be prompted to allow the browser to use your camera and microphone. After that, `then` callback is called and
 the `stream:MediaStream` is added to the `srcObject` property of the `htmlElement`. 
 
+If you prefer the `async/await` syntax, you can do it like this
 
+````
+try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+    htmlElement.srcObject = stream;
+} catch (e) {
+    console.log(e.message)
+}
+````
 
+`getUserMedia` accepts a set of [constraints](https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamConstraints) that enable you to control some of the aspects of the stream
+displayed in the `video` element. 
 
-
+## Tip #1
 
 
 
