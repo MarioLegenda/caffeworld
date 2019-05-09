@@ -63,7 +63,8 @@ I own a Macbook Pro early 2016 and the CPU temperature raised up to 90 degrees e
 when I had only a local stream of my own camera. 
 If you have a weak CPU, I found that setting the lowest possible quality is the best thing while
 developing and especially if you have a super cool camera. If you just leave the stream opened, it will
-slow down your computer.
+slow down your computer. You would also have to open the browsers developer tools and that will
+slow it down even more.
 
 try {
     const stream = await navigator.mediaDevices.getUserMedia({
