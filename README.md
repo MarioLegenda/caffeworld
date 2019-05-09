@@ -24,6 +24,28 @@ So lets start.
 
 #### The simplest of examples
 
+````
+// I omitted the entire html document for clarity
+<video id="media"></video>
+
+const htmlElement = document.getElementById('media');
+
+return navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((stream) => {
+    htmlElement.srcObject = stream;
+    }).catch(this.onError);
+````
+
+This is a basic example on how to stream video and audio from your camera into the `video` html element.
+The `stream` object is of type `MediaStream`. When you call the method `getUserMedia`, you will be prompted to allow the browser to use your camera and microphone. After that, `then` callback is called and
+the `stream:MediaStream` is added to the `srcObject` property of the `htmlElement`. 
+
+
+
+
+
+
+
+
 
 
 
